@@ -140,7 +140,7 @@ class Login extends StatelessWidget {
                   height: 55.h,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF08D9CE),
+                      backgroundColor: Color(0xFF07C5BB),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.r),
                       ),
@@ -180,7 +180,7 @@ class Login extends StatelessWidget {
                       child: Text(
                         "Sign Up",
                         style: TextStyle(
-                          color: Color(0xFF08D9CE),
+                          color: Color(0xFF07C5BB),
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                         ),
@@ -210,7 +210,7 @@ class Login extends StatelessWidget {
                       child: Text(
                         "Guest",
                         style: TextStyle(
-                          color: Color(0xFF08D9CE),
+                          color: Color(0xFF07C5BB),
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                         ),
