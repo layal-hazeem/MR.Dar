@@ -29,10 +29,13 @@ class Login extends StatelessWidget {
                   height: 275,
                   child: Image.asset("images/photo_2025-11-27_11-23-04.jpg"),
                 ),
-
+                Container(
+                  height: 275,
+                  child: Image.asset("images/photo_2025-11-27_11-23-04.jpg"),
+                ),
                 Center(
                   child: Text(
-                    "Welcome Back ",
+                    "Welcome Back layal",
                     style: TextStyle(
                       fontSize: 25.sp,
                       fontWeight: FontWeight.bold,
