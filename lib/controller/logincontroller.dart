@@ -2,10 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class loginController extends GetxController {
-  var isPasswordHidden = true; // حالة الإخفاء
+  final formKey = GlobalKey<FormState>();
+
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  bool isPasswordHidden = true;
 
   void togglePassword() {
     isPasswordHidden = !isPasswordHidden;
-    update(); // تحديث الواجهة
+    update();
+  }
+
+  bool validateLogin() {
+    if (formKey.currentState!.validate()) {
+      return true;
+    }
+    return false;
   }
 }
