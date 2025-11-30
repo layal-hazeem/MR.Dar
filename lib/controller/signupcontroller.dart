@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../core/errors/exceptions.dart';
+import '../service/auth_service.dart';
+import '../view/home.dart';
 
 class signupController extends GetxController {
   Rx<XFile?> profileImage = Rx<XFile?>(null);
@@ -17,6 +23,12 @@ class signupController extends GetxController {
   var confirmPasswordController = TextEditingController();
 
   bool isConfirmHidden = true;
+  late final AuthService authService;
+  @override
+  void onInit() {
+    authService = AuthService();
+    super.onInit();
+  }
 
   void toggleConfirmPassword() {
     isConfirmHidden = !isConfirmHidden;
@@ -88,8 +100,27 @@ class signupController extends GetxController {
     update();
   }
 
-  bool validateSignup() {
-    if (formKey.currentState?.validate() ?? false) return true;
-    return false;
+  Future<void> signupUser() async {
+    if (formKey.currentState?.validate() ?? false) {
+      try {
+        await authService.signup(
+          firstName: firstNameController.text.trim(),
+          lastName: lastNameController.text.trim(),
+          phone: phoneController.text.trim(),
+          password: passwordController.text.trim(),
+          birthDate: birthDate.value,
+          userType: userType.value,
+          profileImage: profileImage.value != null ? File(profileImage.value!.path) : null,
+          idImage: idImage.value != null ? File(idImage.value!.path) : null,
+        );
+
+        Get.snackbar('Success', 'Account created successfully!');
+        Get.to(() => Home());
+
+      } on SereverException catch (e) {
+        Get.snackbar('Error', e.errModel.errorMessage);
+      }
+    }
   }
+
 }

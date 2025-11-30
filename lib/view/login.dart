@@ -143,9 +143,7 @@ class Login extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        if (controller.validateLogin()) {
-                          Get.to(Home());
-                        }
+                        controller.loginUser(); // تنادي دالة loginUser
                       },
                       child: Text(
                         "Log In",

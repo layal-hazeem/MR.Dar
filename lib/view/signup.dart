@@ -367,10 +367,9 @@ class Signup extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        if (controller.validateSignup()) {
-                          Get.to(Home());
-                        }
-                      },
+                        controller.signupUser();
+                      }
+                      ,
                       child: Text(
                         "Sign Up",
                         style: TextStyle(
