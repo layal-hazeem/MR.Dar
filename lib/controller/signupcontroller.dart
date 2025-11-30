@@ -21,9 +21,11 @@ class signupController extends GetxController {
   var phoneController = TextEditingController();
   var passwordController = TextEditingController();
   var confirmPasswordController = TextEditingController();
+  var birthDateController = TextEditingController();
 
   bool isConfirmHidden = true;
   late final AuthService authService;
+
   @override
   void onInit() {
     authService = AuthService();
@@ -59,7 +61,7 @@ class signupController extends GetxController {
               final XFile? image = await picker.pickImage(
                 source: ImageSource.gallery,
               );
-              if (image != null) profileImage.value = image;
+
             },
           ),
           ListTile(
@@ -70,7 +72,7 @@ class signupController extends GetxController {
               final XFile? image = await picker.pickImage(
                 source: ImageSource.camera,
               );
-              if (image != null) profileImage.value = image;
+
             },
           ),
         ],
@@ -84,7 +86,10 @@ class signupController extends GetxController {
   void pickIdImage() async {
     try {
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-      if (image != null) idImage.value = image;
+      if (image != null) {
+        idImage.value = image;
+        update();
+      }
     } catch (e) {
       Get.snackbar("Error", "Failed to pick ID image: $e");
     }
@@ -92,11 +97,12 @@ class signupController extends GetxController {
 
   void setUserType(String type) {
     userType.value = type;
-    update(); // <<< مهم جداً
+    update();
   }
 
   void setBirthDate(String date) {
     birthDate.value = date;
+    birthDateController.text = date; // نحدث الكونترولر للنص
     update();
   }
 
@@ -110,17 +116,13 @@ class signupController extends GetxController {
           password: passwordController.text.trim(),
           birthDate: birthDate.value,
           userType: userType.value,
-          profileImage: profileImage.value != null ? File(profileImage.value!.path) : null,
-          idImage: idImage.value != null ? File(idImage.value!.path) : null,
         );
 
         Get.snackbar('Success', 'Account created successfully!');
         Get.to(() => Home());
-
       } on SereverException catch (e) {
         Get.snackbar('Error', e.errModel.errorMessage);
       }
     }
   }
-
 }
