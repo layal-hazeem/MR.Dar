@@ -252,8 +252,8 @@ class Signup extends StatelessWidget {
                               if (value == null || value.isEmpty) {
                                 return "Password is required!";
                               }
-                              if (value.length < 7) {
-                                return "Password must be at least 7 characters!";
+                              if (value.length < 8) {
+                                return "Password must be at least 8 characters!";
                               }
                               return null;
                             },

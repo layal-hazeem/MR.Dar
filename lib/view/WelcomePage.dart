@@ -8,111 +8,113 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      backgroundColor: Colors.white,
-
-      body: Column(
+      body: Stack(
         children: [
-          // -------- القسم العلوي (الصورة + اللوغو) --------
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(80),
-              bottomRight: Radius.circular(80),
+          // -------- الصورة كخلفية --------
+          SizedBox(
+            height: screenHeight,
+            width: double.infinity,
+            child: Image.asset(
+              "images/photo_2025-11-30_12-36-36.jpg",
+              fit: BoxFit.cover,
             ),
+          ),
+
+          // -------- الكونتينر السفلي المدور --------
+          Align(
+            alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.60,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("images/photo_2025-11-30_12-36-36.jpg"),
-                  fit: BoxFit.cover,
+              height: 300,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    offset: Offset(0, -3),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Welcome to MR.Dar",
+                      style: TextStyle(
+                        color: Color(0xFF274668),
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => Get.to(Login()),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF274668),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 15),
+                          ),
+                          child: const Text("Login",
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 18)),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => Get.to(Signup()),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFE5E8EF),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 15),
+                          ),
+                          child: const Text("Sign Up",
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 18)),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          " or Continue as a",
+                          style: TextStyle(fontSize: 20, color: Colors.black54),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text(
+                            "Guest",
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF274668),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-
-          const SizedBox(height: 50),
-
-          // -------- النص + الازرار --------
-          Text(
-            "Welcome to MR.Dar",
-            style: TextStyle(
-              color: Color(0xFF274668),
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-
-          const SizedBox(height: 35),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              // زر تسجيل الدخول
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF274668),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 60,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-                onPressed: () => Get.to(Login()),
-                child: const Text(
-                  "Login",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              // زر إنشاء حساب
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFE5E8EF),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 60,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-                onPressed: () => Get.to(Signup()),
-                child: const Text(
-                  "Sign Up",
-                  style: TextStyle(fontSize: 18, color: Colors.black87),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // الجملة الصغيرة
-              Text(
-                " or Continue as a",
-                style: TextStyle(fontSize: 20, color: Colors.black54),
-              ),
-
-              // زر الضيف
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  "Guest",
-                  style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF274668),
-                  ),
-                ),
-              ),
-            ],
           ),
         ],
       ),

@@ -134,7 +134,7 @@ class signupController extends GetxController {
         );
 
         Get.snackbar('Success', 'Account created successfully!');
-        Get.off(() => Home());
+        Get.to(() => Home());
       } on SereverException catch (e) {
         Get.snackbar('Error', e.errModel.errorMessage);
       }
