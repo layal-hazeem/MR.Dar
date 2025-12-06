@@ -1,34 +1,32 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
+import 'package:new_project/core/api/dio_consumer.dart';
 
-class signupController extends GetxController {
+class SignupController extends GetxController {
+  final AuthService api;
+  SignupController({required this.api});
+
   Rx<XFile?> profileImage = Rx<XFile?>(null);
   Rx<XFile?> idImage = Rx<XFile?>(null);
-
   RxString birthDate = "".obs;
-  RxInt role = 2.obs;
+  RxInt role = 0.obs;
 
-  var firstNameController = TextEditingController();
-  var lastNameController = TextEditingController();
-  var phoneController = TextEditingController();
-  var passwordController = TextEditingController();
-  var confirmPasswordController = TextEditingController();
-  var birthDateController = TextEditingController();
-
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController birthDateController = TextEditingController();
+  bool isPasswordHidden = true;
   bool isConfirmHidden = true;
-  late final AuthService authService;
 
   @override
   void onInit() {
-    authService = AuthService();
     super.onInit();
   }
 
@@ -39,8 +37,6 @@ class signupController extends GetxController {
 
   final ImagePicker picker = ImagePicker();
   final formKey = GlobalKey<FormState>();
-
-  bool isPasswordHidden = true;
 
   void togglePassword() {
     isPasswordHidden = !isPasswordHidden;
@@ -115,7 +111,7 @@ class signupController extends GetxController {
   Future<void> signupUser() async {
     if (formKey.currentState?.validate() ?? false) {
       try {
-        await authService.signup(
+        await api.signup(
           firstName: firstNameController.text.trim(),
           lastName: lastNameController.text.trim(),
           phone: phoneController.text.trim(),
@@ -125,7 +121,6 @@ class signupController extends GetxController {
           birthDate: birthDate.value,
           role: role.value,
 
-          //  ⬅⬅⬅  هدول السطرين يلي كنتي عم تسألي وين ينحطوا
           profileImage: profileImage.value != null
               ? File(profileImage.value!.path)
               : null,
@@ -135,7 +130,7 @@ class signupController extends GetxController {
 
         Get.snackbar('Success', 'Account created successfully!');
         Get.to(() => Home());
-      } on SereverException catch (e) {
+      } on ServerException catch (e) {
         Get.snackbar('Error', e.errModel.errorMessage);
       }
     }

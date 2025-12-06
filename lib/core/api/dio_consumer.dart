@@ -1,22 +1,38 @@
 import 'package:new_project/core/api/api_consumer.dart';
 import 'package:dio/dio.dart';
+import 'package:new_project/core/api/api_interceptors.dart';
+import 'package:new_project/core/api/end_points.dart';
 import 'package:new_project/core/errors/exceptions.dart';
-import '../errors/error_model.dart';
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
-  DioConsumer({required this.dio});
+
+  DioConsumer({required this.dio}) {
+    dio.options.baseUrl = EndPoint.baseUrl;
+    dio.interceptors.add(ApiInterceptor()); //مراقبة ال request وال response
+    dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestBody: true,
+        requestHeader: true,
+        responseBody: true,
+        responseHeader: true,
+        error: true,
+      ),
+    ); //يراقب ال request وال response ويطبعهم بال console
+  }
 
   @override
   Future delete(
     String path, {
-    Object? data,
+    dynamic data,
     Map<String, dynamic>? queryParameters,
+    bool isFormDatta = false,
   }) async {
     try {
       final response = await dio.delete(
         path,
-        data: data,
+        data: isFormDatta ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
       );
       return response.data;
@@ -46,13 +62,14 @@ class DioConsumer extends ApiConsumer {
   @override
   Future patch(
     String path, {
-    Object? data,
+    dynamic data,
     Map<String, dynamic>? queryParameters,
+    bool isFormDatta = false,
   }) async {
     try {
       final response = await dio.patch(
         path,
-        data: data,
+        data: isFormDatta ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
       );
       return response.data;
@@ -64,13 +81,14 @@ class DioConsumer extends ApiConsumer {
   @override
   Future post(
     String path, {
-    Object? data,
+    dynamic data,
     Map<String, dynamic>? queryParameters,
+    bool isFormDatta = false,
   }) async {
     try {
       final response = await dio.post(
         path,
-        data: data,
+        data: isFormDatta ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
       );
       return response.data;

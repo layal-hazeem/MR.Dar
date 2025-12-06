@@ -1,13 +1,11 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../controller/signupcontroller.dart';
-import 'home.dart';
 
 class Signup extends StatelessWidget {
   Signup({super.key});
-  final signupController controller = Get.put(signupController());
+  final SignupController controller = Get.find<SignupController>();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,7 @@ class Signup extends StatelessWidget {
                       SizedBox(height: 20.h),
 
                       // اختيار نوع المستخدم
-                      GetBuilder<signupController>(
+                      GetBuilder<SignupController>(
                         builder: (ctrl) {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -145,7 +143,7 @@ class Signup extends StatelessWidget {
                       SizedBox(height: 15.h),
 
                       // Date of Birth
-                      GetBuilder<signupController>(
+                      GetBuilder<SignupController>(
                         builder: (ctrl) {
                           return TextFormField(
                             readOnly: true,
@@ -177,7 +175,7 @@ class Signup extends StatelessWidget {
                       SizedBox(height: 15.h),
 
                       // Profile Image & ID Image
-                      GetBuilder<signupController>(
+                      GetBuilder<SignupController>(
                         builder: (ctrl) {
                           return Row(
                             children: [
@@ -238,7 +236,7 @@ class Signup extends StatelessWidget {
                       SizedBox(height: 15.h),
 
                       // Password
-                      GetBuilder<signupController>(
+                      GetBuilder<SignupController>(
                         builder: (ctrl) {
                           return TextFormField(
                             controller: ctrl.passwordController,
@@ -276,7 +274,7 @@ class Signup extends StatelessWidget {
                       SizedBox(height: 15.h),
 
                       // Confirm Password
-                      GetBuilder<signupController>(
+                      GetBuilder<SignupController>(
                         builder: (ctrl) {
                           return TextFormField(
                             controller: ctrl.confirmPasswordController,

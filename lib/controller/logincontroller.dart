@@ -1,23 +1,24 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:new_project/core/api/dio_consumer.dart';
 import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
 
 class LoginController extends GetxController {
-  final formKey = GlobalKey<FormState>();
-  final phoneController = TextEditingController();
-  final passwordController = TextEditingController();
-  bool isPasswordHidden = true;
+  GlobalKey<FormState> formKey = GlobalKey();
+  final AuthService api;
+  LoginController({required this.api});
 
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool isPasswordHidden = true;
   String? phoneError;
   String? passError;
 
-  late final AuthService authService;
-
   @override
   void onInit() {
-    authService = AuthService();
     super.onInit();
   }
 
@@ -30,18 +31,14 @@ class LoginController extends GetxController {
     phoneError = null;
     passError = null;
     update();
-
     if (formKey.currentState!.validate()) {
       String phone = phoneController.text.trim();
       String password = passwordController.text.trim();
-
       try {
-        await authService.login(phone: phone, password: password);
-
+        await api.login(phone: phone, password: password);
         Get.snackbar('Success', 'Logged in successfully!');
-        Get.to(() => Home());
-      } on SereverException catch (e) {
-        // سواء الرقم غلط أو الباسوورد غلط، نفس الرسالة تحت الاثنين
+        Get.toNamed("/home");
+      } on ServerException catch (e) {
         phoneError = passError = e.errModel.errorMessage;
         update();
       }

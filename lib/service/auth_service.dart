@@ -1,78 +1,28 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import '../core/api/api_interceptors.dart';
 import '../core/api/dio_consumer.dart';
 import '../core/errors/error_model.dart';
 import '../core/errors/exceptions.dart';
-import '../core/api/end_points.dart'; // مهم جداً
+import '../core/api/end_points.dart';
 
 class AuthService {
-  late final Dio dio;
-  late final DioConsumer apiConsumer;
+  final DioConsumer api;
+  AuthService({required this.api});
 
-  AuthService() {
-    dio =
-        Dio(
-            BaseOptions(
-              baseUrl: EndPoint.baseUrl, // <<<<< غيّريه من end_points.dart
-              connectTimeout: const Duration(seconds: 15),
-              receiveTimeout: const Duration(seconds:15),
-              headers: {
-                "Accept": "application/json", // ← هنا
-              },
-            ),
-          )
-          ..interceptors.add(ApiInterceptor())
-          ..interceptors.add(
-            LogInterceptor(
-              request: true,
-              requestBody: true,
-              responseBody: true,
-              error: true,
-            ),
-          );
-
-    apiConsumer = DioConsumer(dio: dio);
-  }
   Future<void> login({required String phone, required String password}) async {
     try {
-      final response = await apiConsumer.post(
-        '/api/login',
+      final response = await api.post(
+        EndPoint.logIn,
         data: {"phone": phone, "password": password},
       );
-
-      print("🔥 FULL RESPONSE: $response");
-
-      // إذا response فارغ أو ما فيه data → خطأ
-      if (response == null || response["data"] == null) {
-        throw SereverException(
-          errModel: ErrorModel(status: 400, errorMessage: "Invalid Credntials"),
-        );
-      }
-
-      // تحقق من رسالة النجاح
-      if (response["message"] == "User Logged In Successfully .") {
-        // كل شيء تمام، ممكن تخزن الـ access_token لو بدك
-        return;
-      }
-
-      // أي شيء غير كده → خطأ
-      throw SereverException(
-        errModel: ErrorModel(status: 400, errorMessage: "Invalid Credntials"),
-      );
+      return response;
     } on DioException catch (e) {
-      throw SereverException(
-        errModel: ErrorModel(status: 400, errorMessage: "Invalid Credntials"),
-      );
-    } catch (e) {
-      throw SereverException(
-        errModel: ErrorModel(status: 400, errorMessage: "Invalid Credntials"),
-      );
+      handleDioException(e);
+      rethrow;
     }
   }
 
-  // 3️⃣ دالة signup
-  Future<bool> signup({
+  Future<void> signup({
     required String firstName,
     required String lastName,
     required String phone,
@@ -84,74 +34,34 @@ class AuthService {
     required int role,
   }) async {
     try {
-      // FormData
-      FormData formData = FormData();
+      final formData = FormData.fromMap({
+        "first_name": firstName,
+        "last_name": lastName,
+        "phone": phone,
+        "password": password,
+        "password_confirmation": confirmPassword,
+        "role": role.toString(),
+        "date_of_birth": birthDate.split('/').reversed.join('-'),
+        if (profileImage != null)
+          "profile_image": await MultipartFile.fromFile(profileImage.path),
+        if (idImage != null)
+          "id_image": await MultipartFile.fromFile(idImage.path),
+      });
 
-      String formattedDate = birthDate.split('/').reversed.join('-');
+      final response = await api.post(EndPoint.signUp, data: formData);
 
-      formData.fields
-        ..add(MapEntry('first_name', firstName))
-        ..add(MapEntry('last_name', lastName))
-        ..add(MapEntry('phone', phone))
-        ..add(MapEntry('password', password))
-        ..add(MapEntry('password_confirmation', confirmPassword)) // ← أضفنا هذا
-        ..add(MapEntry('role', role.toString()))
-        ..add(MapEntry('date_of_birth', formattedDate));
-
-      if (profileImage != null) {
-        formData.files.add(
-          MapEntry(
-            'profile_image',
-            await MultipartFile.fromFile(profileImage.path),
+      // إذا الـresponse ما نجحت، رمي استثناء
+      if (response == null ||
+          response["message"] != "User Created Successfully .") {
+        throw ServerException(
+          errModel: ErrorModel(
+            errorMessage: response?["message"] ?? "Signup failed",
           ),
         );
       }
-
-      if (idImage != null) {
-        formData.files.add(
-          MapEntry('id_image', await MultipartFile.fromFile(idImage.path)),
-        );
-      }
-
-      print("💡 Signup Data:");
-      for (var field in formData.fields) {
-        print("${field.key}: ${field.value}");
-      }
-      for (var f in formData.files) {
-        print("${f.key}: ${f.value.filename}");
-      }
-
-      // إرسال الريكوست للباك
-      final response = await apiConsumer.post(
-        '/api/register', // ←← انتبهي: ما في /api لأن ApiConsumer بيحطها لحالو
-        data: formData,
-      );
-
-      print("🔥 SIGNUP RESPONSE: $response");
-
-      // التحقق من نجاح العملية
-      if (response != null &&
-          response["message"] == "User Created Successfully .") {
-        return true;
-      }
-
-      // فشل التسجيل
-      throw SereverException(
-        errModel: ErrorModel(status: 400, errorMessage: "Signup failed."),
-      );
     } on DioException catch (e) {
-      print("❌ Dio Error: ${e.response}");
-      throw SereverException(
-        errModel: ErrorModel(
-          status: e.response?.statusCode ?? 400,
-          errorMessage: e.response?.data?["message"] ?? "Signup failed",
-        ),
-      );
-    } catch (e) {
-      print("❌ General Error: $e");
-      throw SereverException(
-        errModel: ErrorModel(status: 400, errorMessage: "Signup failed"),
-      );
+      // هون بنستفيد من handleDioException مباشرة
+      handleDioException(e);
     }
   }
 }

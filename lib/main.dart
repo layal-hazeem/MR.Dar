@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:new_project/view/WelcomePage.dart';
-import 'package:new_project/view/home.dart';
 import 'package:get/get.dart';
+import 'package:dio/dio.dart';
+import 'core/api/dio_consumer.dart';
+import 'controller/logincontroller.dart';
+import 'controller/signupcontroller.dart';
+import 'package:new_project/view/WelcomePage.dart';
 import 'package:new_project/view/home.dart';
 import 'package:new_project/view/login.dart';
 import 'package:new_project/view/signup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'core/bindings/app_bindings.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,6 +26,7 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       builder: (context, child) {
         return GetMaterialApp(
+          initialBinding: AppBindings(), // ← استدعاء الـ Bindings
           debugShowCheckedModeBanner: false,
           home: WelcomePage(),
           getPages: [
