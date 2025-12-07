@@ -23,11 +23,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 812), // iPhone 11 base size
+      designSize: const Size(375, 812), 
       minTextAdapt: true,
       builder: (context, child) {
         return GetMaterialApp(
-          initialBinding: AppBindings(), // ← استدعاء الـ Bindings
+          initialBinding: AppBindings(),
           debugShowCheckedModeBanner: false,
           home: Splash(),
           getPages: [

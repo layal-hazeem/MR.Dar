@@ -36,23 +36,23 @@ class LoginController extends GetxController {
     update();
 
     if (!formKey.currentState!.validate()) return;
-    isLoading = true;   // ⬅️ بدء التحميل
+    isLoading = true;
     update();
     try {
       final token = await api.login(
         phone: phoneController.text.trim(),
         password: passwordController.text.trim(),
       );
-      // حفظ التوكن
+
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString("token", token);
 
-      isLoading = false; // ⬅️ ايقاف التحميل
+      isLoading = false;
       update();
 
       Get.offAll(() => Home());
     } on ServerException catch (e) {
-      isLoading = false; // ⬅️ ايقاف التحميل عند الخطأ
+      isLoading = false;
       phoneError = e.errModel?.errorMessage;
       passError = e.errModel?.errorMessage;
       update();
