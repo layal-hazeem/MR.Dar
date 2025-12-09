@@ -115,6 +115,16 @@ class SignupController extends GetxController {
       Get.snackbar('Error', 'Please fill all required fields correctly');
       return;
     }
+    if (profileImage.value == null) {
+      Get.snackbar('Error', 'Profile image is required');
+      return;
+    }
+    if (idImage.value == null) {
+      Get.snackbar('Error', 'ID image is required');
+      return;
+    }
+
+
     if (passwordController.text != confirmPasswordController.text) {
       Get.snackbar('Error', 'Passwords do not match');
       return;

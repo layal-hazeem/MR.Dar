@@ -198,7 +198,11 @@ class Signup extends StatelessWidget {
                             child: AbsorbPointer(
                               child: TextFormField(
                                 readOnly: true,
-                                decoration: _inputDecoration("Profile Image"),
+                                decoration: _inputDecoration(
+                                  ctrl.profileImage.value == null
+                                      ? "Profile Image"
+                                      : "Image Selected ✔",
+                                ),
                               ),
                             ),
                           ),
@@ -210,7 +214,11 @@ class Signup extends StatelessWidget {
                             child: AbsorbPointer(
                               child: TextFormField(
                                 readOnly: true,
-                                decoration: _inputDecoration("ID Image"),
+                                decoration: _inputDecoration(
+                                  ctrl.idImage.value == null
+                                      ? "ID Image"
+                                      : "Image Selected ✔",
+                                ),
                               ),
                             ),
                           ),
