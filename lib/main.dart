@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'view/apartment_details_page.dart';
 import 'core/bindings/app_bindings.dart';
 import 'view/Splash.dart';
 import 'view/WelcomePage.dart';
@@ -23,14 +23,19 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       builder: (context, child) {
         return GetMaterialApp(
-          initialBinding: AppBindings(),   // 🔥 أهم سطر — تشغيل الـ Bindings
+          initialBinding: AppBindings(),
           debugShowCheckedModeBanner: false,
-          home: Splash(),                 // شاشة البداية
+          home: Splash(),
           getPages: [
             GetPage(name: "/home", page: () => Home()),
             GetPage(name: "/signup", page: () => Signup()),
             GetPage(name: "/login", page: () => Login()),
             GetPage(name: "/welcome", page: () => WelcomePage()),
+            // ✅ أضف هذه الصفحة
+            GetPage(name: "/apartmentDetails", page: () {
+              final apartment = Get.arguments;
+              return ApartmentDetailsPage(apartment: apartment);
+            }),
           ],
         );
       },

@@ -1,56 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../model/apartment_model.dart';
+import '../controller/ApartmentController.dart';
 import '../widgets/apartment_card.dart';
 import 'apartment_details_page.dart';
 
-class HomeContent extends StatefulWidget {
-  const HomeContent({super.key});
+class HomeContent extends StatelessWidget {
+  HomeContent({super.key});
 
-  @override
-  State<HomeContent> createState() => _HomeContentState();
-}
-
-class _HomeContentState extends State<HomeContent> {
-  // شقق وهمية للتجربة
-  List<Apartment> apartments = [
-    Apartment(
-      title: "شقة فاخرة في دمشق",
-      description: "شقة مفروشة وحديثة للإيجار الشهري.",
-      rentValue: 2500000,
-      rooms: 3,
-      space: 150,
-      notes: "قريبة من الخدمات وإطلالة جميلة",
-      cityId: 1,
-      governorateId: 1,
-      street: "أبو رمانة",
-      flatNumber: "12",
-      longitude: 36.2783,
-      latitude: 33.5138,
-      houseImages: [
-        'images/photo_2025-11-30_12-36-36.jpg', // ✅ مسار الصورة المحلية
-
-      ],
-    ),
-    Apartment(
-      title: "شقة جميلة في حمص",
-      description: "مناسبة للعائلات الصغيرة.",
-      rentValue: 1500000,
-      rooms: 2,
-      space: 90,
-      notes: "منطقة هادئة",
-      cityId: 2,
-      governorateId: 2,
-      street: "الغوطة",
-      flatNumber: "8",
-      longitude: 36.72,
-      latitude: 34.73,
-      houseImages: [
-        'images/photo_2025-11-30_12-36-36.jpg', // استخدمي نفس الصورة أو صورة ثانية محلية
-      ],
-    ),
-  ];
+  final ApartmentController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -59,41 +16,83 @@ class _HomeContentState extends State<HomeContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // شريط البحث
-          TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
-              hintText: "Search properties...",
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
+          // ---------------- Search Bar ----------------
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 6,
+                    offset: Offset(0, 3))
+              ],
+            ),
+            child: TextField(
+              onChanged: (value) => controller.search(value),
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                hintText: "Search apartments...",
+                hintStyle: TextStyle(color: Colors.grey[500]),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(vertical: 14),
               ),
             ),
           ),
-          const SizedBox(height: 90),
 
-          // قائمة الشقق أفقية
-          SizedBox(
-            height: 380, // ارتفاع الكارد
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: apartments.length,
-              itemBuilder: (context, index) {
-                return SizedBox(
-                  width: 300, // عرض الكارد
-                  child: ApartmentCard(
-                    apartment: apartments[index],
-                    onTap: () {
-                      Get.to(() => ApartmentDetailsPage(
-                        apartment: apartments[index],
-                      ));
-                    },
+          const SizedBox(height: 20),
+
+          // ---------------- Content ----------------
+          Expanded(
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (controller.errorMessage.isNotEmpty) {
+                return Center(
+                  child: Text(
+                    "Oops: ${controller.errorMessage.value}",
+                    style: TextStyle(color: Colors.red, fontSize: 16),
                   ),
                 );
-              },
-            ),
+              }
+
+              if (controller.apartments.isEmpty) {
+                return Center(
+                  child: Text(
+                    "No apartments available",
+                    style: TextStyle(fontSize: 18, color: Colors.black54),
+                  ),
+                );
+              }
+
+              // ---------------- Grid View Cards ----------------
+              return GridView.builder(
+                physics: const BouncingScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 0.72,
+                ),
+                itemCount: controller.apartments.length,
+                itemBuilder: (context, index) {
+                  final apt = controller.apartments[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Get.to(
+                            () => ApartmentDetailsPage(apartment: apt),
+                        transition: Transition.fadeIn,
+                        duration: const Duration(milliseconds: 200),
+                      );
+                    },
+                    // ✅ التصحيح هنا: استخدم ApartmentCard وليس ApartmentDetailsPage
+                    child: ApartmentCard(apartment: apt, onTap: () {  },),
+                  );
+                },
+              );
+            }),
           ),
         ],
       ),
