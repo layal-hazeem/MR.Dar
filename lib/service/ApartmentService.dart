@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart'; // تأكد من إضافته
-import 'package:new_project/view/apartment_details_page.dart';
 import '../core/api/dio_consumer.dart';
 import '../core/api/end_points.dart';
 import '../core/errors/error_model.dart';

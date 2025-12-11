@@ -1,13 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:new_project/core/api/dio_consumer.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
-import 'homecontroller.dart';
-import 'my_account_controller.dart';
 
 class LoginController extends GetxController {
   bool isLoading = false;
@@ -22,10 +17,6 @@ class LoginController extends GetxController {
   String? phoneError;
   String? passError;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void togglePassword() {
     isPasswordHidden = !isPasswordHidden;
@@ -54,8 +45,8 @@ class LoginController extends GetxController {
       Get.offAll(() => Home());
     } on ServerException catch (e) {
       isLoading = false;
-      phoneError = e.errModel?.errorMessage;
-      passError = e.errModel?.errorMessage;
+      phoneError = e.errModel.errorMessage;
+      passError = e.errModel.errorMessage;
       update();
 
       Get.snackbar(

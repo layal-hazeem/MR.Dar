@@ -414,8 +414,9 @@ class Signup extends StatelessWidget {
                       ),
                       validator: (v) {
                         if (v!.isEmpty) return "Confirm is required";
-                        if (v != ctrl.passwordController.text)
+                        if (v != ctrl.passwordController.text) {
                           return "Not matching";
+                        }
                         return null;
                       },
                       decoration: _inputDecoration(

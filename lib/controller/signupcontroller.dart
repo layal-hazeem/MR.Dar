@@ -29,10 +29,6 @@ class SignupController extends GetxController {
   bool isPasswordHidden = true;
   bool isConfirmHidden = true;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void toggleConfirmPassword() {
     isConfirmHidden = !isConfirmHidden;

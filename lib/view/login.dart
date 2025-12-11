@@ -31,7 +31,7 @@ class Login extends StatelessWidget {
                 /// ---------------------------
                 ///           LOGO
                 /// ---------------------------
-                Container(
+                SizedBox(
                   height: 220,
                   width: 120,
 

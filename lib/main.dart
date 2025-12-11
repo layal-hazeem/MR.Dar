@@ -8,8 +8,21 @@ import 'view/WelcomePage.dart';
 import 'view/home.dart';
 import 'view/login.dart';
 import 'view/signup.dart';
+import 'package:get_storage/get_storage.dart';
+import 'core/theme/theme_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init(); // لازم قبل استخدام GetStorage
+
+  final storage = GetStorage();
+  final themeService = ThemeService(storage);
+
+  // نخزّن الخدمة كـ singleton
+  Get.put<ThemeService>(themeService, permanent: true);
+
+  // نطبق الثيم اللي مخزون
+  Get.changeThemeMode(themeService.themeMode);
   runApp(const MyApp());
 }
 
@@ -18,6 +31,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeService = Get.find<ThemeService>();
+
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
@@ -25,6 +40,9 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           initialBinding: AppBindings(),
           debugShowCheckedModeBanner: false,
+          theme: themeService.lightTheme,
+          darkTheme: themeService.darkTheme,
+          themeMode: themeService.themeMode,
           home: Splash(),
           getPages: [
             GetPage(name: "/home", page: () => Home()),
@@ -32,10 +50,13 @@ class MyApp extends StatelessWidget {
             GetPage(name: "/login", page: () => Login()),
             GetPage(name: "/welcome", page: () => WelcomePage()),
             // ✅ أضف هذه الصفحة
-            GetPage(name: "/apartmentDetails", page: () {
-              final apartment = Get.arguments;
-              return ApartmentDetailsPage(apartment: apartment);
-            }),
+            GetPage(
+              name: "/apartmentDetails",
+              page: () {
+                final apartment = Get.arguments;
+                return ApartmentDetailsPage(apartment: apartment);
+              },
+            ),
           ],
         );
       },

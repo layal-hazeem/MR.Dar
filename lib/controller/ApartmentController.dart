@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../model/apartment_model.dart';
 import '../service/ApartmentService.dart';
-import 'package:new_project/view/apartment_details_page.dart';
 
 class ApartmentController extends GetxController {
   final ApartmentService service;

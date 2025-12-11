@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import '../service/auth_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../view/WelcomePage.dart';
 

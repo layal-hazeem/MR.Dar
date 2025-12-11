@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/authcontroller.dart';
 import '../controller/homecontroller.dart';
-import '../controller/logincontroller.dart';
-import '../controller/my_account_controller.dart';
-import '../controller/signupcontroller.dart';
-import '../core/api/dio_consumer.dart';
-import '../main.dart';
-import '../service/auth_service.dart';
-import 'WelcomePage.dart';
+import '../core/theme/theme_service.dart';
 import 'homeContent.dart';
-import 'login.dart';
 import 'favourite.dart';
 import 'myAccount.dart';
 import 'myRent.dart';
@@ -19,6 +11,7 @@ import 'myRent.dart';
 class Home extends StatelessWidget {
   Home({super.key});
   final HomeController controller = Get.put(HomeController());
+  final ThemeService themeService = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -56,45 +49,40 @@ class Home extends StatelessWidget {
     }
 
     return AppBar(
-      title: Center(child: Text(title)),
+      title: Text(
+        title,
+        textAlign: TextAlign.start,
+        style: TextStyle(fontSize: 27),
+      ),
       backgroundColor: const Color(0xFF274668),
       foregroundColor: Colors.white,
 
       // يظهر زر تسجيل الخروج فقط بصفحة الـ Home
       actions: index == 0
           ? [
-              IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () {
-                  Get.defaultDialog(
-                    title: "Logout From App",
-                    titleStyle: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    middleText: "Are you sure you need to logout ?",
-                    middleTextStyle: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                    backgroundColor: Colors.grey,
-                    radius: 10,
-                    textCancel: "No",
-                    cancelTextColor: Colors.white,
-                    textConfirm: "Yes",
-                    confirmTextColor: Colors.white,
-                    onCancel: () {
-                      Get.back();
-                    },
-                    onConfirm: () {
-                      final auth = Get.find<AuthController>();
-                      auth.logout();
-                    },
-                    buttonColor: Color(0xFF274668),
-                  );
-                },
-              ),
+              Obx(() {
+                final isDark = themeService.rxIsDark.value;
+                return IconButton(
+                  tooltip: isDark ? 'Switch to light' : 'Switch to dark',
+                  onPressed: () => themeService.toggleTheme(),
+                  icon: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (child, anim) =>
+                        RotationTransition(turns: anim, child: child),
+                    child: isDark
+                        ? const Icon(
+                            Icons.dark_mode, // قمر أو أيقونة داكنة
+                            key: ValueKey('dark'),
+                            size: 22,
+                          )
+                        : const Icon(
+                            Icons.light_mode, // شمس
+                            key: ValueKey('light'),
+                            size: 22,
+                          ),
+                  ),
+                );
+              }),
             ]
           : [],
 
@@ -106,10 +94,7 @@ class Home extends StatelessWidget {
                 onPressed: () => Scaffold.of(context).openDrawer(),
               ),
             )
-          : IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => controller.changeTab(0),
-            ),
+          : null,
     );
   }
 
@@ -129,19 +114,34 @@ class Home extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.person_sharp),
-            title: const Text('Profile'),
+            leading: const Icon(Icons.person_pin),
+            title: const Text('Profile Settings'),
             onTap: () {
               Get.back();
             },
           ),
           ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
+            leading: const Icon(Icons.switch_account),
+            title: const Text('Switch account'),
             onTap: () {
               Get.back();
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: const Text('Language '),
+            onTap: () {
+              Get.back();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.help),
+            title: const Text('Help & Support '),
+            onTap: () {
+              Get.back();
+            },
+          ),
+
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
