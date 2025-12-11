@@ -34,8 +34,7 @@ class HomeContent extends StatelessWidget {
 
               return GridView.builder(
                 itemCount: controller.apartments.length,
-                gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
@@ -46,15 +45,13 @@ class HomeContent extends StatelessWidget {
                   return ApartmentCard(
                     apartment: apt,
                     onTap: () {
-                      Get.to(
-                            () => ApartmentDetailsPage(apartment: apt),
-                      );
+                      Get.to(() => ApartmentDetailsPage(apartment: apt));
                     },
                   );
                 },
               );
             }),
-          )
+          ),
         ],
       ),
     );

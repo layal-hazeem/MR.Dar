@@ -12,11 +12,9 @@ import '../../controller/signupcontroller.dart';
 import '../../service/auth_service.dart';
 import 'package:dio/dio.dart';
 
-
 class AppBindings extends Bindings {
   @override
   void dependencies() {
-
     final dio = Dio();
 
     // Dio يبقى دائم
@@ -28,6 +26,10 @@ class AppBindings extends Bindings {
     // AuthService يبقى دائم
     Get.put<AuthService>(
       AuthService(api: Get.find<DioConsumer>()),
+      permanent: true,
+    );
+    Get.put<ApartmentService>(
+      ApartmentService(api: Get.find<DioConsumer>()),
       permanent: true,
     );
 
@@ -44,7 +46,8 @@ class AppBindings extends Bindings {
       AuthController(authService: Get.find<AuthService>()),
       permanent: true,
     );
-    Get.lazyPut(() => ApartmentService(api: Get.find<DioConsumer>()));
-    Get.lazyPut(() => ApartmentController(service: Get.find()));
+    Get.put<ApartmentController>(
+      ApartmentController(service: Get.find<ApartmentService>()),
+    );
   }
 }
