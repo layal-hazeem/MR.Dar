@@ -9,7 +9,9 @@ class ApartmentController extends GetxController {
   ApartmentController({required this.service});
 
   // البيانات
-  RxList<Apartment> apartments = <Apartment>[].obs;
+  RxList<Apartment> allApartments = <Apartment>[].obs;
+  RxList<Apartment> featuredApartments = <Apartment>[].obs;
+  RxList<Apartment> topRatedApartments = <Apartment>[].obs;
 
   // حالات الواجهة
   RxBool isLoading = false.obs;
@@ -17,25 +19,31 @@ class ApartmentController extends GetxController {
   RxString errorMessage = ''.obs;
   RxString createMessage = ''.obs; // رسالة نتيجة الإنشاء
 
-  // فلترة
-  Rxn<int> cityId = Rxn<int>();
-  Rxn<int> minPrice = Rxn<int>();
-  Rxn<int> maxPrice = Rxn<int>();
-
   // ========================= تحميل كل الشقق =========================
   Future<void> loadApartments() async {
     try {
       isLoading.value = true;
       errorMessage.value = "";
 
-      final data = await service.getAllApartments();
-      apartments.assignAll(data);
+      allApartments.assignAll(
+        await service.getAllApartments(),
+      );
+
+      featuredApartments.assignAll(
+        await service.getApartmentsByQuery(maxPrice: 200),
+      );
+
+      topRatedApartments.assignAll(
+        await service.getApartmentsByQuery(orderBy: 'rate'),
+      );
+
     } catch (e) {
       errorMessage.value = e.toString();
     } finally {
       isLoading.value = false;
     }
   }
+//------------
 
   // ========================= إنشاء شقة جديدة =========================
   Future<bool> createApartment({
@@ -87,35 +95,6 @@ class ApartmentController extends GetxController {
     }
   }
 
-  // ========================= البحث =========================
-  Future<void> search(String keyword) async {
-    if (keyword.trim().isEmpty) {
-      loadApartments();
-      return;
-    }
-
-    isLoading.value = true;
-
-    final data = await service.searchApartments(keyword);
-    apartments.assignAll(data);
-
-    isLoading.value = false;
-  }
-
-  // ========================= تطبيق الفلاتر =========================
-  Future<void> applyFilters() async {
-    isLoading.value = true;
-
-    final data = await service.filterApartments(
-      cityId: cityId.value,
-      minPrice: minPrice.value,
-      maxPrice: maxPrice.value,
-    );
-
-    apartments.assignAll(data);
-
-    isLoading.value = false;
-  }
 
   @override
   void onInit() {

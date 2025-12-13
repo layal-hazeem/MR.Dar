@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../model/apartment_model.dart';
 
 class ApartmentDetailsPage extends StatelessWidget {
@@ -8,129 +9,148 @@ class ApartmentDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
 
-      // ---------- زر الحجز (أسفل الشاشة) ----------
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black12, blurRadius: 8, offset: Offset(0, -3))
-          ],
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          height: 55,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF274668),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-            ),
-            onPressed: () {
-              // TODO: Navigate to booking process
-            },
-            child: Text(
-              "Reserve Now",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      ),
+      // AppBar مع زر رجوع وعنوان
 
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ---------- صور الشقة ----------
-            SizedBox(
-              height: 320,
-              child: PageView(
-                children: apartment.houseImages.isNotEmpty
-                    ? apartment.houseImages
-                    .map((img) =>
-                    Image.network(img, fit: BoxFit.cover))
-                    .toList()
-                    : [
-                  Image.asset(
-                    'images/photo_2025-11-30_12-36-36.jpg',
-                    fit: BoxFit.cover,
-                  )
+            Container(
+              height: 300,
+              child: Stack(
+                children: [
+                  // الصور
+                  PageView.builder(
+                    itemCount: apartment.houseImages.length,
+                    itemBuilder: (_, index) {
+                      return Image.network(
+                        apartment.houseImages[index],
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      );
+                    },
+                  ),
+                  Positioned(
+                    top: 40,
+                    left: 16,
+                    child: _circleIcon(Icons.arrow_back_ios_new, () => Get.back()),
+                  ),
+
+                  Positioned(
+                    top: 40,
+                    right: 16,
+                    child: _circleIcon(Icons.favorite_border, () {}),
+                  ),
+
                 ],
               ),
             ),
 
-            // ---------- محتوى الصفحة ----------
+            // ---------- المحتوى ----------
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ---------- السعر ----------
-                  Text(
-                    "\$${apartment.rentValue} / night",
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 6),
-
-                  // ---------- الموقع ----------
+                  // العنوان والسعر
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(Icons.location_on,
-                          color: Colors.redAccent, size: 22),
-                      const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          "${apartment.street}, City ID: ${apartment.cityId}",
-                          style:
-                          TextStyle(fontSize: 15, color: Colors.grey[700]),
+                          apartment.title,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "\$${apartment.rentValue}",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF274668),
                         ),
                       ),
                     ],
                   ),
 
-                  const SizedBox(height: 16),
+                  Text(
+                    "/ night",
+                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                  ),
 
-                  // ---------- معلومات الغرف والمساحة ----------
+                  SizedBox(height: 16),
+
+                  // الموقع
                   Row(
                     children: [
-                      _infoIcon(Icons.bed, "${apartment.rooms} Beds"),
-                      const SizedBox(width: 16),
-                      _infoIcon(Icons.square_foot,
-                          "${apartment.space.toString()} m²"),
+                      Icon(Icons.location_on, color: Color(0xFF274668)),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          apartment.street.isNotEmpty
+                              ? "${apartment.street}, City ${apartment.cityId}"
+                              : "City ${apartment.cityId}",
+                          style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                        ),
+                      ),
                     ],
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 24),
 
-                  // ---------- الوصف ----------
-                  Text(
-                    "Description",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    apartment.description,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black87,
-                      height: 1.5,
+                  // المواصفات الأساسية
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _specsItem(Icons.bed, "${apartment.rooms} Bedrooms"),
+                        _specsItem(Icons.square_foot, "${apartment.space} m²"),
+                        _specsItem(Icons.apartment, "Apartment"),
+                      ],
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 24),
 
-                  // ---------- الملاحظات ----------
+                  // الوصف
+                  Text(
+                    "Description",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    apartment.description.isNotEmpty
+                        ? apartment.description
+                        : "A beautiful apartment with modern amenities and comfortable living space.",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[700],
+                      height: 1.5,
+                    ),
+                  ),
+                  if (apartment.flatNumber.isNotEmpty)
+                    Text(
+                      "Flat No: ${apartment.flatNumber}",
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
+
+                  // الملاحظات
                   if (apartment.notes.isNotEmpty) ...[
+                    SizedBox(height: 24),
                     Text(
                       "Notes",
                       style: TextStyle(
@@ -138,37 +158,77 @@ class ApartmentDetailsPage extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 8),
                     Text(
                       apartment.notes,
                       style: TextStyle(
-                        fontSize: 15,
-                        height: 1.4,
-                        color: Colors.black87,
+                        fontSize: 16,
+                        color: Colors.grey[700],
+                        height: 1.5,
                       ),
                     ),
                   ],
 
-                  const SizedBox(height: 30),
+                  SizedBox(height: 80), // مساحة للزر الأسفل
                 ],
               ),
             ),
           ],
         ),
       ),
+
+      // ---------- زر الحجز ----------
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        width: double.infinity,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF274668),
+            padding: EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          onPressed: () {
+          //  Get.to(() => BookingPage(apartment: apartment));
+          },
+          child: Text(
+            "Book Now",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget _circleIcon(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.4),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: Colors.white, size: 20),
+      ),
     );
   }
 
-  // ---------- Widget للأيقونة + النص ----------
-  Widget _infoIcon(IconData icon, String text) {
-    return Row(
+  Widget _specsItem(IconData icon, String text) {
+    return Column(
       children: [
-        Icon(icon, size: 20, color: Colors.black87),
-        const SizedBox(width: 4),
+        Icon(icon, size: 28, color: Color(0xFF274668)),
+        SizedBox(height: 8),
         Text(
           text,
-          style: TextStyle(fontSize: 15, color: Colors.black87),
-        )
+          style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+          textAlign: TextAlign.center,
+        ),
       ],
     );
   }

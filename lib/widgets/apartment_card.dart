@@ -16,60 +16,90 @@ class ApartmentCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // IMAGE
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: apartment.houseImages.isNotEmpty
-                  ? Image.network(
-                apartment.houseImages[0],
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              )
-                  : Image.asset(
-                "images/photo_2025-11-30_12-36-36.jpg",
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+            // ---------- Image ----------
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16)),
+                  child: apartment.houseImages.isNotEmpty
+                      ? Image.network(
+                    apartment.houseImages.first,
+                    height: 140,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                      : Container(
+                    height: 140,
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.home, size: 50),
+                  ),
+                ),
+
+                // Favorite
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.4),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.favorite_border,
+                          color: Colors.white, size: 18),
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+              ],
             ),
 
+            // ---------- Content ----------
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Title
                   Text(
                     apartment.title,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                        fontSize: 15, fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
 
                   const SizedBox(height: 4),
 
+                  // Location
+                  Text(
+                    apartment.street.isNotEmpty
+                        ? apartment.street
+                        : "City ${apartment.cityId}",
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  // Price
                   Text(
                     "\$${apartment.rentValue} / night",
-                    style: TextStyle(
+                    style: const TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green[700]),
-                  ),
-
-                  const SizedBox(height: 4),
-
-                  Text(
-                    "${apartment.rooms} Beds • ${apartment.space} m²",
-                    style: const TextStyle(color: Colors.grey),
+                        color: Color(0xFF274668)),
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

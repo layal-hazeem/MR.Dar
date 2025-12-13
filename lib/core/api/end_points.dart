@@ -4,8 +4,7 @@ class EndPoint {
   static String signUp = "register";
   static const String getApartments = "houses"; // للحصول على القائمة
   static const String createApartment = "houses"; // لإنشاء شقة جديدة (نفس الرابط ولكن POST)
-  static const String searchApartments = "houses/search";
-  static const String filterApartments = "houses/filter";
+
 }
 
 class ApiKey {

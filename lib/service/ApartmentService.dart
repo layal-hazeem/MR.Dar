@@ -53,6 +53,33 @@ class ApartmentService {
       );
     }
   }
+//-------
+  Future<List<Apartment>> getApartmentsByQuery({
+    int? maxPrice,
+    String? orderBy,
+  }) async {
+    try {
+      final response = await api.dio.get(
+        EndPoint.getApartments,
+        queryParameters: {
+          if (maxPrice != null) 'max_price': maxPrice,
+          if (orderBy != null) 'order_by': orderBy,
+        },
+        options: Options(
+          validateStatus: (status) => true,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final List list = response.data['data'];
+        return list.map((e) => Apartment.fromJson(e)).toList();
+      }
+
+      return [];
+    } on DioException {
+      return [];
+    }
+  }
 
   // ========================= Create New Apartment =========================
   Future<Map<String, dynamic>> createApartment({
@@ -84,14 +111,14 @@ class ApartmentService {
       formData.fields.add(MapEntry('rooms', rooms.toString()));
       formData.fields.add(MapEntry('space', space.toString()));
       formData.fields.add(MapEntry('notes', notes));
+      formData.fields.add(MapEntry('city_id', cityId.toString()));
+
       formData.fields.add(MapEntry('governorate_id', governorateId.toString()));
       formData.fields.add(MapEntry('street', street));
       formData.fields.add(MapEntry('flat_number', flatNumber.toString()));
 
       // الحقول الاختيارية (nullable)
-      if (cityId != null) {
-        formData.fields.add(MapEntry('city_id', cityId.toString()));
-      }
+
 
       if (longitude != null) {
         formData.fields.add(MapEntry('longitude', longitude.toString()));
@@ -147,71 +174,5 @@ class ApartmentService {
   }
 
   // ========================= Search =========================
-  Future<List<Apartment>> searchApartments(String keyword) async {
-    try {
-      if (keyword.trim().isEmpty) return [];
 
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString("token") ?? "";
-
-      final response = await api.dio.get(
-        "${EndPoint.searchApartments}?q=$keyword",
-        options: Options(
-          headers: {"Authorization": "Bearer $token"},
-          validateStatus: (status) => true,
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        final data = response.data;
-
-        if (data is Map && data.containsKey("data")) {
-          final list = data["data"] as List;
-          return list.map((e) => Apartment.fromJson(e)).toList();
-        }
-      }
-
-      return [];
-    } on DioException {
-      return [];
-    }
-  }
-
-  // ========================= Filter =========================
-  Future<List<Apartment>> filterApartments({
-    int? cityId,
-    int? minPrice,
-    int? maxPrice,
-  }) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString("token") ?? "";
-
-      final response = await api.dio.post(
-        EndPoint.filterApartments,
-        data: {
-          "city_id": cityId,
-          "min_price": minPrice,
-          "max_price": maxPrice,
-        },
-        options: Options(
-          headers: {"Authorization": "Bearer $token"},
-          validateStatus: (status) => true,
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        final data = response.data;
-
-        if (data is Map && data.containsKey("data")) {
-          final list = data["data"] as List;
-          return list.map((e) => Apartment.fromJson(e)).toList();
-        }
-      }
-
-      return [];
-    } on DioException {
-      return [];
-    }
-  }
 }

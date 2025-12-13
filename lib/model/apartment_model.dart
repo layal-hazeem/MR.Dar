@@ -85,8 +85,9 @@ class Apartment {
       rooms: safeParseInt(json["rooms"]),
       space: safeParseDouble(json["space"]),
       notes: json["notes"]?.toString() ?? "",
-      cityId: safeParseInt(json["city_id"]),
-      governorateId: safeParseInt(json["governorate_id"]),
+      cityId: safeParseInt(json["address"]["city"]["id"]
+      ),
+      governorateId: safeParseInt(json['address']?['city']?['governorate']?['id']),
       street: json["street"]?.toString() ?? "",
       flatNumber: json["flat_number"]?.toString() ?? "",
       longitude: safeParseDouble(json["longitude"]),
