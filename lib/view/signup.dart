@@ -10,7 +10,7 @@ class Signup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // <-- خلفية بيضاء
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           "Join us & find your perfect home",
@@ -116,7 +116,6 @@ class Signup extends StatelessWidget {
                           ],
                         ),
 
-                        // 🔴 رسالة الخطأ تحت الخيارات
                         if (ctrl.roleError.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 6, left: 8),
@@ -213,7 +212,7 @@ class Signup extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  height: 65, // ↔️ تحكّمي بالحجم
+                                  height: 65,
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
                                     color: Color(0xFFF5F5F5),
@@ -239,8 +238,7 @@ class Signup extends StatelessWidget {
                                               ? "Profile Image"
                                               : "Profile Image Selected",
                                           style: TextStyle(
-                                            fontSize:
-                                                16, // ⬅️ حجم أصغر ليناسب المساحة
+                                            fontSize: 16,
                                             color:
                                                 ctrl.profileImage.value == null
                                                 ? Colors.black54
@@ -250,9 +248,8 @@ class Signup extends StatelessWidget {
                                                 ? FontWeight.w500
                                                 : FontWeight.w600,
                                           ),
-                                          maxLines: 2, // ⬅️ يسمح بسطرين
-                                          overflow: TextOverflow
-                                              .ellipsis, // ⬅️ لمنع التقطع
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                       Icon(
@@ -263,7 +260,6 @@ class Signup extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                // ⬅️ عرض رسالة الخطأ تحت الحقل
                                 if (ctrl.profileImageError.value.isNotEmpty)
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -296,7 +292,7 @@ class Signup extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  height: 65, // نفس الارتفاع
+                                  height: 65,
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
                                     color: Color(0xFFF5F5F5),
@@ -318,7 +314,7 @@ class Signup extends StatelessWidget {
                                               ? "ID Image"
                                               : "ID Image Selected",
                                           style: TextStyle(
-                                            fontSize: 16, // نفس حجم الخط
+                                            fontSize: 16,
                                             color: ctrl.idImage.value == null
                                                 ? Colors.black54
                                                 : Colors.black54,
@@ -327,9 +323,8 @@ class Signup extends StatelessWidget {
                                                 ? FontWeight.w500
                                                 : FontWeight.w600,
                                           ),
-                                          maxLines: 2, // ⬅️ يسمح بسطرين
-                                          overflow: TextOverflow
-                                              .ellipsis, // ⬅️ لمنع التقطع
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                       Icon(
@@ -340,7 +335,6 @@ class Signup extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                // ⬅️ عرض رسالة الخطأ تحت الحقل
                                 if (ctrl.idImageError.value.isNotEmpty)
                                   Padding(
                                     padding: const EdgeInsets.only(

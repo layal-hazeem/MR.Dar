@@ -10,7 +10,7 @@ class DioConsumer extends ApiConsumer {
 
   DioConsumer({required this.dio}) {
     dio.options.baseUrl = EndPoint.baseUrl;
-    dio.interceptors.add(ApiInterceptor()); //مراقبة ال request وال response
+    dio.interceptors.add(ApiInterceptor());
 
     dio.interceptors.add(
       InterceptorsWrapper(
@@ -26,7 +26,6 @@ class DioConsumer extends ApiConsumer {
         },
       ),
     );
-
 
     dio.interceptors.add(
       LogInterceptor(
@@ -66,10 +65,7 @@ class DioConsumer extends ApiConsumer {
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      final response = await dio.get(
-        path,
-        queryParameters: queryParameters,
-      );
+      final response = await dio.get(path, queryParameters: queryParameters);
 
       return response.data;
     } on DioException catch (e) {

@@ -27,10 +27,6 @@ class Login extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 40),
-
-                /// ---------------------------
-                ///           LOGO
-                /// ---------------------------
                 SizedBox(
                   height: 220,
                   width: 120,
@@ -39,10 +35,6 @@ class Login extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 30),
-
-                /// ---------------------------
-                ///      Welcome Text
-                /// ---------------------------
                 const Text(
                   "Welcome Back",
                   style: TextStyle(
@@ -54,9 +46,6 @@ class Login extends StatelessWidget {
 
                 const SizedBox(height: 10),
 
-                /// ---------------------------
-                ///     Centered Form
-                /// ---------------------------
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 28),
                   child: Form(
@@ -184,23 +173,23 @@ class Login extends StatelessWidget {
 
                         const SizedBox(height: 10),
 
-                        // GUEST LINK
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Continue as "),
-                            GestureDetector(
-                              onTap: () => Get.to(Home()),
-                              child: const Text(
-                                "Guest",
-                                style: TextStyle(
-                                  color: Color(0xFF274668),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // // GUEST LINK
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     const Text("Continue as "),
+                        //     GestureDetector(
+                        //       onTap: () => Get.to(Home()),
+                        //       child: const Text(
+                        //         "Guest",
+                        //         style: TextStyle(
+                        //           color: Color(0xFF274668),
+                        //           fontWeight: FontWeight.bold,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),

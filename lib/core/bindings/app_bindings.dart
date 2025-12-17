@@ -15,13 +15,10 @@ class AppBindings extends Bindings {
   void dependencies() {
     final dio = Dio();
 
-    // Dio يبقى دائم
     Get.put<Dio>(Dio(), permanent: true);
 
-    // DioConsumer يبقى دائم
     Get.put<DioConsumer>(DioConsumer(dio: Get.find<Dio>()), permanent: true);
 
-    // AuthService يبقى دائم
     Get.put<AuthService>(
       AuthService(api: Get.find<DioConsumer>()),
       permanent: true,

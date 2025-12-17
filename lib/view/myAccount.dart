@@ -78,7 +78,6 @@ class MyAccount extends StatelessWidget {
                   ),
 
             const SizedBox(height: 30),
-            // معلومات المستخدم
             _buildInfoCard("👤", "Name", "${user.firstName} ${user.lastName}"),
             _buildInfoCard("📱", "Phone", user.phone),
             _buildInfoCard("🎭", "Role", user.role),

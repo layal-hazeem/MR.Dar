@@ -11,7 +11,6 @@ class AuthController extends GetxController {
   Future<void> logout() async {
     await authService.signOut();
 
-    // بعد حذف البيانات نوجّه المستخدم على صفحة تسجيل الدخول
     Get.offAll(() => const WelcomePage());
   }
 }

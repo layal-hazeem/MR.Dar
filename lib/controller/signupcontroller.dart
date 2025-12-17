@@ -44,7 +44,6 @@ class SignupController extends GetxController {
     update();
   }
 
-  // اختيار صورة Profile من Camera أو Gallery
   void selectProfileImage() {
     Get.bottomSheet(
       Column(
@@ -61,7 +60,7 @@ class SignupController extends GetxController {
               );
               if (image != null) {
                 profileImage.value = image;
-                profileImageError.value = ""; // إزالة رسالة الخطأ
+                profileImageError.value = "";
 
                 update();
               }
@@ -78,7 +77,7 @@ class SignupController extends GetxController {
               );
               if (image != null) {
                 profileImage.value = image;
-                profileImageError.value = ""; // إزالة رسالة الخطأ
+                profileImageError.value = "";
 
                 update();
               }
@@ -91,7 +90,6 @@ class SignupController extends GetxController {
     );
   }
 
-  // اختيار صورة ID
   void pickIdImage() async {
     Get.bottomSheet(
       Column(
@@ -108,7 +106,7 @@ class SignupController extends GetxController {
               );
               if (image != null) {
                 idImage.value = image;
-                idImageError.value = ""; // إزالة رسالة الخطأ
+                idImageError.value = "";
                 update();
               }
             },
@@ -124,7 +122,7 @@ class SignupController extends GetxController {
               );
               if (image != null) {
                 idImage.value = image;
-                idImageError.value = ""; // إزالة رسالة الخطأ
+                idImageError.value = "";
                 update();
               }
             },
@@ -138,26 +136,23 @@ class SignupController extends GetxController {
 
   void setRole(int type) {
     role.value = type;
-    roleError = ""; // مسح الخطأ أول ما يختار
+    roleError = "";
     update();
   }
 
   void setBirthDate(String date) {
     birthDate.value = date;
-    birthDateController.text = date; // نحدث الكونترولر للنص
+    birthDateController.text = date;
     update();
   }
 
-  // دالة للتحقق من صحة جميع الحقول
   bool validateAllFields() {
     bool isValid = true;
 
-    // التحقق من الحقول النصية باستخدام formKey
     if (!(formKey.currentState?.validate() ?? false)) {
       isValid = false;
     }
 
-    // التحقق من صورة الملف الشخصي
     if (profileImage.value == null) {
       profileImageError.value = "Profile image is required!";
       isValid = false;
@@ -165,7 +160,6 @@ class SignupController extends GetxController {
       profileImageError.value = "";
     }
 
-    // التحقق من صورة الهوية
     if (idImage.value == null) {
       idImageError.value = "ID image is required!";
       isValid = false;
@@ -173,7 +167,6 @@ class SignupController extends GetxController {
       idImageError.value = "";
     }
 
-    // التحقق من تاريخ الميلاد
     if (birthDate.value.isEmpty) {
       birthDateController.text = "";
       isValid = false;
@@ -186,7 +179,6 @@ class SignupController extends GetxController {
       roleError = "";
     }
 
-    // التحقق من تطابق كلمات المرور
     if (passwordController.text != confirmPasswordController.text) {
       Get.snackbar('Error', 'Passwords do not match');
       isValid = false;
@@ -199,7 +191,6 @@ class SignupController extends GetxController {
   void onInit() {
     super.onInit();
 
-    // Listener لمسح رسالة الخطأ بس لما المستخدم يبلش يكتب
     phoneController.addListener(() {
       if (phoneError.isNotEmpty) {
         phoneError = "";
@@ -209,9 +200,8 @@ class SignupController extends GetxController {
   }
 
   Future<void> signupUser() async {
-    // أولاً: التحقق من جميع الحقول
     if (!validateAllFields()) {
-      update(); // لتحديث واجهة المستخدم وعرض رسائل الخطأ
+      update();
       return;
     }
 
@@ -233,18 +223,7 @@ class SignupController extends GetxController {
         idImage: idImage.value != null ? File(idImage.value!.path) : null,
       );
 
-      // بعد التسجيل، تأكد من حفظ البيانات
       final prefs = await SharedPreferences.getInstance();
-
-      // طباعة كل البيانات للتأكد من حفظها
-      print("📋 بعد التسجيل - البيانات المحفوظة في SharedPreferences:");
-      print("   id: ${prefs.getString("id")}");
-      print("   first_name: ${prefs.getString("first_name")}");
-      print("   last_name: ${prefs.getString("last_name")}");
-      print("   phone: ${prefs.getString("phone")}");
-      print("   role: ${prefs.getString("role")}");
-      print("   date_of_birth: ${prefs.getString("date_of_birth")}");
-      print("   token: ${prefs.getString("token")?.substring(0, 20)}...");
 
       isLoading = false;
       update();
@@ -260,12 +239,10 @@ class SignupController extends GetxController {
       isLoading = false;
       update();
 
-      // إذا كان الخطأ موجود عند الهاتف
       if (e.errModel.errors != null && e.errModel.errors!['phone'] != null) {
         phoneError = e.errModel.errors!['phone'][0].toString();
         update();
 
-        // نظهر رسالة Snackbar للمستخدم
         Get.snackbar(
           "Account exists",
           phoneError,
@@ -274,7 +251,6 @@ class SignupController extends GetxController {
           snackPosition: SnackPosition.BOTTOM,
         );
       } else {
-        // إذا كان الخطأ عام
         Get.snackbar(
           "Signup failed",
           e.errModel.errorMessage,
@@ -284,9 +260,8 @@ class SignupController extends GetxController {
         );
       }
 
-      // طباعة الأخطاء للdebug
-      print("❌ ServerException message: ${e.errModel.errorMessage}");
-      print("❌ ServerException errors: ${e.errModel.errors}");
+      print(" ServerException message: ${e.errModel.errorMessage}");
+      print(" ServerException errors: ${e.errModel.errors}");
     } catch (e) {
       isLoading = false;
       update();

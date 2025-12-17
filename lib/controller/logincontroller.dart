@@ -17,7 +17,6 @@ class LoginController extends GetxController {
   String? phoneError;
   String? passError;
 
-
   void togglePassword() {
     isPasswordHidden = !isPasswordHidden;
     update();
@@ -36,8 +35,6 @@ class LoginController extends GetxController {
         phone: phoneController.text.trim(),
         password: passwordController.text.trim(),
       );
-
-      print("✅ Login successful, token: $token");
 
       isLoading = false;
       update();

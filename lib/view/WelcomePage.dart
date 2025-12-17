@@ -13,7 +13,6 @@ class WelcomePage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // -------- الصورة كخلفية --------
           SizedBox(
             height: screenHeight,
             width: double.infinity,
@@ -23,7 +22,6 @@ class WelcomePage extends StatelessWidget {
             ),
           ),
 
-          // -------- الكونتينر السفلي المدور --------
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -43,8 +41,10 @@ class WelcomePage extends StatelessWidget {
                 ],
               ),
               child: Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 25,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -68,11 +68,14 @@ class WelcomePage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(25),
                             ),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 15),
+                              horizontal: 40,
+                              vertical: 15,
+                            ),
                           ),
-                          child: const Text("Login",
-                              style:
-                              TextStyle(color: Colors.white, fontSize: 18)),
+                          child: const Text(
+                            "Login",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
                         ),
                         ElevatedButton(
                           onPressed: () => Get.to(Signup()),
@@ -82,35 +85,41 @@ class WelcomePage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(25),
                             ),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 15),
+                              horizontal: 40,
+                              vertical: 15,
+                            ),
                           ),
-                          child: const Text("Sign Up",
-                              style: TextStyle(
-                                  color: Colors.black87, fontSize: 18)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          " or Continue as a",
-                          style: TextStyle(fontSize: 20, color: Colors.black54),
-                        ),
-                        TextButton(
-                          onPressed: () {},
                           child: const Text(
-                            "Guest",
+                            "Sign Up",
                             style: TextStyle(
-                              fontSize: 19,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF274668),
+                              color: Colors.black87,
+                              fontSize: 18,
                             ),
                           ),
                         ),
                       ],
                     ),
+                    // const SizedBox(height: 20),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     const Text(
+                    //       " or Continue as a",
+                    //       style: TextStyle(fontSize: 20, color: Colors.black54),
+                    //     ),
+                    //     TextButton(
+                    //       onPressed: () {},
+                    //       child: const Text(
+                    //         "Guest",
+                    //         style: TextStyle(
+                    //           fontSize: 19,
+                    //           fontWeight: FontWeight.bold,
+                    //           color: Color(0xFF274668),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),

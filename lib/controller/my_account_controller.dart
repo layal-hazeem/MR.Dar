@@ -18,16 +18,6 @@ class MyAccountController extends GetxController {
 
       final prefs = await SharedPreferences.getInstance();
 
-      // طباعة كل البيانات المخزنة للتشخيص
-      print("📱 SharedPreferences Data:");
-      print("   id: ${prefs.getString("id")}");
-      print("   first_name: ${prefs.getString("first_name")}");
-      print("   last_name: ${prefs.getString("last_name")}");
-      print("   phone: ${prefs.getString("phone")}");
-      print("   role: ${prefs.getString("role")}");
-      print("   date_of_birth: ${prefs.getString("date_of_birth")}");
-      print("   token: ${prefs.getString("token")?.substring(0, 20)}...");
-
       final userData = {
         "id": prefs.getString("id") ?? "0",
         "first_name": prefs.getString("first_name") ?? "Unknown",

@@ -2,9 +2,8 @@ class EndPoint {
   static String baseUrl = "http://10.0.2.2:8000/api/";
   static String logIn = "login";
   static String signUp = "register";
-  static const String getApartments = "houses"; // للحصول على القائمة
-  static const String createApartment = "houses"; // لإنشاء شقة جديدة (نفس الرابط ولكن POST)
-
+  static const String getApartments = "houses";
+  static const String createApartment = "houses";
 }
 
 class ApiKey {
