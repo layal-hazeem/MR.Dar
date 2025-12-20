@@ -4,6 +4,7 @@ import '../../controller/ApartmentController.dart';
 import '../../controller/FilterController.dart';
 import '../../controller/UserController.dart';
 import '../../controller/authcontroller.dart';
+import '../../controller/edit_profile_controller.dart';
 import '../../controller/homecontroller.dart';
 import '../../controller/my_account_controller.dart';
 import '../../service/ApartmentService.dart';
@@ -40,12 +41,12 @@ class AppBindings extends Bindings {
     Get.put<HomeController>(HomeController(), permanent: true);
 
     Get.lazyPut<LoginController>(
-          () => LoginController(api: authService),
+      () => LoginController(api: authService),
       fenix: true,
     );
 
     Get.lazyPut<SignupController>(
-          () => SignupController(api: authService),
+      () => SignupController(api: authService),
       fenix: true,
     );
 
@@ -61,20 +62,23 @@ class AppBindings extends Bindings {
     }, fenix: true);
 
     Get.lazyPut<ApartmentController>(
-          () => ApartmentController(service: apartmentService),
+      () => ApartmentController(service: apartmentService),
       fenix: true,
     );
 
     // ✅ تأكد من أن MyAccountController يحتوي على constructor يأخذ userService
     Get.lazyPut<MyAccountController>(
-          () => MyAccountController(service: userService), // ✅ تأكد من اسم المعلمة
+      () => MyAccountController(service: userService), // ✅ تأكد من اسم المعلمة
       fenix: true,
     );
-
+    Get.lazyPut<EditProfileController>(
+      () => EditProfileController(
+        userService: Get.find<UserService>(),
+        myAccountController: Get.find<MyAccountController>(),
+      ),
+      fenix: true,
+    );
     // 4. Register FilterController (مرة واحدة فقط)
-    Get.lazyPut<FilterController>(
-          () => FilterController(),
-      fenix: true,
-    );
+    Get.lazyPut<FilterController>(() => FilterController(), fenix: true);
   }
 }

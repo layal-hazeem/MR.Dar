@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controller/my_account_controller.dart';
 import '../controller/authcontroller.dart';
 import '../model/user_model.dart';
+import 'edit_profile.dart';
 
 class MyAccount extends StatelessWidget {
   MyAccount({super.key});
@@ -111,29 +112,50 @@ class MyAccount extends StatelessWidget {
             ),
 
             const SizedBox(height: 25),
-            _buildIdImage(user),
+
             // ===== User Details =====
             _buildInfoCard("📱", "Phone", user.phone),
             _buildInfoCard("🎂", "Date of Birth", user.dateOfBirth),
             const SizedBox(height: 30),
-
-            // ===== Refresh Button =====
-            Center(
-              child: OutlinedButton.icon(
-                onPressed: () => controller.loadProfile(),
-                icon: Icon(Icons.refresh),
-                label: Text("Refresh Data"),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 12,
+            _buildIdImage(user),
+            const SizedBox(height: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // ===== Refresh Button =====
+                Center(
+                  child: OutlinedButton.icon(
+                    onPressed: () => controller.loadProfile(),
+                    icon: Icon(Icons.refresh),
+                    label: Text("Refresh Data"),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 12,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+
+                const SizedBox(height: 20),
+                // زر التعديل
+                Center(
+                  child: OutlinedButton.icon(
+                    onPressed: () => Get.to(() => EditProfileScreen()),
+                    icon: Icon(Icons.edit),
+                    label: Text("Edit Profile"),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 12,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
 
-            const SizedBox(height: 20),
-
+            const SizedBox(height: 30),
             // ===== Logout Button =====
             Center(
               child: ElevatedButton.icon(
@@ -185,7 +207,7 @@ class MyAccount extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             child: Image.network(
               user.idImage!,
-              height: 200,
+              height: 100,
               width: double.infinity,
               fit: BoxFit.cover,
               loadingBuilder: (context, child, loadingProgress) {
