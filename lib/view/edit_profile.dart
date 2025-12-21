@@ -263,61 +263,70 @@ class EditProfileScreen extends StatelessWidget {
               SizedBox(height: 20),
 
               // Current Password
-              TextFormField(
-                controller: controller.currentPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Current Password',
-                  prefixIcon: Icon(Icons.lock),
-                  border: OutlineInputBorder(),
+              Obx(
+                () => TextFormField(
+                  controller: controller.currentPasswordController,
+                  obscureText: !controller.showCurrentPassword.value,
+                  decoration: InputDecoration(
+                    labelText: 'Current Password',
+                    prefixIcon: Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.showCurrentPassword.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: controller.showCurrentPassword.toggle,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-                validator: (value) {
-                  if (controller.hasPasswordChanges &&
-                      (value == null || value.isEmpty)) {
-                    return 'Current password is required';
-                  }
-                  return null;
-                },
               ),
 
               SizedBox(height: 16),
 
               // New Password
-              TextFormField(
-                controller: controller.newPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'New Password',
-                  prefixIcon: Icon(Icons.lock_outline),
-                  border: OutlineInputBorder(),
+              Obx(
+                () => TextFormField(
+                  controller: controller.newPasswordController,
+                  obscureText: !controller.showNewPassword.value,
+                  decoration: InputDecoration(
+                    labelText: 'New Password',
+                    prefixIcon: Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.showNewPassword.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: controller.showNewPassword.toggle,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-                validator: (value) {
-                  if (controller.currentPasswordController.text.isNotEmpty &&
-                      (value == null || value.length < 8)) {
-                    return 'Password must be at least 8 characters';
-                  }
-                  return null;
-                },
               ),
 
               SizedBox(height: 16),
 
               // Confirm Password
-              TextFormField(
-                controller: controller.confirmPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Confirm New Password',
-                  prefixIcon: Icon(Icons.lock_reset),
-                  border: OutlineInputBorder(),
+              Obx(
+                () => TextFormField(
+                  controller: controller.confirmPasswordController,
+                  obscureText: !controller.showConfirmPassword.value,
+                  decoration: InputDecoration(
+                    labelText: 'Confirm New Password',
+                    prefixIcon: Icon(Icons.lock_reset),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.showConfirmPassword.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: controller.showConfirmPassword.toggle,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-                validator: (value) {
-                  if (controller.newPasswordController.text.isNotEmpty &&
-                      value != controller.newPasswordController.text) {
-                    return 'Passwords do not match';
-                  }
-                  return null;
-                },
               ),
 
               SizedBox(height: 16),
@@ -355,13 +364,12 @@ class EditProfileScreen extends StatelessWidget {
             Text('Please enter your current password to confirm:'),
             SizedBox(height: 10),
             TextFormField(
+              controller: controller.confirmDialogPasswordController,
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Current Password',
                 border: OutlineInputBorder(),
               ),
-              onChanged: (value) =>
-                  controller.currentPasswordController.text = value,
             ),
           ],
         ),
@@ -372,32 +380,34 @@ class EditProfileScreen extends StatelessWidget {
               onPressed: controller.isUpdating.value
                   ? null
                   : () async {
-                      if (controller.hasPasswordChanges) {
-                        // تغيير كلمة المرور
-                        final success = await controller.changePassword();
-                        if (success) {
-                          Get.back();
-                          Get.snackbar(
-                            'Success',
-                            'Password changed successfully!',
-                            backgroundColor: Colors.green,
-                            colorText: Colors.white,
-                          );
-                        }
-                      } else if (controller.hasChanges) {
-                        // تحديث الملف الشخصي
-                        final success = await controller.updateProfile(
-                          password: controller.currentPasswordController.text,
+                      final password = controller
+                          .confirmDialogPasswordController
+                          .text
+                          .trim();
+
+                      if (password.isEmpty) {
+                        Get.snackbar(
+                          'Error',
+                          'Please enter your current password',
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
                         );
-                        if (success) {
-                          Get.back();
-                          Get.snackbar(
-                            'Success',
-                            'Profile updated successfully!',
-                            backgroundColor: Colors.green,
-                            colorText: Colors.white,
-                          );
-                        }
+                        return;
+                      }
+
+                      bool success = false;
+
+                      if (controller.hasPasswordChanges) {
+                        success = await controller.changePassword();
+                      } else if (controller.hasChanges) {
+                        success = await controller.updateProfile(
+                          password: password, // ✅ الصح
+                        );
+                      }
+
+                      if (success) {
+                        controller.confirmDialogPasswordController.clear();
+                        Get.back(); // ✅ هلّق الدايلوج أكيد تسكّر
                       }
                     },
               child: controller.isUpdating.value

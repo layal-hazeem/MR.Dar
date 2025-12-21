@@ -15,40 +15,53 @@ class EditProfileController extends GetxController {
     required this.myAccountController,
   });
 
-  // متغيرات التحميل
+  // Loading
   final isLoading = false.obs;
   final isUpdating = false.obs;
 
-  // معلومات المستخدم الحالية
+  // Current data
   String? currentFirstName;
   String? currentLastName;
   String? currentPhone;
   String? currentProfileImage;
 
-  // Controllers
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController currentPasswordController = TextEditingController();
-  TextEditingController newPasswordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  // Text Controllers
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final phoneController = TextEditingController();
 
-  // التحقق من الصحة
+  final currentPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  // Dialog password
+  final confirmDialogPasswordController = TextEditingController();
+
+  // Forms
   final formKey = GlobalKey<FormState>();
   final passwordFormKey = GlobalKey<FormState>();
 
-  // إدارة الصور
-  final Rx<XFile?> selectedImage = Rx<XFile?>(null);
-  final ImagePicker picker = ImagePicker();
+  // Image
+  final selectedImage = Rx<XFile?>(null);
+  final picker = ImagePicker();
 
-  // رسائل الأخطاء
-  final RxString errorMessage = ''.obs;
-  final RxString successMessage = ''.obs;
+  // Messages
+  final errorMessage = ''.obs;
+  final successMessage = ''.obs;
+
+  // Changes tracking
+  final hasProfileChanges = false.obs;
+
+  // Password visibility
+  final showCurrentPassword = false.obs;
+  final showNewPassword = false.obs;
+  final showConfirmPassword = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     _loadCurrentUserData();
+    _listenToChanges();
   }
 
   void _loadCurrentUserData() {
@@ -65,191 +78,89 @@ class EditProfileController extends GetxController {
     }
   }
 
-  // اختيار صورة جديدة
-  Future<void> selectProfileImage() async {
-    Get.bottomSheet(
-      Container(
-        color: Colors.white,
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: Icon(Icons.photo_library),
-              title: Text('Choose from Gallery'),
-              onTap: () async {
-                Get.back();
-                final image = await picker.pickImage(
-                  source: ImageSource.gallery,
-                );
-                if (image != null) {
-                  selectedImage.value = image;
-                }
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.camera_alt),
-              title: Text('Take a Photo'),
-              onTap: () async {
-                Get.back();
-                final image = await picker.pickImage(
-                  source: ImageSource.camera,
-                );
-                if (image != null) {
-                  selectedImage.value = image;
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+  void _listenToChanges() {
+    firstNameController.addListener(_checkChanges);
+    lastNameController.addListener(_checkChanges);
+    phoneController.addListener(_checkChanges);
   }
 
-  // التحقق إذا كانت هناك تغييرات
-  bool get hasChanges {
-    return firstNameController.text != currentFirstName ||
-        lastNameController.text != currentLastName ||
-        phoneController.text != currentPhone ||
+  void _checkChanges() {
+    hasProfileChanges.value =
+        firstNameController.text.trim() != currentFirstName ||
+        lastNameController.text.trim() != currentLastName ||
+        phoneController.text.trim() != currentPhone ||
         selectedImage.value != null;
   }
 
-  bool get hasPasswordChanges {
-    return newPasswordController.text.isNotEmpty ||
-        confirmPasswordController.text.isNotEmpty;
+  bool get hasChanges => hasProfileChanges.value;
+
+  bool get hasPasswordChanges =>
+      newPasswordController.text.isNotEmpty ||
+      confirmPasswordController.text.isNotEmpty;
+
+  // Image picker
+  Future<void> selectProfileImage() async {
+    final image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      selectedImage.value = image;
+      _checkChanges();
+    }
   }
 
-  // تحديث المعلومات الأساسية
+  // Update profile
   Future<bool> updateProfile({required String password}) async {
     try {
       isUpdating.value = true;
-      errorMessage.value = '';
-      successMessage.value = '';
 
-      // التحقق من كلمة المرور
-      final isValidPassword = await _verifyPassword(password);
-      if (!isValidPassword) {
-        errorMessage.value = 'Incorrect password';
-        isUpdating.value = false;
-        return false;
-      }
-
-      // إعداد البيانات
-      final formData = FormData(); // ✅ هذا صحيح الآن بعد استيراد Dio
-
-      // البيانات النصية
+      final formData = FormData();
       formData.fields.addAll([
         MapEntry('first_name', firstNameController.text.trim()),
         MapEntry('last_name', lastNameController.text.trim()),
         MapEntry('phone', phoneController.text.trim()),
-        MapEntry('current_password', password), // إرسال كلمة المرور الحالية
+        MapEntry('current_password', password),
       ]);
 
-      // صورة الملف الشخصي الجديدة
       if (selectedImage.value != null) {
         final file = File(selectedImage.value!.path);
-        if (file.existsSync()) {
-          formData.files.add(
-            MapEntry(
-              'profile_image',
-              await MultipartFile.fromFile(
-                file.path,
-                filename:
-                    'profile_${DateTime.now().millisecondsSinceEpoch}.jpg',
-              ),
-            ),
-          );
-        }
+        formData.files.add(
+          MapEntry('profile_image', await MultipartFile.fromFile(file.path)),
+        );
       }
 
-      // إرسال الطلب
       final response = await userService.updateProfile(formData);
 
       if (response['success'] == true || response['status'] == 'success') {
-        successMessage.value = 'Profile updated successfully!';
-
-        // تحديث البيانات المحلية
-        await myAccountController
-            .loadProfile(); // ✅ إزالة forceRefresh إذا لم تكن موجودة
-
-        // إعادة تعيين
+        await myAccountController.loadProfile();
         _loadCurrentUserData();
         selectedImage.value = null;
-
+        hasProfileChanges.value = false;
         return true;
-      } else {
-        errorMessage.value = response['message'] ?? 'Update failed';
-        return false;
       }
-    } catch (e) {
-      errorMessage.value = 'Error: ${e.toString()}';
+      errorMessage.value = response['message'] ?? 'Update failed';
       return false;
     } finally {
       isUpdating.value = false;
     }
   }
 
-  // تغيير كلمة المرور
+  // Change password
   Future<bool> changePassword() async {
-    try {
-      isUpdating.value = true;
-      errorMessage.value = '';
-      successMessage.value = '';
+    if (!passwordFormKey.currentState!.validate()) return false;
 
-      // التحقق من صحة النموذج
-      if (!passwordFormKey.currentState!.validate()) {
-        isUpdating.value = false;
-        return false;
-      }
+    final response = await userService.changePassword(
+      currentPassword: currentPasswordController.text,
+      newPassword: newPasswordController.text,
+      confirmPassword: confirmPasswordController.text,
+    );
 
-      // التحقق من تطابق كلمات المرور الجديدة
-      if (newPasswordController.text != confirmPasswordController.text) {
-        errorMessage.value = 'New passwords do not match';
-        isUpdating.value = false;
-        return false;
-      }
-
-      // التحقق من كلمة المرور القديمة
-      final isValidPassword = await _verifyPassword(
-        currentPasswordController.text,
-      );
-      if (!isValidPassword) {
-        errorMessage.value = 'Current password is incorrect';
-        isUpdating.value = false;
-        return false;
-      }
-
-      // إعداد بيانات تغيير كلمة المرور
-      final response = await userService.changePassword(
-        currentPassword: currentPasswordController.text,
-        newPassword: newPasswordController.text,
-        confirmPassword: confirmPasswordController.text,
-      );
-
-      if (response['success'] == true || response['status'] == 'success') {
-        successMessage.value = 'Password changed successfully!';
-
-        // إعادة تعيين الحقول
-        currentPasswordController.clear();
-        newPasswordController.clear();
-        confirmPasswordController.clear();
-
-        return true;
-      } else {
-        errorMessage.value = response['message'] ?? 'Password change failed';
-        return false;
-      }
-    } catch (e) {
-      errorMessage.value = 'Error: ${e.toString()}';
-      return false;
-    } finally {
-      isUpdating.value = false;
+    if (response['success'] == true || response['status'] == 'success') {
+      currentPasswordController.clear();
+      newPasswordController.clear();
+      confirmPasswordController.clear();
+      return true;
     }
-  }
-
-  // التحقق من كلمة المرور الحالية
-  Future<bool> _verifyPassword(String password) async {
-    // هنا يمكنك إضافة API call للتحقق من كلمة المرور
-    // أو استخدام الـ token الموجود
-    return password.isNotEmpty && password.length >= 8;
+    errorMessage.value = response['message'] ?? 'Password change failed';
+    return false;
   }
 
   @override
