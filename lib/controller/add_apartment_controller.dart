@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import '../model/city_model.dart';
 import '../model/governorate_model.dart';
 import '../service/ApartmentService.dart';
 
@@ -34,7 +35,7 @@ class AddApartmentController extends GetxController {
 
   // location
   var governorates = <GovernorateModel>[].obs;
-  var cities = [].obs;
+  var cities = <CityModel>[].obs;
   var selectedGovernorateId = RxnInt();
   var selectedCityId = RxnInt();
 
@@ -59,6 +60,9 @@ class AddApartmentController extends GetxController {
         governorates.firstWhere((g) => g.id == id).cities;
     selectedCityId.value = null;
   }
+  void onCitySelected(int id) {
+    selectedCityId.value = id;
+  }
 
   bool validate() {
     if (title.isEmpty ||
@@ -77,39 +81,51 @@ class AddApartmentController extends GetxController {
 
   Future<void> submit() async {
     if (!validate()) return;
+try {
+  isLoading.value = true;
 
-    isLoading.value = true;
+  await service.createApartment(
+    title: title.value,
+    description: description.value,
+    rentValue: double.parse(rentValue.value),
+    rooms: int.parse(rooms.value),
+    space: double.parse(space.value),
+    notes: "",
+    // ❌ ما عم نستخدمها
+    governorateId: selectedGovernorateId.value!,
+    cityId: selectedCityId.value!,
+    street: street.value,
+    flatNumber: flatNumber.value,
+    longitude: null,
+    latitude: null,
+    houseImages: images,
+  );
 
-    await service.createApartment(
-      title: title.value,
-      description: description.value,
-      rentValue: double.parse(rentValue.value),
-      rooms: int.parse(rooms.value),
-      space: double.parse(space.value),
-      notes: "", // ❌ ما عم نستخدمها
-      governorateId: selectedGovernorateId.value!,
-      cityId: selectedCityId.value!,
-      street: street.value,
-      flatNumber: int.parse(flatNumber.value),
-      longitude: null,
-      latitude: null,
-      houseImages: images,
-    );
+  isLoading.value = false;
 
-    isLoading.value = false;
+  Get.offAllNamed('/home');
 
-    Get.offAllNamed('/home');
-
+  Get.snackbar(
+    "Apartment added 🏠",
+    "Your apartment was added successfully\nWaiting for admin approval",
+    backgroundColor: const Color(0xFF0F2A44),
+    colorText: Colors.white,
+    snackPosition: SnackPosition.BOTTOM,
+    margin: const EdgeInsets.all(16),
+    borderRadius: 16,
+    duration: const Duration(seconds: 3),
+  );
+} catch (e) {
+    // ❌ فشل
     Get.snackbar(
-      "Apartment added 🏠",
-      "Your apartment was added successfully\nWaiting for admin approval",
-      backgroundColor: const Color(0xFF0F2A44),
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
-      borderRadius: 16,
-      duration: const Duration(seconds: 3),
+    "Error",
+    e.toString(),
+    backgroundColor: Colors.red,
+    colorText: Colors.white,
     );
+    } finally {
+    // 🔴 هذا أهم سطر
+    isLoading.value = false;
+  }}
 
-  }
 }

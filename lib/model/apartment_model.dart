@@ -14,8 +14,8 @@ class Apartment {
 
   final String street;
   final String flatNumber;
-  final double longitude;
-  final double latitude;
+  final double? longitude;
+  final double? latitude;
 
   final List<String> houseImages;
 
@@ -75,8 +75,13 @@ class Apartment {
 
       street: address['street'] ?? '',
       flatNumber: address['flat_number']?.toString() ?? '',
-      longitude: safeDouble(address['longitude']),
-      latitude: safeDouble(address['latitude']),
+      longitude: address['longitude'] == null
+          ? null
+          : double.tryParse(address['longitude'].toString()),
+
+      latitude: address['latitude'] == null
+          ? null
+          : double.tryParse(address['latitude'].toString()),
 
       houseImages: parseImages(json['images']),
     );

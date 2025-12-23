@@ -81,7 +81,6 @@ class AddApartmentPage extends StatelessWidget {
   Widget _basicInfoStep() {
     return _card(
       Column(
-
         children: [
           _input("Title", onChanged: (v) => controller.title.value = v),
           _input("Description",
@@ -96,7 +95,6 @@ class AddApartmentPage extends StatelessWidget {
           _input("Space (m²)",
               keyboard: TextInputType.number,
               onChanged: (v) => controller.space.value = v),
-
       _nextButton(() {
         controller.goToStep(1, pageController);
       }),
@@ -116,12 +114,15 @@ class AddApartmentPage extends StatelessWidget {
               hint: "Governorate",
               value: controller.selectedGovernorateId.value,
               items: controller.governorates
-                  .map((g) => DropdownMenuItem(
-                value: g.id,
-                child: Text(g.name),
+                  .map((governorate) => DropdownMenuItem(
+                value: governorate.id,
+                child: Text(governorate.name),
               ))
                   .toList(),
-              onChanged: (v) => controller.onGovernorateSelected(v!),
+        onChanged: (int? newValue) {
+          if (newValue != null) {
+            controller.onGovernorateSelected(newValue);
+          }}
             ),
           ),
           Obx(
@@ -130,14 +131,16 @@ class AddApartmentPage extends StatelessWidget {
               value: controller.selectedCityId.value,
               items: controller.cities
                   .map<DropdownMenuItem<int>>(
-                    (c) => DropdownMenuItem(
-                  value: c.id,
-                  child: Text(c.name),
+                    (city) => DropdownMenuItem(
+                  value: city.id,
+                  child: Text(city.name),
                 ),
               )
                   .toList(),
-              onChanged: (v) => controller.selectedCityId.value = v,
-            ),
+              onChanged: (int? newValue) {
+    if (newValue != null) {
+    controller.onCitySelected(newValue);
+    }}),
           ),
           _input("Street", onChanged: (v) => controller.street.value = v),
           _input("Flat Number",

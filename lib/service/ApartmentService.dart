@@ -239,7 +239,7 @@ class ApartmentService {
     required int governorateId,
     required int? cityId,
     required String street,
-    required int flatNumber,
+    required String flatNumber,
     required int? longitude,
     required int? latitude,
     required List<XFile> houseImages,
@@ -249,35 +249,28 @@ class ApartmentService {
       final token = prefs.getString("token") ?? "";
 
       // FormData
-      final formData = FormData();
+      final formData = FormData.fromMap({
+        'title': title,
+        'description': description,
+        'rent_value': rentValue,
+        'rooms': rooms,
+        'space': space,
+        'notes': notes,
+        'governorate_id': governorateId,
+        'city_id': cityId,
+        'street': street,
+        'flat_number': flatNumber,
+        'longitude': longitude ?? 0,
+        'latitude': latitude ?? 0,
+      });
 
-      formData.fields.add(MapEntry('title', title));
-      formData.fields.add(MapEntry('description', description));
-      formData.fields.add(MapEntry('rent_value', rentValue.toString()));
-      formData.fields.add(MapEntry('rooms', rooms.toString()));
-      formData.fields.add(MapEntry('space', space.toString()));
-      formData.fields.add(MapEntry('notes', notes));
-      formData.fields.add(MapEntry('city_id', cityId.toString()));
-      formData.fields.add(MapEntry('governorate_id', governorateId.toString()));
-      formData.fields.add(MapEntry('street', street));
-      formData.fields.add(MapEntry('flat_number', flatNumber.toString()));
-
-      if (longitude != null) {
-        formData.fields.add(MapEntry('longitude', longitude.toString()));
-      }
-
-      if (latitude != null) {
-        formData.fields.add(MapEntry('latitude', latitude.toString()));
-      }
-
-      for (int i = 0; i < houseImages.length; i++) {
-        final image = houseImages[i];
+      for (var image in houseImages) {
         formData.files.add(
           MapEntry(
-            'house_images[$i]',
+            'house_images[]',
             await MultipartFile.fromFile(
               image.path,
-              filename: 'image_$i.jpg',
+              filename: image.name,
             ),
           ),
         );
@@ -289,7 +282,7 @@ class ApartmentService {
         options: Options(
           headers: {
             "Authorization": "Bearer $token",
-            "Content-Type": "multipart/form-data",
+            "Accept": "application/json",
           },
           validateStatus: (status) => true,
         ),
