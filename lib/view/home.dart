@@ -34,7 +34,6 @@ class Home extends StatelessWidget {
                 backgroundColor: const Color(0xFF274668),
                 onPressed: () {
                   Get.to(() => AddApartmentPage());
-
                 },
                 child: const Icon(Icons.add),
               )
@@ -77,14 +76,6 @@ class Home extends StatelessWidget {
               }),
             ]
           : [],
-      leading: index == 0
-          ? Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              ),
-            )
-          : null,
     );
   }
 

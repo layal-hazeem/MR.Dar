@@ -20,26 +20,43 @@ class AppBindings extends Bindings {
   @override
   void dependencies() {
     final dio = Dio();
-
-    // 1. Register Dio and DioConsumer (مرة واحدة فقط)
-    Get.put<Dio>(dio, permanent: true);
     final dioConsumer = DioConsumer(dio: dio);
+    final authService = AuthService(api: dioConsumer);
+    final apartmentService = ApartmentService(api: dioConsumer);
+    final userService = UserService(dioConsumer);
+    final controller = UserController();
+
+    //core
+    Get.put<Dio>(dio, permanent: true);
     Get.put<DioConsumer>(dioConsumer, permanent: true);
 
-    // 2. Register Services (مرة واحدة فقط)
-    final authService = AuthService(api: dioConsumer);
+    //Services
     Get.put<AuthService>(authService, permanent: true);
-
-    final apartmentService = ApartmentService(api: dioConsumer);
     Get.put<ApartmentService>(apartmentService, permanent: true);
-
-    final userService = UserService(dioConsumer); // ✅ تمرير الـ api
-    Get.put<UserService>(userService, permanent: true);
-
+    Get.put<UserService>(UserService(dioConsumer), permanent: true);
     Get.put<UserLocalService>(UserLocalService(), permanent: true);
 
-    // 3. Register Controllers
+    //Controllers
     Get.put<HomeController>(HomeController(), permanent: true);
+
+    Get.put<AuthController>(
+      AuthController(authService: authService),
+      permanent: true,
+    );
+
+    //lazy Controllers
+    Get.lazyPut<MyAccountController>(
+      () => MyAccountController(service: userService),
+      fenix: true,
+    );
+
+    Get.lazyPut<EditProfileController>(
+      () => EditProfileController(
+        userService: Get.find<UserService>(),
+        myAccountController: Get.find<MyAccountController>(),
+      ),
+      fenix: true,
+    );
 
     Get.lazyPut<LoginController>(
       () => LoginController(api: authService),
@@ -51,13 +68,7 @@ class AppBindings extends Bindings {
       fenix: true,
     );
 
-    Get.put<AuthController>(
-      AuthController(authService: authService),
-      permanent: true,
-    );
-
     Get.lazyPut<UserController>(() {
-      final controller = UserController();
       controller.loadUserRole();
       return controller;
     }, fenix: true);
@@ -66,27 +77,12 @@ class AppBindings extends Bindings {
       () => ApartmentController(service: apartmentService),
       fenix: true,
     );
+
     Get.lazyPut<AddApartmentController>(
-          () => AddApartmentController(
-        service: Get.find<ApartmentService>(),
-      ),
+      () => AddApartmentController(service: Get.find<ApartmentService>()),
       fenix: true,
     );
 
-
-    // ✅ تأكد من أن MyAccountController يحتوي على constructor يأخذ userService
-    Get.lazyPut<MyAccountController>(
-      () => MyAccountController(service: userService), // ✅ تأكد من اسم المعلمة
-      fenix: true,
-    );
-    Get.lazyPut<EditProfileController>(
-      () => EditProfileController(
-        userService: Get.find<UserService>(),
-        myAccountController: Get.find<MyAccountController>(),
-      ),
-      fenix: true,
-    );
-    // 4. Register FilterController (مرة واحدة فقط)
     Get.lazyPut<FilterController>(() => FilterController(), fenix: true);
   }
 }
