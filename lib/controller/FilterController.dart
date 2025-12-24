@@ -47,6 +47,8 @@ class FilterController extends GetxController {
     update();
   }
 
+  
+
   // الحصول على الفلتر الحالي
   FilterModel get activeFilter => currentFilter.value;
 

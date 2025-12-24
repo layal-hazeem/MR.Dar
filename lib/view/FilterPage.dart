@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controller/ApartmentController.dart';
 import '../controller/FilterController.dart';
 import '../model/filter_model.dart';
 
 class FilterPage extends StatelessWidget {
   FilterPage({Key? key}) : super(key: key);
+
+  final ApartmentController controller = Get.find<ApartmentController>();
 
   // المتحكمات
   final Rx<RangeValues> rentRange = Rx(RangeValues(0, 5000));
@@ -15,145 +18,8 @@ class FilterPage extends StatelessWidget {
   // خيارات الترتيب
   final RxString selectedSortBy = RxString('created_at');
   final RxString selectedSortDir = RxString('asc');
+  final RxList<Map<String, dynamic>> sortOptionsFromApi = RxList([]);
 
-  // خيارات الترتيب المتاحة
-  final Map<String, String> sortOptions = {
-    'created_at': 'Newest',
-    'rent_value': 'Rent (Low to High)',
-    'rent_desc': 'Rent (High to Low)',
-    'rooms': 'Number of Rooms',
-    'space': 'Space (m²)',
-  };
-
-  // قائمة المحافظات مع الـ IDs
-  final List<Map<String, dynamic>> governoratesList = [
-    {'id': 1, 'name': 'Damascus'},
-    {'id': 2, 'name': 'Rural Damascus'},
-    {'id': 3, 'name': 'Aleppo'},
-    {'id': 4, 'name': 'Homs'},
-    {'id': 5, 'name': 'Hama'},
-    {'id': 6, 'name': 'Idlib'},
-    {'id': 7, 'name': 'Latakia'},
-    {'id': 8, 'name': 'Tartus'},
-    {'id': 9, 'name': 'Deir ez-Zor'},
-    {'id': 10, 'name': 'Raqqa'},
-    {'id': 11, 'name': 'Al-Hasakah'},
-    {'id': 12, 'name': 'Daraa'},
-    {'id': 13, 'name': 'Quneitra'},
-    {'id': 14, 'name': 'As-Suwayda'},
-  ];
-
-  // قائمة المدن مع الـ IDs والمحافظات التابعة لها
-  final List<Map<String, dynamic>> citiesList = [
-    // Damascus cities (id: 1)
-    {'id': 101, 'name': 'Al-Qadam', 'governorate_id': 1},
-    {'id': 102, 'name': 'Sayyida Zainab', 'governorate_id': 1},
-    {'id': 103, 'name': 'Al-Midan', 'governorate_id': 1},
-    {'id': 104, 'name': 'Kafr Sousa', 'governorate_id': 1},
-    {'id': 105, 'name': 'Jobar', 'governorate_id': 1},
-    {'id': 106, 'name': 'Bab Touma', 'governorate_id': 1},
-    {'id': 107, 'name': 'Baramkeh', 'governorate_id': 1},
-    {'id': 108, 'name': 'Mezzeh', 'governorate_id': 1},
-    {'id': 109, 'name': 'Rukn al-Din', 'governorate_id': 1},
-    {'id': 110, 'name': 'Qanawat', 'governorate_id': 1},
-    {'id': 111, 'name': 'Tadamun', 'governorate_id': 1},
-    {'id': 112, 'name': 'Shaghour', 'governorate_id': 1},
-    {'id': 113, 'name': 'Khan al-Sabil', 'governorate_id': 1},
-    {'id': 114, 'name': 'Al-Mazraa', 'governorate_id': 1},
-    {'id': 115, 'name': 'Other', 'governorate_id': 1},
-
-    // Rural Damascus cities (id: 2)
-    {'id': 201, 'name': 'Douma', 'governorate_id': 2},
-    {'id': 202, 'name': 'Al-Tall', 'governorate_id': 2},
-    {'id': 203, 'name': 'Al-Qutayfah', 'governorate_id': 2},
-    {'id': 204, 'name': 'An-Nabek', 'governorate_id': 2},
-    {'id': 205, 'name': 'Al-Malihah', 'governorate_id': 2},
-    {'id': 206, 'name': 'Other', 'governorate_id': 2},
-
-    // Aleppo cities (id: 3)
-    {'id': 301, 'name': 'Manbij', 'governorate_id': 3},
-    {'id': 302, 'name': 'Afrin', 'governorate_id': 3},
-    {'id': 303, 'name': 'Azaz', 'governorate_id': 3},
-    {'id': 304, 'name': 'Al-Bab', 'governorate_id': 3},
-    {'id': 305, 'name': 'Other', 'governorate_id': 3},
-
-    // Homs cities (id: 4)
-    {'id': 401, 'name': 'Tadmur', 'governorate_id': 4},
-    {'id': 402, 'name': 'Al-Qusayr', 'governorate_id': 4},
-    {'id': 403, 'name': 'Al-Rastan', 'governorate_id': 4},
-    {'id': 404, 'name': 'Talbiseh', 'governorate_id': 4},
-    {'id': 405, 'name': 'Other', 'governorate_id': 4},
-
-    // Hama cities (id: 5)
-    {'id': 501, 'name': 'Mahardah', 'governorate_id': 5},
-    {'id': 502, 'name': 'Salamiyah', 'governorate_id': 5},
-    {'id': 503, 'name': 'Al-Suqaylabiyah', 'governorate_id': 5},
-    {'id': 504, 'name': 'Masyaf', 'governorate_id': 5},
-    {'id': 505, 'name': 'Other', 'governorate_id': 5},
-
-    // Idlib cities (id: 6)
-    {'id': 601, 'name': 'Jisr al-Shughur', 'governorate_id': 6},
-    {'id': 602, 'name': 'Ariha', 'governorate_id': 6},
-    {'id': 603, 'name': 'Saraqib', 'governorate_id': 6},
-    {'id': 604, 'name': 'Maarrat al-Nu\'man', 'governorate_id': 6},
-    {'id': 605, 'name': 'Other', 'governorate_id': 6},
-
-    // Latakia cities (id: 7)
-    {'id': 701, 'name': 'Jableh', 'governorate_id': 7},
-    {'id': 702, 'name': 'Qardaha', 'governorate_id': 7},
-    {'id': 703, 'name': 'Safita', 'governorate_id': 7},
-    {'id': 704, 'name': 'Baniyas', 'governorate_id': 7},
-    {'id': 705, 'name': 'Other', 'governorate_id': 7},
-
-    // Tartus cities (id: 8)
-    {'id': 801, 'name': 'Baniyas', 'governorate_id': 8},
-    {'id': 802, 'name': 'Duraykish', 'governorate_id': 8},
-    {'id': 803, 'name': 'Al-Hamidiyah', 'governorate_id': 8},
-    {'id': 804, 'name': 'Safita', 'governorate_id': 8},
-    {'id': 805, 'name': 'Other', 'governorate_id': 8},
-
-    // Deir ez-Zor cities (id: 9)
-    {'id': 901, 'name': 'Mayadin', 'governorate_id': 9},
-    {'id': 902, 'name': 'Al-Busayrah', 'governorate_id': 9},
-    {'id': 903, 'name': 'Al-Quriyah', 'governorate_id': 9},
-    {'id': 904, 'name': 'Abu Kamal', 'governorate_id': 9},
-    {'id': 905, 'name': 'Other', 'governorate_id': 9},
-
-    // Raqqa cities (id: 10)
-    {'id': 1001, 'name': 'Al-Tabqah', 'governorate_id': 10},
-    {'id': 1002, 'name': 'Tal Abyad', 'governorate_id': 10},
-    {'id': 1003, 'name': 'Ain Issa', 'governorate_id': 10},
-    {'id': 1004, 'name': 'Sukhnah', 'governorate_id': 10},
-    {'id': 1005, 'name': 'Other', 'governorate_id': 10},
-
-    // Al-Hasakah cities (id: 11)
-    {'id': 1101, 'name': 'Qamishli', 'governorate_id': 11},
-    {'id': 1102, 'name': 'Al-Malikiyah', 'governorate_id': 11},
-    {'id': 1103, 'name': 'Ras al-Ain', 'governorate_id': 11},
-    {'id': 1104, 'name': 'Amuda', 'governorate_id': 11},
-    {'id': 1105, 'name': 'Other', 'governorate_id': 11},
-
-    // Daraa cities (id: 12)
-    {'id': 1201, 'name': 'Jasim', 'governorate_id': 12},
-    {'id': 1202, 'name': 'Izra', 'governorate_id': 12},
-    {'id': 1203, 'name': 'Al-Sanamayn', 'governorate_id': 12},
-    {'id': 1204, 'name': 'Muzayrib', 'governorate_id': 12},
-    {'id': 1205, 'name': 'Other', 'governorate_id': 12},
-
-    // Quneitra cities (id: 13)
-    {'id': 1301, 'name': 'Khan Arnabah', 'governorate_id': 13},
-    {'id': 1302, 'name': 'Fiq', 'governorate_id': 13},
-    {'id': 1303, 'name': 'Buq\'ata', 'governorate_id': 13},
-    {'id': 1304, 'name': 'Beit Jinn', 'governorate_id': 13},
-    {'id': 1305, 'name': 'Other', 'governorate_id': 13},
-
-    // As-Suwayda cities (id: 14)
-    {'id': 1401, 'name': 'Salkhad', 'governorate_id': 14},
-    {'id': 1402, 'name': 'Shahba', 'governorate_id': 14},
-    {'id': 1403, 'name': 'Al-Mazraa', 'governorate_id': 14},
-    {'id': 1404, 'name': 'Hauran towns', 'governorate_id': 14},
-    {'id': 1405, 'name': 'Other', 'governorate_id': 14},
-  ];
 
   // متغيرات للمحافظة والمدينة المختارة (بالـ IDs)
   final RxInt selectedGovernorateId = RxInt(0);
@@ -161,6 +27,14 @@ class FilterPage extends StatelessWidget {
 
   // قائمة المدن للمحافظة المختارة
   final RxList<Map<String, dynamic>> filteredCities = RxList([]);
+
+  final Map<String, String> sortOptions = {
+    'created_at': 'Newest',
+    'rooms': 'Rooms',
+    'space': 'Space',
+    'rent_value': 'Rent Asc',
+    'rent_desc': 'Rent Desc',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -300,6 +174,7 @@ class FilterPage extends StatelessWidget {
                 if (value != null) {
                   selectedSortBy.value = value;
                   // إذا كان الخيار متعلق بالإيجار، نضبط الاتجاه المناسب
+
                   if (value == 'rent_value') {
                     selectedSortDir.value = 'asc';
                   } else if (value == 'rent_desc') {
@@ -390,19 +265,22 @@ class FilterPage extends StatelessWidget {
                   value: 0,
                   child: Text("All Governorates"),
                 ),
-                ...governoratesList.map<DropdownMenuItem<int>>((gov) {
+                ...controller.governorates.map<DropdownMenuItem<int>>((gov) {
                   return DropdownMenuItem<int>(
-                    value: gov['id'],
-                    child: Text(gov['name']),
+                    value: gov.id,
+                    child: Text(gov.name),
                   );
                 }).toList(),
               ],
               onChanged: (int? value) {
                 selectedGovernorateId.value = value ?? 0;
                 selectedCityId.value = 0;
-                _filterCitiesByGovernorate(value ?? 0);
+                // تصفية المدن بناءً على المحافظه (جميع المدن موجودة بالكونترولر)
+                filteredCities.value = controller.cities
+                    .where((city) => city.id == (value ?? 0))
+                    .map((city) => {'id': city.id, 'name': city.name})
+                    .toList();
               },
-              isExpanded: true,
             )),
             const SizedBox(height: 15),
 
@@ -427,7 +305,6 @@ class FilterPage extends StatelessWidget {
                 }).toList(),
               ],
               onChanged: (int? value) => selectedCityId.value = value ?? 0,
-              isExpanded: true,
             )),
           ],
         ),
@@ -527,16 +404,6 @@ class FilterPage extends StatelessWidget {
     );
   }
 
-  // دالة لتصفية المدن حسب المحافظة
-  void _filterCitiesByGovernorate(int governorateId) {
-    if (governorateId == 0) {
-      filteredCities.value = [];
-    } else {
-      filteredCities.value = citiesList
-          .where((city) => city['governorate_id'] == governorateId)
-          .toList();
-    }
-  }
 
   // دالة إعادة تعيين جميع الفلاتر
   void _resetFilters() {
@@ -549,11 +416,13 @@ class FilterPage extends StatelessWidget {
     selectedSortBy.value = 'created_at';
     selectedSortDir.value = 'asc';
     filteredCities.value = [];
+
+    controller.resetFilter(); // إعادة تحميل كل البيانات بدون فلتر
   }
+
 
   // دالة تطبيق الفلاتر
   void _applyFilters() {
-    // تحويل ترتيب الإيجار إذا كان 'rent_desc' مختاراً
     String finalSortBy = selectedSortBy.value;
     if (selectedSortBy.value == 'rent_desc') {
       finalSortBy = 'rent_value';
@@ -569,16 +438,18 @@ class FilterPage extends StatelessWidget {
       cityId: selectedCityId.value == 0
           ? null
           : selectedCityId.value,
-      minRent: rentRange.value.start.round().toInt(),
-      maxRent: rentRange.value.end.round().toInt(),
-      minRooms: roomsRange.value.start.round().toInt(),
-      maxRooms: roomsRange.value.end.round().toInt(),
-      minSpace: spaceRange.value.start.round().toInt(),
-      maxSpace: spaceRange.value.end.round().toInt(),
+      minRent: rentRange.value.start.round(),
+      maxRent: rentRange.value.end.round(),
+      minRooms: roomsRange.value.start.round(),
+      maxRooms: roomsRange.value.end.round(),
+      minSpace: spaceRange.value.start.round(),
+      maxSpace: spaceRange.value.end.round(),
       sortBy: finalSortBy,
       sortDir: selectedSortDir.value,
     );
 
-    Get.back(result: filter);
+    controller.applyFilter(filter); // جلب البيانات من الباك
+    Get.back(); // إغلاق صفحة الفلاتر
   }
+
 }

@@ -1,13 +1,21 @@
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../model/apartment_model.dart';
+import '../model/city_model.dart';
 import '../model/filter_model.dart';
+import '../model/governorate_model.dart';
 import '../service/ApartmentService.dart';
 
 class ApartmentController extends GetxController {
   final ApartmentService service;
 
   ApartmentController({required this.service});
+
+  RxList<GovernorateModel> governorates = <GovernorateModel>[].obs;
+  RxList<CityModel> cities = <CityModel>[].obs;
+
+  int? selectedGovernorateId;
+  int? selectedCityId;
 
   // بيانات الشقق
   RxList<Apartment> allApartments = <Apartment>[].obs;
@@ -38,6 +46,7 @@ class ApartmentController extends GetxController {
     super.onInit();   // استدعاء الدالة الأصلية أولاً
     loadApartments(); // دالة تحميل الشقق
     loadInitialData(); // دالة تحميل البيانات الابتدائية
+    loadGovernorates();
   }
 
 
@@ -219,6 +228,24 @@ class ApartmentController extends GetxController {
       isLoadingMore.value = false;
     }
   }
+
+  Future<void> loadGovernorates() async {
+    try {
+      isLoading.value = true;
+      governorates.value = await service.getGovernorates();
+    } catch (e) {
+      errorMessage.value = "Failed to load governorates";
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void onGovernorateSelected(GovernorateModel gov) {
+    selectedGovernorateId = gov.id;
+    cities.value = gov.cities;
+    selectedCityId = null;
+  }
+
 
   // إعادة تعيين الفلتر
   void resetFilter() {
