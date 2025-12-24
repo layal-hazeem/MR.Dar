@@ -47,11 +47,4 @@ class FilterController extends GetxController {
     update();
   }
 
-  
-
-  // الحصول على الفلتر الحالي
-  FilterModel get activeFilter => currentFilter.value;
-
-  // فحص إذا كان هناك فلتر فعال
-  bool get hasActiveFilter => currentFilter.value.hasActiveFilters;
 }

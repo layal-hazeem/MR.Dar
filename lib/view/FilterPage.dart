@@ -272,14 +272,22 @@ class FilterPage extends StatelessWidget {
                   );
                 }).toList(),
               ],
-              onChanged: (int? value) {
-                selectedGovernorateId.value = value ?? 0;
-                selectedCityId.value = 0;
-                // تصفية المدن بناءً على المحافظه (جميع المدن موجودة بالكونترولر)
-                filteredCities.value = controller.cities
-                    .where((city) => city.id == (value ?? 0))
-                    .map((city) => {'id': city.id, 'name': city.name})
-                    .toList();
+    onChanged: (int? value) {
+    selectedGovernorateId.value = value ?? 0;
+    selectedCityId.value = 0;
+
+    if (value == null || value == 0) {
+    filteredCities.clear();
+    return;
+    }
+
+    final gov = controller.governorates
+        .firstWhere((g) => g.id == value);
+
+    filteredCities.value = gov.cities
+        .map((c) => {'id': c.id, 'name': c.name})
+        .toList();
+
               },
             )),
             const SizedBox(height: 15),

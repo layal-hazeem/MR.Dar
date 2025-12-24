@@ -8,6 +8,8 @@ import '../service/ApartmentService.dart';
 
 class ApartmentController extends GetxController {
   final ApartmentService service;
+  FilterModel filter = FilterModel();
+
 
   ApartmentController({required this.service});
 
@@ -304,14 +306,16 @@ class ApartmentController extends GetxController {
     }
   }
 
+
   // فحص إذا كان هناك فلتر أو بحث نشط
-  bool get hasActiveFilterOrSearch {
-    return currentFilter.value.hasActiveFilters || searchQuery.value.isNotEmpty;
+  bool get hasActiveFilter {
+    return currentFilter.value.hasActiveFilters ||
+        searchQuery.value.isNotEmpty;
   }
 
   // الحصول على القائمة المناسبة للعرض
   List<Apartment> get displayApartments {
-    if (hasActiveFilterOrSearch) {
+    if (hasActiveFilter) {
       return filteredApartments;
     }
     return allApartments;

@@ -10,13 +10,11 @@ class HomeContent extends StatelessWidget {
   HomeContent({super.key});
 
   final ApartmentController controller = Get.find();
-  final FilterController filterController = Get.find();
 
   void _openFilterPage() async {
     final result = await Get.to(() => FilterPage());
 
     if (result != null) {
-      filterController.applyFilter(result);
       controller.applyFilter(result);
     }
   }
@@ -57,7 +55,7 @@ class HomeContent extends StatelessWidget {
                       horizontal: 20,
                     ),
                     suffixIcon: Obx(() {
-                      if (filterController.hasActiveFilter) {
+                      if (controller.hasActiveFilter) {
                         return Container(
                           padding: const EdgeInsets.only(right: 12),
                           child: Badge(
@@ -88,7 +86,7 @@ class HomeContent extends StatelessWidget {
 
           // مؤشر الفلتر النشط
           Obx(() {
-            if (filterController.hasActiveFilter) {
+            if (controller.hasActiveFilter) {
               return Container(
                 margin: const EdgeInsets.only(top: 16, bottom: 8),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -126,7 +124,6 @@ class HomeContent extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        filterController.resetFilter();
                         controller.resetFilter();
                       },
                       style: TextButton.styleFrom(
@@ -273,7 +270,7 @@ class HomeContent extends StatelessWidget {
 
           // قسم عرض الشقق بعد التصفية
           Obx(() {
-            if (filterController.hasActiveFilter) {
+            if (controller.hasActiveFilter) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
