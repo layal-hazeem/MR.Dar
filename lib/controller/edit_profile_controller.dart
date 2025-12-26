@@ -21,6 +21,7 @@ class EditProfileController extends GetxController {
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
   late TextEditingController phoneController;
+  late TextEditingController dobController;
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final confirmDialogPasswordController = TextEditingController();
@@ -39,13 +40,20 @@ class EditProfileController extends GetxController {
     firstNameController = TextEditingController(text: user?.firstName ?? "");
     lastNameController = TextEditingController(text: user?.lastName ?? "");
     phoneController = TextEditingController(text: user?.phone ?? "");
-
+    dobController = TextEditingController(text: user?.dateOfBirth ?? "");
     void listener() => checkChanges();
     firstNameController.addListener(listener);
     lastNameController.addListener(listener);
     phoneController.addListener(listener);
+    dobController.addListener(listener);
     newPasswordController.addListener(listener);
     confirmPasswordController.addListener(listener);
+  }
+
+  void setBirthDate(String date) {
+    dobController.text = date;
+    checkChanges();
+    update();
   }
 
   void checkChanges() {
@@ -56,6 +64,7 @@ class EditProfileController extends GetxController {
         firstNameController.text.trim() != user.firstName ||
         lastNameController.text.trim() != user.lastName ||
         phoneController.text.trim() != user.phone ||
+        dobController.text.trim() != user.dateOfBirth ||
         selectedImage.value != null ||
         newPasswordController.text.isNotEmpty;
 
@@ -73,7 +82,23 @@ class EditProfileController extends GetxController {
     }
   }
 
-  // ... (نفس التعريفات السابقة)
+  Future<void> selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: dobController.text.isNotEmpty
+          ? (DateTime.tryParse(dobController.text) ?? DateTime(2000))
+          : DateTime(2000),
+      firstDate: DateTime(1950),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      dobController.text =
+          "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+      checkChanges();
+      update();
+    }
+  }
 
   Future<bool> saveAllChanges(String confirmPassword) async {
     try {
@@ -85,6 +110,7 @@ class EditProfileController extends GetxController {
         MapEntry('first_name', firstNameController.text.trim()),
         MapEntry('last_name', lastNameController.text.trim()),
         MapEntry('phone', phoneController.text.trim()),
+        MapEntry('date_of_birth', dobController.text.trim()),
         MapEntry('current_password', confirmPassword),
       ]);
 
@@ -114,19 +140,16 @@ class EditProfileController extends GetxController {
 
       final response = await userService.updateProfile(formData);
 
-      // التأكد من نجاح العملية من خلال الستاتوس كود أو الحقل status
       if (response['status'] == 'success') {
         await myAccountController.loadProfile();
         _clearSensitiveData();
         return true;
       } else {
-        // إذا أرجع السيرفر خطأ (مثل كلمة سر خاطئة)
         errorMessage.value =
             response['message'] ?? 'Incorrect current password';
         return false;
       }
     } catch (e) {
-      // التعامل مع أخطاء الشبكة أو أخطاء Dio
       if (e is DioException) {
         errorMessage.value =
             e.response?.data['message'] ?? 'Validation Error: Check your data';

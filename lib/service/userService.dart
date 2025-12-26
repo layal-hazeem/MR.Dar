@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-
 import '../core/api/dio_consumer.dart';
 import '../core/api/end_points.dart';
 import '../model/user_model.dart';
@@ -17,8 +16,17 @@ class UserService {
     await api.post(EndPoint.logout);
   }
 
-  Future<void> deleteAccount() async {
-    await api.delete(EndPoint.deleteAccount);
+  // في ملف user_service.dart
+
+  Future<Map<String, dynamic>> deleteAccount(String password) async {
+    final response = await api.dio.delete(
+      EndPoint.deleteAccount,
+      data: {
+        'current_password': password, // حسب الاسم المتوقع في DeleteUserRequest
+      },
+      options: Options(headers: {'Accept': 'application/json'}),
+    );
+    return response.data;
   }
 
   Future<Map<String, dynamic>> updateProfile(FormData formData) async {

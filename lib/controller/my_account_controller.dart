@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../model/user_model.dart';
-import 'package:dio/dio.dart' as dio;
 import '../service/UserLocalService.dart';
 import '../service/userService.dart';
 import 'authcontroller.dart';
@@ -31,14 +30,12 @@ class MyAccountController extends GetxController {
       isLoading.value = true;
       update();
 
-      // محاولة تحميل البيانات من الذاكرة المحلية أولاً
       final localData = await localService.getUserData();
       if (localData['token'] != null && localData['id'] != null) {
         user.value = _createUserFromLocalData(localData);
         isDataFromLocal.value = true;
       }
 
-      // ثم محاولة تحديث البيانات من API
       try {
         final apiUser = await service.getProfile();
         user.value = apiUser;
@@ -48,14 +45,12 @@ class MyAccountController extends GetxController {
         await _updateLocalData(apiUser);
       } catch (e) {
         print("Failed to fetch from API: $e");
-        // إذا فشل الاتصال بالAPI، نستخدم البيانات المحلية
         if (user.value == null) {
           throw Exception("No data available");
         }
       }
     } catch (e) {
       print("Error loading profile: $e");
-      // إذا لم توجد بيانات محلية أيضاً
       if (user.value == null) {
         user.value = null;
       }
@@ -65,21 +60,17 @@ class MyAccountController extends GetxController {
     }
   }
 
-  // في lib/controller/my_account_controller.dart
   String _fixImageUrl(String? url) {
     if (url == null || url.isEmpty) return '';
 
-    // إذا كان الرابط يبدأ بـ storage/ وغير كامل
     if (url.startsWith('storage/')) {
       return 'http://10.0.2.2:8000/storage/${url.substring(8)}';
     }
 
-    // إذا كان الرابط نسبي
     if (url.startsWith('/storage/')) {
       return 'http://10.0.2.2:8000$url';
     }
 
-    // إذا كان الرابط يحتوي على localhost، استبدله بـ 10.0.2.2
     if (url.contains('localhost:8000')) {
       return url.replaceAll('localhost:8000', '10.0.2.2:8000');
     }
@@ -117,7 +108,6 @@ class MyAccountController extends GetxController {
     });
   }
 
-  // دالة لتحديث بيانات المستخدم بعد التسجيل
   Future<void> updateUserAfterSignup(Map<String, dynamic> userData) async {
     await localService.saveUserData(userData);
     user.value = _createUserFromLocalData(userData);
@@ -126,28 +116,22 @@ class MyAccountController extends GetxController {
   }
 
   Future<void> verifyAndDeleteAccount(String password) async {
+    if (password.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Please enter your password",
+        backgroundColor: Colors.red,
+      );
+      return;
+    }
+
     try {
       isDeleting.value = true;
 
-      // 1. التحقق من كلمة المرور عبر استدعاء الـ updateProfile (مثل منطق التعديل تماماً)
-      final formData = dio.FormData.fromMap({
-        'current_password': password,
-        // نرسل نفس البيانات الحالية لكي لا يتغير شيء، فقط للتحقق
-        'first_name': user.value?.firstName,
-        'last_name': user.value?.lastName,
-        'phone': user.value?.phone,
-      });
+      final response = await service.deleteAccount(password);
 
-      final response = await service.updateProfile(formData);
-
-      // 2. إذا نجح التحقق (السيرفر قبل كلمة المرور)
-      if (response['status'] == 'success') {
-        // 3. استدعاء تابع الحذف الفعلي
-        await service.deleteAccount();
-
-        Get.back(); // إغلاق الديالوج
-
-        // 4. تسجيل الخروج وتصفير البيانات
+      if (response['status'] == 'success' || response['message'] != null) {
+        if (Get.isDialogOpen!) Get.back();
         final authController = Get.find<AuthController>();
         await authController.logout();
 
@@ -156,27 +140,89 @@ class MyAccountController extends GetxController {
           "Your account has been permanently removed",
           backgroundColor: Colors.black,
           colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
-      } else {
-        Get.snackbar(
-          "Error",
-          "Incorrect password",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
         );
       }
     } catch (e) {
-      // إذا رمى السيرفر خطأ 401 (كلمة سر غلط) سيسقط الكود هنا
+      print("Delete Error: $e");
       Get.snackbar(
-        "Verification Failed",
-        "Current password is incorrect",
+        "Failed",
+        "Could not delete account. Please check your password.",
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
     } finally {
       isDeleting.value = false;
     }
+  }
+
+  void showDeleteAccountFlow(BuildContext context) {
+    Get.defaultDialog(
+      title: "Delete Account?",
+      middleText: "Are you sure? This action cannot be undone.",
+      textConfirm: "Next",
+      textCancel: "Cancel",
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.red,
+      onConfirm: () {
+        Get.back();
+        _showPasswordVerifyDialog(context);
+      },
+      onCancel: () {
+        Get.closeAllSnackbars();
+      },
+    );
+  }
+
+  void _showPasswordVerifyDialog(BuildContext context) {
+    deletePasswordController.clear();
+
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text("Verify Password"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Please enter your password to confirm deletion:"),
+            const SizedBox(height: 15),
+            TextField(
+              controller: deletePasswordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Password",
+                prefixIcon: Icon(Icons.lock_outline),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
+          Obx(
+            () => ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              onPressed: isDeleting.value
+                  ? null
+                  : () => verifyAndDeleteAccount(deletePasswordController.text),
+              child: isDeleting.value
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : const Text(
+                      "Confirm Delete",
+                      style: TextStyle(color: Colors.white),
+                    ),
+            ),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
   }
 
   @override

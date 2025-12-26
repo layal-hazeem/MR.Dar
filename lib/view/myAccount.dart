@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:new_project/view/settings_screen.dart';
 import '../controller/my_account_controller.dart';
 import '../controller/authcontroller.dart';
 import '../model/user_model.dart';
@@ -120,7 +121,7 @@ class MyAccount extends StatelessWidget {
             _buildIdImage(user),
             const SizedBox(height: 25),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // ===== Refresh Button =====
                 Center(
@@ -137,13 +138,13 @@ class MyAccount extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 // زر التعديل
                 Center(
                   child: OutlinedButton.icon(
-                    onPressed: () => Get.to(() => EditProfileScreen()),
-                    icon: Icon(Icons.edit),
-                    label: Text("Edit Profile"),
+                    onPressed: () => Get.to(() => SettingsScreen()),
+                    icon: const Icon(Icons.settings),
+                    label: const Text("Settings"),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 30,
@@ -155,105 +156,44 @@ class MyAccount extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 30),
-            // ===== Logout Button =====
-            Center(
-              child: ElevatedButton.icon(
-                onPressed: () => authController.logout(),
-                icon: const Icon(Icons.logout),
-                label: const Text("Logout"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 14,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextButton.icon(
-              onPressed: () => _confirmDeleteSequence(context),
-              icon: const Icon(Icons.delete_outline, color: Colors.red),
-              label: const Text(
-                "Delete Account",
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
+            // const SizedBox(height: 30),
+            // // ===== Logout Button =====
+            // Center(
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       ElevatedButton.icon(
+            //         onPressed: () => authController.logout(),
+            //         icon: const Icon(Icons.logout),
+            //         label: const Text("Logout"),
+            //         style: ElevatedButton.styleFrom(
+            //           backgroundColor: Colors.red,
+            //           padding: const EdgeInsets.symmetric(
+            //             horizontal: 30,
+            //             vertical: 14,
+            //           ),
+            //         ),
+            //       ),
+            //
+            //       ElevatedButton.icon(
+            //         onPressed: () => _confirmDeleteSequence(context),
+            //         icon: const Icon(Icons.delete_outline),
+            //         label: const Text("Delete Account"),
+            //         style: ElevatedButton.styleFrom(
+            //           backgroundColor: Colors.red,
+            //           padding: const EdgeInsets.symmetric(
+            //             horizontal: 30,
+            //             vertical: 14,
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       );
     });
-  }
-
-  void _confirmDeleteSequence(BuildContext context) {
-    // الديالوج الأول: تحذير عام
-    Get.defaultDialog(
-      title: "Delete Account?",
-      middleText: "Are you sure? This action cannot be undone.",
-      textConfirm: "Next",
-      textCancel: "Cancel",
-      confirmTextColor: Colors.white,
-      buttonColor: Colors.red,
-      onConfirm: () {
-        Get.back(); // إغلاق التحذير
-        _showPasswordVerifyDialog(context); // الانتقال للتحقق
-      },
-    );
-  }
-
-  void _showPasswordVerifyDialog(BuildContext context) {
-    controller.deletePasswordController.clear();
-
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: const Text("Verify Password"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("Please enter your password to confirm deletion:"),
-            const SizedBox(height: 15),
-            TextField(
-              controller: controller.deletePasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Password",
-                prefixIcon: Icon(Icons.lock_outline),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
-          Obx(
-            () => ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: controller.isDeleting.value
-                  ? null
-                  : () => controller.verifyAndDeleteAccount(
-                      controller.deletePasswordController.text,
-                    ),
-              child: controller.isDeleting.value
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : const Text(
-                      "Confirm Delete",
-                      style: TextStyle(color: Colors.white),
-                    ),
-            ),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
-    );
   }
 
   Widget _buildProfileImage(UserModel user) {

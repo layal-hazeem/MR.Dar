@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // مهم للـ inputFormatters
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../controller/edit_profile_controller.dart';
 
@@ -19,7 +19,6 @@ class EditProfileScreen extends StatelessWidget {
         ),
         backgroundColor: const Color(0xFF274668),
         foregroundColor: Colors.white,
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -30,7 +29,7 @@ class EditProfileScreen extends StatelessWidget {
               Obx(() => _buildProfileHeader(controller)),
               const SizedBox(height: 30),
               _buildSectionTitle('Personal Information', Icons.person_outline),
-              _buildInfoCard(controller),
+              _buildInfoCard(context, controller),
               const SizedBox(height: 25),
               _buildSectionTitle('Security', Icons.lock_outline),
               _buildPasswordCard(controller),
@@ -110,7 +109,10 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard(EditProfileController controller) {
+  Widget _buildInfoCard(
+    BuildContext context,
+    EditProfileController controller,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -130,25 +132,85 @@ class EditProfileScreen extends StatelessWidget {
               Icons.person_outline,
             ),
             const SizedBox(height: 15),
-            // حقل الهاتف مع تحديد الحد الأقصى 10 أرقام
             TextFormField(
               controller: controller.phoneController,
               keyboardType: TextInputType.phone,
               maxLength: 10,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-              ], // يسمح بالأرقام فقط
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: InputDecoration(
                 labelText: 'Phone Number',
                 prefixIcon: const Icon(Icons.phone, color: Color(0xFF274668)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                counterText: "", // لإخفاء عداد الأرقام الصغير تحت الحقل
+                counterText: "",
               ),
               validator: (v) =>
                   (v == null || v.length < 10) ? 'Must be 10 digits' : null,
             ),
+            const SizedBox(height: 15),
+            // Date of Birth - Optional Field
+            // Date of Birth - Optional Field
+            GetBuilder<EditProfileController>(
+              builder: (ctrl) {
+                return TextFormField(
+                  readOnly: true,
+                  controller: ctrl.dobController,
+                  decoration: InputDecoration(
+                    labelText: "Date of Birth (Optional)",
+                    prefixIcon: const Icon(
+                      Icons.cake_outlined,
+                      color: Color(0xFF274668),
+                    ),
+                    suffixIcon: const Icon(
+                      Icons.calendar_today,
+                      color: Color(0xFF274668),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onTap: () async {
+                    DateTime initialDate = DateTime(2000);
+
+                    if (ctrl.dobController.text.isNotEmpty) {
+                      try {
+                        initialDate = DateTime.parse(ctrl.dobController.text);
+                      } catch (e) {
+                        initialDate = DateTime(2000);
+                      }
+                    }
+
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: initialDate,
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                      builder: (context, child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: const ColorScheme.light(
+                              primary: Color(0xFF274668),
+                              onPrimary: Colors.white,
+                              onSurface: Colors.black,
+                            ),
+                          ),
+                          child: child!,
+                        );
+                      },
+                    );
+
+                    if (picked != null) {
+                      String formattedDate =
+                          "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+                      ctrl.setBirthDate(formattedDate);
+                    }
+                  },
+                  validator: (v) => null,
+                );
+              },
+            ),
+            const SizedBox(height: 15),
           ],
         ),
       ),
@@ -260,13 +322,10 @@ class EditProfileScreen extends StatelessWidget {
     BuildContext context,
     EditProfileController controller,
   ) {
-    // تصفير حقل كلمة السر في الديالوج قبل فتحه
     controller.confirmDialogPasswordController.clear();
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
+    Get.dialog(
+      AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: const Text('Confirm Identity'),
         content: Column(
@@ -287,8 +346,7 @@ class EditProfileScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            // استخدام Navigator.pop لضمان إغلاق الديالوج حصراً
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Get.back(),
             child: const Text('Cancel', style: TextStyle(color: Colors.red)),
           ),
           Obx(
@@ -305,8 +363,7 @@ class EditProfileScreen extends StatelessWidget {
 
                       bool success = await controller.saveAllChanges(pass);
 
-                      // إغلاق الديالوج أولاً
-                      Navigator.of(context).pop();
+                      Get.back();
 
                       if (success) {
                         Get.snackbar(
@@ -321,7 +378,6 @@ class EditProfileScreen extends StatelessWidget {
                           ),
                         );
                       } else {
-                        // إظهار سبب الفشل (مثلاً كلمة السر غلط)
                         Get.snackbar(
                           'Update Failed',
                           controller.errorMessage.value,
