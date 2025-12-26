@@ -37,19 +37,46 @@ class SettingsScreen extends StatelessWidget {
             title: "Logout",
             subtitle: "Sign out from your account",
             onTap: () {
-              Get.defaultDialog(
-                title: "Confirm Logout",
+              Get.dialog(
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  title: const Text(
+                    'Attention ! ',
+                    style: TextStyle(fontSize: 30),
+                  ),
+                  content: Text(
+                    'Are you sure you want to logout?',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Get.back(),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        authController.logout();
+                        Get.back();
+                      },
 
-                middleText: "Are you sure you want to logout?",
-                textCancel: "Cancel",
-                textConfirm: "Logout",
-                buttonColor: Color(0xFF274668),
-                confirmTextColor: Colors.white,
-                onConfirm: () {
-                  authController.logout();
-                  Get.back();
-                },
-                onCancel: () {},
+                      child: Text(
+                        'Confirm',
+                        style: TextStyle(
+                          color: Color(0xFF274668),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           ),
