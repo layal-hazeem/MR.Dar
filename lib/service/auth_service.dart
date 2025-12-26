@@ -105,8 +105,6 @@ class AuthService {
     required String role,
   }) async {
     try {
-      print("Starting signup process...");
-
       if (!birthDate.contains('/')) {
         throw ServerException(
           errModel: ErrorModel(
@@ -173,14 +171,10 @@ class AuthService {
         ),
       );
 
-      print("Server response: $response");
-
       if (response != null &&
           response is Map &&
           (response["message"]?.toString().contains("Successfully") == true ||
               response["status"] == "success")) {
-        print("Signup successful!");
-
         final userData = response["data"] ?? response;
         final token = userData["access_token"];
 
@@ -214,7 +208,6 @@ class AuthService {
 
             if (profileImageUrl.isNotEmpty) {
               await prefs.setString("profile_image", profileImageUrl);
-              print("✅ Profile image saved: $profileImageUrl");
             }
           }
 
@@ -233,7 +226,6 @@ class AuthService {
 
             if (idImageUrl.isNotEmpty) {
               await prefs.setString("id_image", idImageUrl);
-              print("✅ ID image saved: $idImageUrl");
             }
           }
 
@@ -298,7 +290,5 @@ class AuthService {
     await prefs.remove("phone");
     await prefs.remove("role");
     await prefs.remove("date_of_birth");
-
-    print(" User logged out successfully (local data cleared)");
   }
 }

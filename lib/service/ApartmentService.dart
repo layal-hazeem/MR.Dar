@@ -28,9 +28,6 @@ class ApartmentService {
         ),
       );
 
-      print(" Response status: ${response.statusCode}");
-      print(" Response data: ${response.data}");
-
       if (response.statusCode == 200) {
         final data = response.data;
 
@@ -39,15 +36,15 @@ class ApartmentService {
           return list.map((e) => Apartment.fromJson(e)).toList();
         } else {
           throw ServerException(
-            errModel: ErrorModel(errorMessage: "Invalid data format from server"),
+            errModel: ErrorModel(
+              errorMessage: "Invalid data format from server",
+            ),
           );
         }
       } else {
         final errorMsg =
             response.data["message"] ?? "Failed to fetch apartments";
-        throw ServerException(
-          errModel: ErrorModel(errorMessage: errorMsg),
-        );
+        throw ServerException(errModel: ErrorModel(errorMessage: errorMsg));
       }
     } on DioException catch (e) {
       throw ServerException(
@@ -55,7 +52,8 @@ class ApartmentService {
       );
     }
   }
-//-------
+
+  //-------
   Future<List<Apartment>> getApartmentsByQuery({
     int? maxPrice,
     String? orderBy,
@@ -67,9 +65,7 @@ class ApartmentService {
           if (maxPrice != null) 'max_price': maxPrice,
           if (orderBy != null) 'order_by': orderBy,
         },
-        options: Options(
-          validateStatus: (status) => true,
-        ),
+        options: Options(validateStatus: (status) => true),
       );
 
       if (response.statusCode == 200) {
@@ -82,15 +78,13 @@ class ApartmentService {
       return [];
     }
   }
-// ApartmentService.dart
+  // ApartmentService.dart
 
   Future<List<GovernorateModel>> getGovernorates() async {
     try {
       final response = await api.dio.get(
         EndPoint.getGovernorates,
-        options: Options(
-          validateStatus: (status) => true,
-        ),
+        options: Options(validateStatus: (status) => true),
       );
 
       if (response.statusCode == 200) {
@@ -103,9 +97,6 @@ class ApartmentService {
       rethrow;
     }
   }
-
-
-
 
   // Get All Apartments with Pagination and Filtering
   Future<Map<String, dynamic>> getApartments({
@@ -129,8 +120,6 @@ class ApartmentService {
         queryParams.addAll(filter.toQuery());
       }
 
-      print("Query Parameters: $queryParams");
-
       final response = await api.dio.get(
         EndPoint.getApartments,
         queryParameters: queryParams,
@@ -140,16 +129,15 @@ class ApartmentService {
         ),
       );
 
-      print("Response status: ${response.statusCode}");
-
       if (response.statusCode == 200) {
         final data = response.data;
 
         if (data is Map && data.containsKey("data")) {
           // تحويل البيانات إلى قائمة شقق
           final List list = data["data"];
-          final List<Apartment> apartments =
-          list.map((e) => Apartment.fromJson(e)).toList();
+          final List<Apartment> apartments = list
+              .map((e) => Apartment.fromJson(e))
+              .toList();
 
           // استخراج بيانات الـ pagination
           final int currentPage = data["current_page"] ?? 1;
@@ -166,15 +154,15 @@ class ApartmentService {
           };
         } else {
           throw ServerException(
-            errModel: ErrorModel(errorMessage: "Invalid data format from server"),
+            errModel: ErrorModel(
+              errorMessage: "Invalid data format from server",
+            ),
           );
         }
       } else {
         final errorMsg =
             response.data["message"] ?? "Failed to fetch apartments";
-        throw ServerException(
-          errModel: ErrorModel(errorMessage: errorMsg),
-        );
+        throw ServerException(errModel: ErrorModel(errorMessage: errorMsg));
       }
     } on DioException catch (e) {
       print("Dio Error: ${e.message}");
@@ -211,7 +199,10 @@ class ApartmentService {
   }
 
   // Search Apartments
-  Future<Map<String, dynamic>> searchApartments(String query, {int page = 1}) async {
+  Future<Map<String, dynamic>> searchApartments(
+    String query, {
+    int page = 1,
+  }) async {
     try {
       final response = await getApartments(
         filter: FilterModel(search: query),
@@ -229,7 +220,6 @@ class ApartmentService {
       };
     }
   }
-
 
   Future<Map<String, dynamic>> createApartment({
     required String title,
@@ -270,10 +260,7 @@ class ApartmentService {
         formData.files.add(
           MapEntry(
             'house_images[]',
-            await MultipartFile.fromFile(
-              image.path,
-              filename: image.name,
-            ),
+            await MultipartFile.fromFile(image.path, filename: image.name),
           ),
         );
       }
@@ -290,16 +277,12 @@ class ApartmentService {
         ),
       );
 
-      print("Create apartment response: ${response.statusCode}");
-      print("Response data: ${response.data}");
-
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.data;
       } else {
-        final errorMsg = response.data["message"] ?? "Failed to create apartment";
-        throw ServerException(
-          errModel: ErrorModel(errorMessage: errorMsg),
-        );
+        final errorMsg =
+            response.data["message"] ?? "Failed to create apartment";
+        throw ServerException(errModel: ErrorModel(errorMessage: errorMsg));
       }
     } on DioException catch (e) {
       throw ServerException(

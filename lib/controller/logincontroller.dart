@@ -38,8 +38,6 @@ class LoginController extends GetxController {
         password: passwordController.text.trim(),
       );
 
-      print("✅ Login successful, token: $token");
-
       isLoading = false;
       update();
       final userCtrl = Get.put(UserController());

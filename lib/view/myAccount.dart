@@ -4,7 +4,6 @@ import 'package:new_project/view/settings_screen.dart';
 import '../controller/my_account_controller.dart';
 import '../controller/authcontroller.dart';
 import '../model/user_model.dart';
-import 'edit_profile.dart';
 
 class MyAccount extends StatelessWidget {
   MyAccount({super.key});
