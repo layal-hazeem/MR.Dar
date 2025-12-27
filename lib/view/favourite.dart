@@ -14,37 +14,127 @@ class Favourite extends StatefulWidget {
 
 class _FavouriteState extends State<Favourite> {
   final ApartmentController controller = Get.find();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    controller.loadFavorites(); // تحميل المفضلة عند فتح الصفحة
+    _loadFavorites();
+
+    // إضافة listener لسحب للتحديث
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        // يمكن إضافة pagination هنا إذا احتجت
+      }
+    });
+  }
+
+  Future<void> _loadFavorites() async {
+    try {
+      await controller.loadFavorites();
+    } catch (e) {
+      print("Error loading favorites: $e");
+    }
+  }
+
+  void _onApartmentTapped(Apartment apartment) {
+    Get.to(() => ApartmentDetailsPage(apartment: apartment));
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Favorites"),
-        backgroundColor: Color(0xFF274668),
+        title: const Text(
+          "My Favorites",
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: const Color(0xFF274668),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () async {
+              await _loadFavorites();
+              Get.snackbar(
+                "Refreshed",
+                "Favorites list updated",
+                backgroundColor: Colors.green,
+                colorText: Colors.white,
+                duration: const Duration(seconds: 1),
+              );
+            },
+          ),
+        ],
       ),
       body: Obx(() {
-        if (controller.favoriteApartments.isEmpty) {
-          return Center(child: Text("No favorites yet"));
+        if (controller.isLoading.value &&
+            controller.favoriteApartments.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
         }
 
-        return ListView.builder(
-          padding: EdgeInsets.all(12),
-          itemCount: controller.favoriteApartments.length,
-          itemBuilder: (context, index) {
-            final apartment = controller.favoriteApartments[index];
-            return ApartmentCard(
-              apartment: apartment,
-              onTap: () {
-                Get.to(() => ApartmentDetailsPage(apartment: apartment));
-              },
-            );
-          },
+        if (controller.favoriteApartments.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.favorite_border, size: 80, color: Colors.grey[400]),
+                const SizedBox(height: 16),
+                const Text(
+                  "No favorites yet",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  "Tap the heart icon on apartments to add them here",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Get.back(); // العودة للصفحة الرئيسية
+                  },
+                  icon: const Icon(Icons.explore),
+                  label: const Text("Browse Apartments"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF274668),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: _loadFavorites,
+          child: ListView.builder(
+            controller: _scrollController,
+            padding: const EdgeInsets.all(16),
+            itemCount: controller.favoriteApartments.length,
+            itemBuilder: (context, index) {
+              final apartment = controller.favoriteApartments[index];
+              return Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                child: ApartmentCard(
+                  apartment: apartment,
+                  onTap: () => _onApartmentTapped(apartment),
+                ),
+              );
+            },
+          ),
         );
       }),
     );

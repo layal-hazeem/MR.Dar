@@ -1,9 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../core/api/end_points.dart';
 import '../model/apartment_model.dart';
 import '../model/city_model.dart';
 import '../model/filter_model.dart';
@@ -20,10 +17,11 @@ class ApartmentController extends GetxController {
   RxList<GovernorateModel> governorates = <GovernorateModel>[].obs;
   RxList<CityModel> cities = <CityModel>[].obs;
   final ApartmentService apiService = Get.find();
-  RxSet<int> favoriteIds = <int>{}.obs;
-  RxList<Apartment> favoriteApartments = <Apartment>[].obs;
   var searchResults = <Apartment>[].obs;
   var isSearching = false.obs;
+
+  RxSet<int> favoriteIds = <int>{}.obs;
+  RxList<Apartment> favoriteApartments = <Apartment>[].obs;
 
   int? selectedGovernorateId;
   int? selectedCityId;
@@ -52,12 +50,17 @@ class ApartmentController extends GetxController {
   RxString searchQuery = ''.obs;
   final Rx<FilterModel> currentFilter = FilterModel().obs;
 
+  // ✅ NEW: للتتبع إذا تم تحميل الشقق
+  RxBool isApartmentsLoaded = false.obs;
+  RxBool isFavoritesLoaded = false.obs;
+
   @override
   void onInit() {
     super.onInit(); // استدعاء الدالة الأصلية أولاً
     loadApartments(); // دالة تحميل الشقق
     loadInitialData(); // دالة تحميل البيانات الابتدائية
     loadGovernorates();
+    loadFavorites();
   }
 
   // تحميل البيانات الأولية
@@ -179,6 +182,7 @@ class ApartmentController extends GetxController {
       filteredApartments.assignAll(result['apartments'] as List<Apartment>);
     } catch (e) {
       filteredApartments.assignAll([]);
+
       print("Search error: $e");
     } finally {
       isSearching.value = false;
@@ -310,64 +314,89 @@ class ApartmentController extends GetxController {
   }
 
   Future<void> toggleFavorite(int houseId) async {
-    final bool isFav = favoriteIds.contains(houseId);
-
-    if (isFav) {
-      favoriteIds.remove(houseId);
-      favoriteApartments.removeWhere((ap) => ap.id == houseId);
-    } else {
-      favoriteIds.add(houseId);
-      final apartment = allApartments.firstWhere(
-        (ap) => ap.id == houseId,
-        orElse: () => Apartment(
-          id: houseId,
-          title: '',
-          description: '',
-          rentValue: 0,
-          rooms: 0,
-          space: 0,
-          notes: '',
-          cityId: 0,
-          cityName: '',
-          governorateId: 0,
-          governorateName: '',
-          street: '',
-          flatNumber: '',
-          longitude: null,
-          latitude: null,
-          houseImages: [],
-        ),
-      );
-      favoriteApartments.add(apartment);
-    }
-
     try {
-      await service.toggleFavorite(houseId);
-    } catch (e) {
-      // rollback
+      final bool isFav = favoriteIds.contains(houseId);
+      final Apartment? apartment = allApartments.firstWhereOrNull(
+        (ap) => ap.id == houseId,
+      );
+
+      // التحديث الفوري في UI
       if (isFav) {
-        favoriteIds.add(houseId);
-        favoriteApartments.add(
-          allApartments.firstWhere((ap) => ap.id == houseId),
-        );
-      } else {
         favoriteIds.remove(houseId);
         favoriteApartments.removeWhere((ap) => ap.id == houseId);
+      } else {
+        favoriteIds.add(houseId);
+        if (apartment != null &&
+            !favoriteApartments.any((ap) => ap.id == houseId)) {
+          favoriteApartments.add(apartment);
+        }
       }
+
+      // إرسال التغيير للخادم
+      await service.toggleFavorite(houseId);
+
+      print("✅ Favorite toggled: House $houseId - isFav: ${!isFav}");
+
+      // تحديث التطبيق
+      update();
+    } catch (e) {
+      print("❌ Failed to toggle favorite: $e");
+
+      // التراجع عن التغيير في حالة الخطأ
+      final bool wasFav = favoriteIds.contains(houseId);
+      if (wasFav) {
+        favoriteIds.remove(houseId);
+        favoriteApartments.removeWhere((ap) => ap.id == houseId);
+      } else {
+        favoriteIds.add(houseId);
+        final apartment = allApartments.firstWhereOrNull(
+          (ap) => ap.id == houseId,
+        );
+        if (apartment != null) {
+          favoriteApartments.add(apartment);
+        }
+      }
+
+      update();
+      rethrow;
     }
   }
 
   Future<void> loadFavorites() async {
     try {
-      isLoading.value = true;
-      favoriteApartments.value = await service.getMyFavorites();
+      print("🔄 Loading favorites from server...");
 
-      // تحديث الـ favoriteIds عشان القلوب تتغير بالـ UI
-      favoriteIds.value = favoriteApartments.map((e) => e.id).toSet();
+      // الحصول على المفضلة من الخادم
+      final List<Apartment> serverFavorites = await service.getMyFavorites();
+
+      // تحديث القوائم
+      favoriteApartments.assignAll(serverFavorites);
+      favoriteIds.value = serverFavorites.map((e) => e.id).toSet();
+
+      print("✅ Loaded ${favoriteApartments.length} favorites");
+      print("✅ Favorite IDs: ${favoriteIds.toList()}");
+
+      update();
     } catch (e) {
-      errorMessage.value = "Failed to load favorites: $e";
-    } finally {
-      isLoading.value = false;
+      print("❌ Failed to load favorites: $e");
+      favoriteApartments.clear();
+      favoriteIds.clear();
+      update();
+    }
+  }
+
+  bool isFavorite(int houseId) {
+    return favoriteIds.contains(houseId);
+  }
+
+  Future<void> loadUserRelatedData() async {
+    try {
+      await Future.wait([
+        loadFavorites(),
+        // يمكن إضافة تحميل بيانات أخرى متعلقة بالمستخدم هنا
+      ]);
+    } catch (e) {
+      print("⚠️ Error loading user data: $e");
     }
   }
 

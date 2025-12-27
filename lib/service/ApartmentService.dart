@@ -293,13 +293,25 @@ class ApartmentService {
       );
 
       if (response.statusCode == 200) {
-        final List list = response.data['data'];
-        return list.map((e) => Apartment.fromJson(e)).toList();
+        final responseData = response.data;
+
+        // تحقق من هيكل البيانات
+        if (responseData is Map && responseData.containsKey('data')) {
+          final List list = responseData['data'];
+
+          return list.map((e) => Apartment.fromJson(e)).toList();
+        } else if (responseData is List) {
+          return responseData.map((e) => Apartment.fromJson(e)).toList();
+        } else {
+          return [];
+        }
       } else {
-        throw Exception("Failed to load favorites");
+        throw Exception("Failed to load favorites: ${response.statusCode}");
       }
     } on DioException catch (e) {
       throw Exception("Network error: ${e.message}");
+    } catch (e) {
+      rethrow;
     }
   }
 }
