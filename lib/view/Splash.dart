@@ -11,9 +11,7 @@ class Splash extends StatelessWidget {
   Widget build(BuildContext context) {
     checkLogin();
 
-    return Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
+    return Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 
   void checkLogin() async {
@@ -23,9 +21,9 @@ class Splash extends StatelessWidget {
     await Future.delayed(Duration(seconds: 1));
 
     if (token != null) {
-      Get.offAll(() => Home());
+      Get.offAllNamed("/home");
     } else {
-      Get.offAll(() => WelcomePage());
+      Get.offAllNamed("/onboarding");
     }
   }
 }

@@ -1,0 +1,161 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'onboarding_page.dart';
+import '../WelcomePage.dart';
+
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController _controller = PageController();
+  int currentIndex = 0;
+
+  final int totalPages = 3;
+
+  bool get isLastPage => currentIndex == totalPages - 1;
+
+  void nextPage() {
+    if (!isLastPage) {
+      _controller.nextPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            /// PageView
+            PageView(
+              controller: _controller,
+              physics: const NeverScrollableScrollPhysics(),
+              onPageChanged: (index) {
+                setState(() {
+                  currentIndex = index;
+                });
+              },
+              children: [
+                const OnboardingPage(
+                  title: "Find Your Perfect Apartment",
+                  subtitle: "The easiest and fastest way to book apartments",
+                  image: "images/House searching-rafiki.png",
+                ),
+                const OnboardingPage(
+                  title: "Choose With Confidence",
+                  subtitle:
+                      "Clear photos, full details, and transparent prices",
+                  image: "images/Apartment rent-amico.png",
+                ),
+
+                /// آخر صفحة onboarding
+                OnboardingPage(
+                  title: "Ready to Get Started?",
+                  subtitle: "Start your journey with MR.Dar today",
+                  image: "images/Apartment rent-pana.png",
+                  bottomWidget: ElevatedButton(
+                    onPressed: () {
+                      Get.offAll(() => const WelcomePage());
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF274668),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 50,
+                        vertical: 14,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                    ),
+                    child: const Text(
+                      "Get Started",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            /// Skip button (يختفي بالصفحة الأخيرة)
+            if (!isLastPage)
+              Positioned(
+                top: 10,
+                right: 10,
+                child: TextButton(
+                  onPressed: () {
+                    _controller.animateToPage(
+                      totalPages - 1,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  child: const Text(
+                    "Skip",
+                    style: TextStyle(fontSize: 16, color: Color(0xFF274668)),
+                  ),
+                ),
+              ),
+
+            /// Dots + Next
+            Positioned(
+              bottom: 30,
+              left: 0,
+              right: 0,
+              child: Column(
+                children: [
+                  /// Dots
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(totalPages, (index) {
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        width: currentIndex == index ? 20 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: currentIndex == index
+                              ? const Color(0xFF274668)
+                              : Colors.grey.shade400,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      );
+                    }),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// Next (يختفي بآخر صفحة)
+                  if (!isLastPage)
+                    ElevatedButton(
+                      onPressed: nextPage,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF274668),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                      ),
+                      child: const Text(
+                        "Next",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
