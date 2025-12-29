@@ -42,7 +42,7 @@ class BookingController extends GetxController {
     List<DateTime> days = [];
 
     for (var r in reservations) {
-      if (r.status != 'accepted') continue;
+      if (r.statusId != 2) continue; // 2 = accepted
 
       DateTime start = DateTime.parse(r.startDate);
       DateTime end = DateTime.parse(r.endDate);
@@ -57,7 +57,7 @@ class BookingController extends GetxController {
   }
   bool isDayBooked(DateTime day) {
     for (var r in reservations) {
-      if (r.status != 'accepted') continue;
+      if (r.statusId != 2) continue; // 2 = accepted
 
       DateTime start = DateTime.parse(r.startDate);
       DateTime end = DateTime.parse(r.endDate);
