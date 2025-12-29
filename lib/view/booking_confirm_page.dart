@@ -113,50 +113,16 @@ class BookingConfirmPage extends StatelessWidget {
                       : () async {
                     await controller.confirmBooking();
 
-                    Get.dialog(
-                      AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(Icons.check_circle,
-                                color: Colors.green, size: 64),
-                            SizedBox(height: 16),
-                            Text(
-                              "Booking Sent",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              "Your request is pending approval from the owner.",
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Get.back();
-                              Get.back();
-                              Get.back();
-                            },
-                            child: const Text("OK"),
-                          ),
-                        ],
-                      ),
-                    );
                   },
                   child: controller.isLoading.value
-                      ? const CircularProgressIndicator(color: Colors.white)
+                      ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                  )
                       : const Text(
                     "Confirm Booking",
-                    style: TextStyle(
-                        color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ),

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -10,6 +11,7 @@ class BookingController extends GetxController {
   final int houseId;
   final double rentValue;
   late Apartment apartment;
+  double get totalPrice => duration.value * rentValue;
 
   BookingController(
       {
@@ -42,7 +44,7 @@ class BookingController extends GetxController {
     List<DateTime> days = [];
 
     for (var r in reservations) {
-      if (r.statusId != 'accepted') continue;
+      if (r.statusId != 2) continue;
 
       DateTime start = DateTime.parse(r.startDate);
       DateTime end = DateTime.parse(r.endDate);
@@ -57,7 +59,7 @@ class BookingController extends GetxController {
   }
   bool isDayBooked(DateTime day) {
     for (var r in reservations) {
-      if (r.statusId != 'accepted') continue;
+      if (r.statusId != 2) continue;
 
       DateTime start = DateTime.parse(r.startDate);
       DateTime end = DateTime.parse(r.endDate);
@@ -85,39 +87,140 @@ class BookingController extends GetxController {
 
     return tempEnd;
   }
+  // داخل BookingController
+
+  // دالة لمعرفة حالة اليوم بدقة
+  int getDayStatus(DateTime day) {
+    bool hasPending = false;
+
+    for (var r in reservations) {
+      DateTime start = DateTime.parse(r.startDate);
+      DateTime end = DateTime.parse(r.endDate);
+
+      if (!day.isBefore(start) && !day.isAfter(end)) {
+        if (r.statusId == 2) return 2; // مؤكد -> أحمر مباشرة
+        if (r.statusId == 1) hasPending = true; // مؤقتاً إذا وجدت حالة معلقة
+      }
+    }
+
+    return hasPending ? 1 : 0; // إذا لا يوجد تأكيد فقط، نرجع Pending أو متاح
+  }
+
+  // المنطق الجديد لفحص توفر الفترة قبل الإرسال
   bool isRangeAvailable() {
-    if (selectedStartDate.value == null && endDate == null) return false;
+    if (selectedStartDate.value == null || endDate == null) return false;
 
     DateTime current = selectedStartDate.value!;
-    // نمشي يوم يوم من البداية للنهاية ونشوف إذا في يوم محجوز
-    while (current.isBefore(endDate!) && isSameDay(current, endDate!)) {
-    if (isDayBooked(current)) return false; // لقينا يوم محجوز بالنص!
-    current = current.add(const Duration(days: 1));
+    while (current.isBefore(endDate!) || isSameDay(current, endDate!)) {
+      // 💡 التعديل: نمنع فقط إذا كانت الحالة 2 (Accepted)
+      if (getDayStatus(current) == 2) return false;
+      current = current.add(const Duration(days: 1));
     }
     return true;
   }
-  double get totalPrice => duration.value * rentValue;
 
   Future<void> confirmBooking() async {
     if (selectedStartDate.value == null) return;
 
-    isLoading.value = true;
+    // حالة (أ): الفحص المحلي قبل الإرسال (تضارب مع حجز مقبول نهائياً)
 
+    isLoading.value = true;
     final success = await service.createReservation(
       houseId: houseId,
-      startDate: DateFormat('yyyy-MM-dd')
-          .format(selectedStartDate.value!),
+      startDate: DateFormat('yyyy-MM-dd').format(selectedStartDate.value!),
       duration: duration.value,
     );
-
     isLoading.value = false;
 
     if (success) {
-      Get.snackbar("Success", "Reservation sent successfully");
-      Get.back();
-      Get.back();
+      // حالة (ب): نجاح (سواء كان التاريخ فارغاً أو عليه طلبات Pending لغيرك)
+      Get.snackbar(
+        "Success", "Your reservation request has been sent",
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+        icon: const Icon(Icons.check_circle, color: Colors.white),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      _showResultDialog(
+        title: "Booking Sent",
+        message: "Your request is pending. The owner can now see it and choose to accept it.",
+        type: 1, // نجاح
+      );
+
     } else {
-      Get.snackbar("Error", "Failed to create reservation");
+      // حالة (ج): فشل من السيرفر (غالباً لأن المستخدم لديه طلب Pending مسبق لنفس البيت)
+      Get.snackbar(
+        "Duplicate Request",
+        "You already have a pending request for this house.",
+        backgroundColor: Colors.orange.withOpacity(0.8),
+        colorText: Colors.white,
+        icon: const Icon(Icons.warning, color: Colors.white),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      _showResultDialog(
+        title: "Request Exists",
+        message: "You have already sent a request for this house. Please wait for the owner's response.",
+        type: 2, // تنبيه
+      );
     }
+  }
+
+  /// 6. الديالوغ الموحد للألوان الثلاثة
+  void _showResultDialog({
+    required String title,
+    required String message,
+    required int type, // 0: فشل، 1: نجاح، 2: تنبيه
+  }) {
+    Color mainColor;
+    IconData mainIcon;
+    String buttonText;
+
+    switch (type) {
+      case 1:
+        mainColor = Colors.green;
+        mainIcon = Icons.check_circle;
+        buttonText = "Great!";
+        break;
+      case 2:
+        mainColor = Colors.orange;
+        mainIcon = Icons.warning_amber_rounded;
+        buttonText = "I Understand";
+        break;
+      default:
+        mainColor = Colors.red;
+        mainIcon = Icons.error_outline;
+        buttonText = "Try Again";
+    }
+
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(mainIcon, color: mainColor, size: 64),
+            const SizedBox(height: 16),
+            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text(message, textAlign: TextAlign.center),
+          ],
+        ),
+        actions: [
+          Center(
+            child: TextButton(
+              onPressed: () {
+                Get.back(); // إغلاق الديالوغ
+                if (type == 1) {
+                  Get.back(); // العودة من صفحة التأكيد
+                  Get.back(); // العودة من صفحة التاريخ
+                }
+              },
+              child: Text(buttonText, style: TextStyle(color: mainColor, fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
   }
 }
