@@ -17,8 +17,8 @@ class EditProfileScreen extends StatelessWidget {
           'Edit Profile',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF274668),
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF274668),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

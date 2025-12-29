@@ -12,11 +12,7 @@ class BookingDatePage extends StatelessWidget {
   final double rentValue;
   final apartment = Get.arguments as Apartment;
 
-   BookingDatePage({
-    super.key,
-    required this.houseId,
-    required this.rentValue,
-  });
+  BookingDatePage({super.key, required this.houseId, required this.rentValue});
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +31,7 @@ class BookingDatePage extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
-        iconTheme: const IconThemeData(
-          color: Color(0xFF274668),
-        ),
+        iconTheme: const IconThemeData(color: Color(0xFF274668)),
         title: const Text(
           "Select Booking Date",
           style: TextStyle(
@@ -49,7 +43,7 @@ class BookingDatePage extends StatelessWidget {
       ),
 
       body: Obx(
-            () => Column(
+        () => Column(
           children: [
             /// 🔽 كل المحتوى Scroll
             Expanded(
@@ -68,16 +62,18 @@ class BookingDatePage extends StatelessWidget {
                         padding: const EdgeInsets.all(16),
                         child: TableCalendar(
                           firstDay: DateTime.now(),
-                          lastDay:
-                          DateTime.now().add(const Duration(days: 365)),
+                          lastDay: DateTime.now().add(
+                            const Duration(days: 365),
+                          ),
                           focusedDay: DateTime.now(),
                           calendarFormat: CalendarFormat.month,
                           availableCalendarFormats: const {
                             CalendarFormat.month: 'Month',
                           },
-                          selectedDayPredicate: (day) =>
-                              isSameDay(
-                                  controller.selectedStartDate.value, day),
+                          selectedDayPredicate: (day) => isSameDay(
+                            controller.selectedStartDate.value,
+                            day,
+                          ),
                           onDaySelected: (day, _) {
                             if (controller.isDayBooked(day)) return;
                             controller.selectedStartDate.value = day;
@@ -91,7 +87,7 @@ class BookingDatePage extends StatelessWidget {
                               if (controller.selectedStartDate.value != null &&
                                   controller.endDate != null) {
                                 final start =
-                                controller.selectedStartDate.value!;
+                                    controller.selectedStartDate.value!;
                                 final end = controller.endDate!;
 
                                 if (isSameDay(day, start) ||
@@ -99,8 +95,7 @@ class BookingDatePage extends StatelessWidget {
                                   return _selectedDay(day);
                                 }
 
-                                if (day.isAfter(start) &&
-                                    day.isBefore(end)) {
+                                if (day.isAfter(start) && day.isBefore(end)) {
                                   return _rangeDay(day);
                                 }
                               }
@@ -171,17 +166,15 @@ class BookingDatePage extends StatelessWidget {
                                   final m = index + 1;
                                   return ChoiceChip(
                                     label: Text("$m"),
-                                    selected:
-                                    controller.duration.value == m,
-                                    selectedColor:
-                                    const Color(0xFF274668),
+                                    selected: controller.duration.value == m,
+                                    selectedColor: const Color(0xFF274668),
                                     labelStyle: TextStyle(
                                       color: controller.duration.value == m
                                           ? Colors.white
                                           : Colors.black,
                                     ),
                                     onSelected: (_) =>
-                                    controller.duration.value = m,
+                                        controller.duration.value = m,
                                   );
                                 }),
                               ),
@@ -213,7 +206,7 @@ class BookingDatePage extends StatelessWidget {
 
                     if (controller.isRangeAvailable()) {
                       Get.to(
-                            () => BookingConfirmPage(),
+                        () => BookingConfirmPage(),
                         arguments: houseId.toString(),
                       );
                     } else {
@@ -247,9 +240,7 @@ class BookingDatePage extends StatelessWidget {
         Text(title, style: const TextStyle(fontSize: 12)),
         const SizedBox(height: 4),
         Text(
-          date == null
-              ? "--"
-              : DateFormat('MMM dd, yyyy').format(date),
+          date == null ? "--" : DateFormat('MMM dd, yyyy').format(date),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ],
@@ -262,10 +253,7 @@ class BookingDatePage extends StatelessWidget {
       shape: BoxShape.circle,
     ),
     child: Center(
-      child: Text(
-        "${day.day}",
-        style: const TextStyle(color: Colors.red),
-      ),
+      child: Text("${day.day}", style: const TextStyle(color: Colors.red)),
     ),
   );
 
@@ -275,10 +263,7 @@ class BookingDatePage extends StatelessWidget {
       shape: BoxShape.circle,
     ),
     child: Center(
-      child: Text(
-        "${day.day}",
-        style: const TextStyle(color: Colors.white),
-      ),
+      child: Text("${day.day}", style: const TextStyle(color: Colors.white)),
     ),
   );
 
