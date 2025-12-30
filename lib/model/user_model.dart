@@ -5,8 +5,8 @@ class UserModel {
   final String phone;
   final String role;
   final String dateOfBirth;
-  final String profileImage;
-  final String idImage;
+  final String? profileImage;
+  final String? idImage;
 
   UserModel({
     required this.id,
@@ -30,12 +30,12 @@ class UserModel {
     }
 
     return UserModel(
-      id: json["id"],
-      firstName: json["first_name"],
-      lastName: json["last_name"],
-      phone: json["phone"],
-      role: json["role"],
-      dateOfBirth: json["date_of_birth"],
+      id: json["id"] ?? 0,
+      firstName: json["first_name"] ?? '',
+      lastName: json["last_name"] ?? '',
+      phone: json["phone"] ?? '',
+      role: json["role"] ?? '',
+      dateOfBirth: json["date_of_birth"] ?? '',
       profileImage: parseImages(json['profile_image']),
       idImage: parseImages(json['id_image']),
     );

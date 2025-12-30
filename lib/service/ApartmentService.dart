@@ -314,4 +314,39 @@ class ApartmentService {
       rethrow;
     }
   }
+
+  //جلب كل شقق المالك
+  Future<List<Apartment>> getMyApartments() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString("token") ?? "";
+
+      final response = await api.dio.get(
+        EndPoint.getApartments,
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+            "Accept": "application/json",
+          },
+          validateStatus: (_) => true,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        if (data is Map && data.containsKey('data')) {
+          final List list = data['data'];
+          return list.map((e) => Apartment.fromJson(e)).toList();
+        }
+      }
+
+      return [];
+    } on DioException catch (e) {
+      print("getMyApartments error: ${e.message}");
+      return [];
+    }
+  }
+
+
 }

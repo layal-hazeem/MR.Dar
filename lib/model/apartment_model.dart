@@ -5,7 +5,7 @@ class Apartment {
   final double rentValue;
   final int rooms;
   final double space;
-  final String notes;
+  final String? notes;
 
   final int cityId;
   final String cityName;
@@ -69,7 +69,7 @@ class Apartment {
       rentValue: safeDouble(json['rent_value']),
       rooms: safeInt(json['rooms']),
       space: safeDouble(json['space']),
-      notes: json['notes'] ?? '',
+      notes: json['notes'] ,
 
       cityId: safeInt(city['id']),
       cityName: city['name'] ?? '',

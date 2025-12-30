@@ -8,6 +8,8 @@ import '../../controller/authcontroller.dart';
 import '../../controller/edit_profile_controller.dart';
 import '../../controller/homecontroller.dart';
 import '../../controller/my_account_controller.dart';
+import '../../controller/my_apartments_controller.dart';
+import '../../controller/my_rents_controller.dart';
 import '../../service/ApartmentService.dart';
 import '../../service/UserLocalService.dart';
 import '../../service/booking_service.dart';
@@ -90,5 +92,19 @@ class AppBindings extends Bindings {
     );
 
     Get.lazyPut<FilterController>(() => FilterController(), fenix: true);
+
+    Get.put<MyRentsController>(
+      MyRentsController(bookingService: Get.find()),
+      permanent: true,
+    );
+
+    Get.lazyPut<MyApartmentsController>(
+          () => MyApartmentsController(
+        apartmentService: Get.find<ApartmentService>(),
+      ),
+      fenix: true,
+    );
+
+
   }
 }

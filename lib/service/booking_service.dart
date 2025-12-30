@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/api/dio_consumer.dart';
 import '../core/api/end_points.dart';
 import '../model/booking_model.dart';
+import '../model/reservation_model.dart';
 
 class BookingService {
   final DioConsumer api;
@@ -67,4 +68,40 @@ class BookingService {
 
     return response.statusCode == 200 || response.statusCode == 201;
   }
+
+  /// 🟢 جلب جميع حجوزات مستأجر)
+  Future<List<ReservationModel>> getMyReservations() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString("token") ?? "";
+
+      final response = await api.dio.get(
+        EndPoint.reservations,
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+            "Accept": "application/json",
+          },
+          validateStatus: (_) => true,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        if (data is Map && data.containsKey('data')) {
+          final List list = data['data'];
+          return list
+              .map((e) => ReservationModel.fromJson(e))
+              .toList();
+        }
+      }
+
+      return [];
+    } on DioException catch (e) {
+      print("getMyReservations error: ${e.message}");
+      return [];
+    }
+  }
 }
+

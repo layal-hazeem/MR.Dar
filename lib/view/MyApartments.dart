@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 
 import '../controller/my_apartments_controller.dart';
 import '../core/enums/apartment_status.dart';
+import '../widgets/apartment_card.dart';
+import 'apartment_details_page.dart';
 
 class MyApartments extends StatefulWidget {
   const MyApartments({super.key});
@@ -12,8 +14,9 @@ class MyApartments extends StatefulWidget {
 }
 
 class _MyApartmentsState extends State<MyApartments> {
-  final MyApartmentsController controller =
-  Get.put(MyApartmentsController());
+  final MyApartmentsController controller = Get.find<MyApartmentsController>();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,31 +54,49 @@ class _MyApartmentsState extends State<MyApartments> {
           // -------- Apartments List --------
           Expanded(
             child: Obx(() {
-              final apartments = controller.filteredApartments;
-
-              if (apartments.isEmpty) {
+              // 1️⃣ Loading
+              if (controller.isLoading.value) {
                 return const Center(
-                  child: Text('no apartments'),
+                  child: CircularProgressIndicator(),
                 );
               }
 
+              // 2️⃣ Error
+              if (controller.errorMessage.isNotEmpty) {
+                return Center(
+                  child: Text(controller.errorMessage.value),
+                );
+              }
+
+              final apartments = controller.filteredApartments;
+
+              // 3️⃣ Empty
+              if (apartments.isEmpty) {
+                return Center(
+                  child: Text(
+                    'no apartments in ${controller.currentStatus.value.displayName}',
+                  ),
+                );
+              }
+
+              // 4️⃣ List
               return ListView.builder(
                 itemCount: apartments.length,
                 itemBuilder: (context, index) {
                   final apartment = apartments[index];
 
-                  return ListTile(
-                    leading: apartment.houseImages.isNotEmpty
-                        ? Image.network(
-                      apartment.houseImages.first,
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                    )
-                        : const Icon(Icons.apartment),
-                    title: Text(apartment.title),
-                    subtitle: Text(
-                      '${apartment.cityName} - ${apartment.governorateName}',
+                  return Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: ApartmentCard(
+                      apartment: apartment,
+                      onTap: () {
+                        Get.to(
+                              () => ApartmentDetailsPage(apartment: apartment),
+                        );
+                      },
                     ),
                   );
                 },
