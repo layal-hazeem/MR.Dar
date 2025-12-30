@@ -37,6 +37,8 @@ class BookingController extends GetxController {
 
   Future<void> loadReservations() async {
     reservations.value = await service.getHouseReservations(houseId);
+    reservations.refresh(); // 👈 مهم
+
   }
 
   /// الأيام المحجوزة (للتقويم)
@@ -44,7 +46,7 @@ class BookingController extends GetxController {
     List<DateTime> days = [];
 
     for (var r in reservations) {
-      if (r.statusId != 2) continue;
+      if (r.status != 'accepted') continue;
 
       DateTime start = DateTime.parse(r.startDate);
       DateTime end = DateTime.parse(r.endDate);
@@ -58,19 +60,26 @@ class BookingController extends GetxController {
     return days;
   }
   bool isDayBooked(DateTime day) {
+    final checkDay = DateTime(day.year, day.month, day.day);
+
     for (var r in reservations) {
-      if (r.statusId != 2) continue;
+      if (r.status != 'accepted') continue;
 
-      DateTime start = DateTime.parse(r.startDate);
-      DateTime end = DateTime.parse(r.endDate);
+      final start = DateTime.parse(r.startDate);
+      final end = DateTime.parse(r.endDate);
 
+      final startDay = DateTime(start.year, start.month, start.day);
+      final endDay = DateTime(end.year, end.month, end.day);
 
-      if (!day.isBefore(start) && !day.isAfter(end)) {
+      // اليوم ضمن الفترة
+      if (!checkDay.isBefore(startDay) && !checkDay.isAfter(endDay)) {
         return true;
       }
     }
     return false;
   }
+
+
   DateTime? get endDate {
     if (selectedStartDate.value == null) return null;
 
@@ -98,8 +107,8 @@ class BookingController extends GetxController {
       DateTime end = DateTime.parse(r.endDate);
 
       if (!day.isBefore(start) && !day.isAfter(end)) {
-        if (r.statusId == 2) return 2; // مؤكد -> أحمر مباشرة
-        if (r.statusId == 1) hasPending = true; // مؤقتاً إذا وجدت حالة معلقة
+        if (r.status == 'accepted') return 2; // مؤكد -> أحمر مباشرة
+        if (r.status == 'pending') hasPending = true; // مؤقتاً إذا وجدت حالة معلقة
       }
     }
 
@@ -111,13 +120,14 @@ class BookingController extends GetxController {
     if (selectedStartDate.value == null || endDate == null) return false;
 
     DateTime current = selectedStartDate.value!;
-    while (current.isBefore(endDate!) || isSameDay(current, endDate!)) {
-      // 💡 التعديل: نمنع فقط إذا كانت الحالة 2 (Accepted)
-      if (getDayStatus(current) == 2) return false;
+
+    while (current.isBefore(endDate!)) {
+      if (isDayBooked(current)) return false;
       current = current.add(const Duration(days: 1));
     }
     return true;
   }
+
 
   Future<void> confirmBooking() async {
     if (selectedStartDate.value == null) return;

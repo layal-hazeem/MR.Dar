@@ -11,18 +11,24 @@ class BookingService {
   BookingService({required this.api});
 
   /// 🟢 جلب الحجوزات لبيت معين
-  Future<List<Booking>> getHouseReservations(int house_Id) async {
+  Future<List<Booking>> getHouseReservations(int houseId) async {
     final response = await api.dio.get(
-      '${EndPoint.reservations}/house/$house_Id',
+      '${EndPoint.reservations}/house/$houseId',
       options: Options(validateStatus: (_) => true),
     );
 
     if (response.statusCode == 200) {
       final List list = response.data['data'];
-      return list.map((e) => Booking.fromJson(e)).toList();
+
+      return list
+          .map((e) => Booking.fromJson(e, houseId: houseId))
+          .toList();
     }
+
     return [];
   }
+
+
   Future<bool> approveReservation(int house_Id) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token") ?? "";

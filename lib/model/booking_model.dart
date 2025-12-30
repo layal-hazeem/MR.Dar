@@ -4,7 +4,7 @@ class Booking {
   final String startDate;
   final String endDate;
   final int duration;
-  final int statusId;
+  final String status;
 
   Booking({
     required this.id,
@@ -12,17 +12,20 @@ class Booking {
     required this.startDate,
     required this.endDate,
     required this.duration,
-    required this.statusId,
+    required this.status,
   });
 
-  factory Booking.fromJson(Map<String, dynamic> json) {
+  factory Booking.fromJson(
+      Map<String, dynamic> json, {
+        required int houseId, // 👈 نمرّره من برا
+      }) {
     return Booking(
       id: json['id'],
-      houseId: json['house_id'], // أو json['house']['id']
+      houseId: houseId, // 👈 ثابت
       startDate: json['start_date'],
       endDate: json['end_date'],
       duration: int.parse(json['duration'].toString()),
-      statusId: json['status_id'],
+      status: json['status'].toString().toLowerCase(),
     );
   }
 }

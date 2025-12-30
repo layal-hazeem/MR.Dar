@@ -61,11 +61,15 @@ class BookingDatePage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: TableCalendar(
+
+                          key: ValueKey(controller.reservations.length),
+
                           firstDay: DateTime.now(),
                           lastDay: DateTime.now().add(
                             const Duration(days: 365),
                           ),
                           focusedDay: DateTime.now(),
+
                           calendarFormat: CalendarFormat.month,
                           availableCalendarFormats: const {
                             CalendarFormat.month: 'Month',
@@ -75,31 +79,45 @@ class BookingDatePage extends StatelessWidget {
                             day,
                           ),
                           onDaySelected: (day, _) {
-                            if (controller.isDayBooked(day)) return;
+                            if (controller.isDayBooked(day)) return; // يمنع الاختيار
                             controller.selectedStartDate.value = day;
                           },
                           calendarBuilders: CalendarBuilders(
+                            // هذا الـ Builder له الأولوية القصوى
                             prioritizedBuilder: (context, day, _) {
                               if (controller.isDayBooked(day)) {
-                                return _bookedDay(day);
-                              }
-
-                              if (controller.selectedStartDate.value != null &&
-                                  controller.endDate != null) {
-                                final start =
-                                    controller.selectedStartDate.value!;
-                                final end = controller.endDate!;
-
-                                if (isSameDay(day, start) ||
-                                    isSameDay(day, end)) {
-                                  return _selectedDay(day);
-                                }
-
-                                if (day.isAfter(start) && day.isBefore(end)) {
-                                  return _rangeDay(day);
-                                }
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.shade400, // لون أحمر هادئ لكن واضح
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '${day.day}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                );
                               }
                               return null;
+                            },
+
+                            // تنسيق الأيام التي يختارها المستخدم حالياً (الحجز الجديد)
+                            selectedBuilder: (context, day, focusedDay) {
+                              return Container(
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF274668),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text('${day.day}', style: const TextStyle(color: Colors.white)),
+                                ),
+                              );
                             },
                           ),
                           headerStyle: const HeaderStyle(
