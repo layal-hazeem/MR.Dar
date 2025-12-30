@@ -323,7 +323,7 @@ class EditProfileScreen extends StatelessWidget {
     EditProfileController controller,
   ) {
     controller.confirmDialogPasswordController.clear();
-
+    controller.dialogPasswordError.value = null;
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -333,13 +333,21 @@ class EditProfileScreen extends StatelessWidget {
           children: [
             const Text('Enter your current password to apply changes:'),
             const SizedBox(height: 15),
-            TextField(
-              controller: controller.confirmDialogPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Current Password',
-                prefixIcon: Icon(Icons.lock),
+            Obx(
+              () => TextFormField(
+                controller: controller.confirmDialogPasswordController,
+                obscureText: true,
+                onChanged: (_) {
+                  if (controller.dialogPasswordError.value != null) {
+                    controller.dialogPasswordError.value = null;
+                  }
+                },
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: 'Current Password',
+                  prefixIcon: const Icon(Icons.lock),
+                  errorText: controller.dialogPasswordError.value,
+                ),
               ),
             ),
           ],
@@ -357,39 +365,25 @@ class EditProfileScreen extends StatelessWidget {
               onPressed: controller.isUpdating.value
                   ? null
                   : () async {
-                      String pass =
-                          controller.confirmDialogPasswordController.text;
-                      if (pass.isEmpty) return;
+                      final pass = controller
+                          .confirmDialogPasswordController
+                          .text
+                          .trim();
 
-                      bool success = await controller.saveAllChanges(pass);
+                      if (pass.isEmpty) {
+                        controller.dialogPasswordError.value =
+                            'Password is required';
+                        return;
+                      }
 
-                      Get.back();
+                      final success = await controller.saveAllChanges(pass);
 
                       if (success) {
-                        Get.snackbar(
-                          'Success',
-                          'Profile updated successfully',
-                          backgroundColor: Colors.green,
-                          colorText: Colors.white,
-                          snackPosition: SnackPosition.TOP,
-                          icon: const Icon(
-                            Icons.check_circle,
-                            color: Colors.white,
-                          ),
-                        );
+                        controller.dialogPasswordError.value = null;
+                        Get.back(); // سكري الديالوج فقط
                       } else {
-                        Get.snackbar(
-                          'Update Failed',
-                          controller.errorMessage.value,
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                          snackPosition: SnackPosition.TOP,
-                          icon: const Icon(
-                            Icons.error_outline,
-                            color: Colors.white,
-                          ),
-                          duration: const Duration(seconds: 4),
-                        );
+                        controller.dialogPasswordError.value =
+                            controller.errorMessage.value;
                       }
                     },
               child: controller.isUpdating.value

@@ -40,4 +40,24 @@ class UserModel {
       idImage: parseImages(json['id_image']),
     );
   }
+
+  // ✅ أضيفي هاد
+  UserModel copyWith({
+    String? firstName,
+    String? lastName,
+    String? phone,
+    String? dateOfBirth,
+    String? profileImage,
+  }) {
+    return UserModel(
+      id: id,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phone: phone ?? this.phone,
+      role: role,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      profileImage: profileImage ?? this.profileImage,
+      idImage: idImage,
+    );
+  }
 }

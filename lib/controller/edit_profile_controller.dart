@@ -17,6 +17,7 @@ class EditProfileController extends GetxController {
   final isUpdating = false.obs;
   final hasAnyChanges = false.obs;
   final errorMessage = ''.obs;
+  final dialogPasswordError = RxnString();
 
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
@@ -106,6 +107,8 @@ class EditProfileController extends GetxController {
       errorMessage.value = '';
 
       final formData = FormData();
+
+      // ===== البيانات النصية =====
       formData.fields.addAll([
         MapEntry('first_name', firstNameController.text.trim()),
         MapEntry('last_name', lastNameController.text.trim()),
@@ -114,34 +117,49 @@ class EditProfileController extends GetxController {
         MapEntry('current_password', confirmPassword),
       ]);
 
+      // ===== تغيير كلمة المرور (إن وُجد) =====
       if (newPasswordController.text.isNotEmpty) {
-        formData.fields.add(
+        formData.fields.addAll([
           MapEntry('new_password', newPasswordController.text.trim()),
-        );
-        formData.fields.add(
           MapEntry(
             'new_password_confirmation',
             confirmPasswordController.text.trim(),
           ),
-        );
+        ]);
       }
 
+      // ===== رفع صورة البروفايل (إن وُجدت) =====
       if (selectedImage.value != null) {
         formData.files.add(
           MapEntry(
             'profile_image',
             await MultipartFile.fromFile(
               selectedImage.value!.path,
-              filename: 'profile.jpg',
+              filename: selectedImage.value!.name,
             ),
           ),
         );
       }
 
+      // ===== طلب التحديث =====
       final response = await userService.updateProfile(formData);
 
       if (response['status'] == 'success') {
-        await myAccountController.loadProfile();
+        final oldUser = myAccountController.user.value;
+
+        if (oldUser != null) {
+          myAccountController.user.value = oldUser.copyWith(
+            firstName: firstNameController.text.trim(),
+            lastName: lastNameController.text.trim(),
+            phone: phoneController.text.trim(),
+            dateOfBirth: dobController.text.trim(),
+            profileImage: selectedImage.value != null
+                ? selectedImage.value!.path
+                : null,
+          );
+        }
+
+        myAccountController.update(); // تحديث الواجهة
         _clearSensitiveData();
         return true;
       } else {
