@@ -48,7 +48,7 @@ class AppBindings extends Bindings {
       permanent: true,
     );
     Get.put<AuthController>(
-      AuthController(authService: authService),
+      AuthController(authService: authService, userService: userService),
       permanent: true,
     );
 
@@ -99,12 +99,10 @@ class AppBindings extends Bindings {
     );
 
     Get.lazyPut<MyApartmentsController>(
-          () => MyApartmentsController(
+      () => MyApartmentsController(
         apartmentService: Get.find<ApartmentService>(),
       ),
       fenix: true,
     );
-
-
   }
 }

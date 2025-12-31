@@ -14,11 +14,13 @@ class EditProfileController extends GetxController {
     required this.myAccountController,
   });
 
+  // States
   final isUpdating = false.obs;
   final hasAnyChanges = false.obs;
   final errorMessage = ''.obs;
   final dialogPasswordError = RxnString();
 
+  // Text Controllers
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
   late TextEditingController phoneController;
@@ -27,21 +29,28 @@ class EditProfileController extends GetxController {
   final confirmPasswordController = TextEditingController();
   final confirmDialogPasswordController = TextEditingController();
 
+  // UI States
   final formKey = GlobalKey<FormState>();
   final selectedImage = Rx<XFile?>(null);
   final picker = ImagePicker();
 
   final showNewPassword = false.obs;
   final showConfirmPassword = false.obs;
+  final showDialogPassword = false.obs;
 
   @override
   void onInit() {
     super.onInit();
+    _initControllers();
+  }
+
+  void _initControllers() {
     final user = myAccountController.user.value;
     firstNameController = TextEditingController(text: user?.firstName ?? "");
     lastNameController = TextEditingController(text: user?.lastName ?? "");
     phoneController = TextEditingController(text: user?.phone ?? "");
     dobController = TextEditingController(text: user?.dateOfBirth ?? "");
+
     void listener() => checkChanges();
     firstNameController.addListener(listener);
     lastNameController.addListener(listener);
@@ -83,41 +92,24 @@ class EditProfileController extends GetxController {
     }
   }
 
-  Future<void> selectDate(BuildContext context) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: dobController.text.isNotEmpty
-          ? (DateTime.tryParse(dobController.text) ?? DateTime(2000))
-          : DateTime(2000),
-      firstDate: DateTime(1950),
-      lastDate: DateTime.now(),
-    );
-
-    if (picked != null) {
-      dobController.text =
-          "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
-      checkChanges();
-      update();
-    }
-  }
-
-  Future<bool> saveAllChanges(String confirmPassword) async {
+  Future<bool> updateProfile({required String currentPassword}) async {
     try {
       isUpdating.value = true;
       errorMessage.value = '';
+      dialogPasswordError.value = null; // 🔽 نمسح أي أخطاء سابقة
 
       final formData = FormData();
 
-      // ===== البيانات النصية =====
+      // البيانات النصية
       formData.fields.addAll([
         MapEntry('first_name', firstNameController.text.trim()),
         MapEntry('last_name', lastNameController.text.trim()),
         MapEntry('phone', phoneController.text.trim()),
         MapEntry('date_of_birth', dobController.text.trim()),
-        MapEntry('current_password', confirmPassword),
+        MapEntry('current_password', currentPassword),
       ]);
 
-      // ===== تغيير كلمة المرور (إن وُجد) =====
+      // تغيير كلمة المرور (إن وُجد)
       if (newPasswordController.text.isNotEmpty) {
         formData.fields.addAll([
           MapEntry('new_password', newPasswordController.text.trim()),
@@ -128,7 +120,7 @@ class EditProfileController extends GetxController {
         ]);
       }
 
-      // ===== رفع صورة البروفايل (إن وُجدت) =====
+      // رفع صورة البروفايل (إن وُجدت)
       if (selectedImage.value != null) {
         formData.files.add(
           MapEntry(
@@ -141,12 +133,18 @@ class EditProfileController extends GetxController {
         );
       }
 
-      // ===== طلب التحديث =====
+      // طلب التحديث
       final response = await userService.updateProfile(formData);
 
-      if (response['status'] == 'success') {
-        final oldUser = myAccountController.user.value;
+      print('📡 API Response: ${response.toString()}'); // 🔽 أضف هذا للتصحيح
 
+      if (response['status'] == 'success') {
+        // 🔽 نمسح كل الرسائل عند النجاح
+        errorMessage.value = '';
+        dialogPasswordError.value = null;
+
+        // تحديث البيانات محلياً
+        final oldUser = myAccountController.user.value;
         if (oldUser != null) {
           myAccountController.user.value = oldUser.copyWith(
             firstName: firstNameController.text.trim(),
@@ -159,22 +157,25 @@ class EditProfileController extends GetxController {
           );
         }
 
-        myAccountController.update(); // تحديث الواجهة
+        myAccountController.update();
         _clearSensitiveData();
-        Get.back(); // إغلاق صفحة التعديل
-        return true;
+        return true; // 🔽 نجاح
       } else {
-        errorMessage.value =
-            response['message'] ?? 'Incorrect current password';
+        // 🔽 فشل: نعرض رسالة الخطأ
+        final errorMsg = response['message'] ?? 'Incorrect current password';
+        errorMessage.value = errorMsg;
+        dialogPasswordError.value = errorMsg; // 🔽 هام: نضيف قيمة للخطأ
         return false;
       }
+    } on DioException catch (e) {
+      final errorMsg =
+          e.response?.data['message'] ?? 'Validation Error: Check your data';
+      errorMessage.value = errorMsg;
+      dialogPasswordError.value = errorMsg; // 🔽 هام: نضيف قيمة للخطأ
+      return false;
     } catch (e) {
-      if (e is DioException) {
-        errorMessage.value =
-            e.response?.data['message'] ?? 'Validation Error: Check your data';
-      } else {
-        errorMessage.value = 'Connection failed. Please try again.';
-      }
+      errorMessage.value = 'Connection failed. Please try again.';
+      dialogPasswordError.value = errorMessage.value; // 🔽 هام: نضيف قيمة للخطأ
       return false;
     } finally {
       isUpdating.value = false;
@@ -187,5 +188,25 @@ class EditProfileController extends GetxController {
     confirmPasswordController.clear();
     confirmDialogPasswordController.clear();
     hasAnyChanges.value = false;
+    dialogPasswordError.value = null; // 🔽 تأكد من مسح الخطأ
+    errorMessage.value = ''; // 🔽 تأكد من مسح الرسالة
+    showDialogPassword.value = false; // 🔽 إعادة تعيين حالة إظهار كلمة السر
+  }
+
+  void clearDialogFields() {
+    confirmDialogPasswordController.clear();
+    dialogPasswordError.value = null;
+  }
+
+  @override
+  void onClose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    phoneController.dispose();
+    dobController.dispose();
+    newPasswordController.dispose();
+    confirmPasswordController.dispose();
+    confirmDialogPasswordController.dispose();
+    super.onClose();
   }
 }

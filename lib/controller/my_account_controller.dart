@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,6 +35,12 @@ class MyAccountController extends GetxController {
       if (localData['token'] != null && localData['id'] != null) {
         user.value = _createUserFromLocalData(localData);
         isDataFromLocal.value = true;
+
+        // 🔽 تحقق من رابط الصورة
+        if (user.value?.profileImage != null &&
+            user.value!.profileImage!.isNotEmpty) {
+          await checkImageUrl(user.value!.profileImage!);
+        }
       }
 
       try {
@@ -43,6 +50,12 @@ class MyAccountController extends GetxController {
 
         // تحديث البيانات المحلية
         await _updateLocalData(apiUser);
+
+        // 🔽 تحقق من رابط الصورة بعد التحميل من API
+        if (user.value?.profileImage != null &&
+            user.value!.profileImage!.isNotEmpty) {
+          await checkImageUrl(user.value!.profileImage!);
+        }
       } catch (e) {
         print("Failed to fetch from API: $e");
         if (user.value == null) {
@@ -63,14 +76,22 @@ class MyAccountController extends GetxController {
   String _fixImageUrl(String? url) {
     if (url == null || url.isEmpty) return '';
 
-    if (url.startsWith('storage/')) {
-      return 'http://10.0.2.2:8000/storage/${url.substring(8)}';
+    print('🖼️ Original URL: $url');
+
+    // إصلاح الروابط النسبية
+    if (!url.startsWith('http')) {
+      if (url.startsWith('/storage/')) {
+        final fixed = 'http://10.0.2.2:8000$url';
+        print('🛠️ Fixed URL (with slash): $fixed');
+        return fixed;
+      } else if (url.startsWith('storage/')) {
+        final fixed = 'http://10.0.2.2:8000/storage/${url.substring(8)}';
+        print('🛠️ Fixed URL (without slash): $fixed');
+        return fixed;
+      }
     }
 
-    if (url.startsWith('/storage/')) {
-      return 'http://10.0.2.2:8000$url';
-    }
-
+    // إصلاح localhost لـ Android emulator
     if (url.contains('localhost:8000')) {
       return url.replaceAll('localhost:8000', '10.0.2.2:8000');
     }
@@ -80,6 +101,16 @@ class MyAccountController extends GetxController {
     }
 
     return url;
+  }
+
+  Future<void> checkImageUrl(String url) async {
+    try {
+      print('🔍 Testing image URL: $url');
+      final response = await Dio().head(url);
+      print('✅ Image exists - Status: ${response.statusCode}');
+    } catch (e) {
+      print('❌ Image not accessible: $e');
+    }
   }
 
   UserModel _createUserFromLocalData(Map<String, dynamic> data) {

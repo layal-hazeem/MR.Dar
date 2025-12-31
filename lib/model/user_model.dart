@@ -23,10 +23,24 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     String parseImages(dynamic image) {
-      if (image is Map && image['url'] != null) {
-        return image['url'].toString();
+      if (image == null || image.toString().trim().isEmpty) {
+        return "";
       }
-      return " ";
+
+      if (image is Map && image['url'] != null) {
+        String url = image['url'].toString();
+        // تأكد من الرابط كامل
+        if (url.isNotEmpty && !url.startsWith('http')) {
+          if (url.startsWith('/storage/')) {
+            url = 'http://10.0.2.2:8000$url';
+          } else if (url.startsWith('storage/')) {
+            url = 'http://10.0.2.2:8000/storage/${url.substring(8)}';
+          }
+        }
+        return url;
+      }
+
+      return image.toString();
     }
 
     return UserModel(
@@ -43,21 +57,24 @@ class UserModel {
 
   // ✅ أضيفي هاد
   UserModel copyWith({
+    int? id,
     String? firstName,
     String? lastName,
     String? phone,
+    String? role,
     String? dateOfBirth,
     String? profileImage,
+    String? idImage,
   }) {
     return UserModel(
-      id: id,
+      id: id ?? this.id,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       phone: phone ?? this.phone,
-      role: role,
+      role: role ?? this.role,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       profileImage: profileImage ?? this.profileImage,
-      idImage: idImage,
+      idImage: idImage ?? this.idImage,
     );
   }
 }
