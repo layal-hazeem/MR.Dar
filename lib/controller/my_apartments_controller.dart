@@ -116,4 +116,10 @@ class MyApartmentsController extends GetxController {
       update();
     }
   }
+
+  /// 🔄 إعادة تحميل البيانات (عند تغيير اللغة)
+  Future<void> reload() async {
+    await fetchMyApartments();
+  }
+
 }

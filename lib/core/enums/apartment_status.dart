@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 enum ApartmentStatus {
   pending,
@@ -18,15 +19,15 @@ extension ApartmentStatusExtension on ApartmentStatus {
   String get displayName {
     switch (this) {
       case ApartmentStatus.pending:
-        return 'Pending';
+        return 'Pending'.tr;
       case ApartmentStatus.accepted:
-        return 'Accepted';
+        return 'accepted'.tr;
       case ApartmentStatus.rejected:
-        return 'Rejected';
+        return 'Rejected'.tr;
       case ApartmentStatus.blocked:
-        return 'Blocked';
+        return 'Blocked'.tr;
       case ApartmentStatus.canceled:
-        return 'Canceled';
+        return 'Canceled'.tr;
     }
   }
 

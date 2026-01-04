@@ -271,6 +271,15 @@ class MyLocale implements Translations{
 
 
       "Login":"تسجيل دخول",
+
+      "Pending":"قيد الانتظار ",
+      "Rejected":"مرفوض",
+      "Blocked":"محظور",
+      "Canceled":"ملغي",
+      "Previous":"سابق",
+      "":"",
+      "":"",
+      "":"",
       "":"",
       "":"",
     } ,
@@ -541,6 +550,16 @@ class MyLocale implements Translations{
 
 
       "Login":"Login",
+
+
+      "Pending":"pending",
+      "Rejected":"rejected",
+      "Blocked":"blocked",
+      "Canceled":"canceled",
+      "Previous":"previous",
+      "":"",
+      "":"",
+      "":"",
       "":"",
       "":"",
     },

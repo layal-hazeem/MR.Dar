@@ -1,3 +1,5 @@
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
+
 enum ReservationStatus {
   pending,
   accepted,
@@ -27,21 +29,21 @@ extension ReservationStatusExtension on ReservationStatus {
     }
   }
 
-  /// اسم جاهز للعرض بالواجهة
+  ///  للعرض بالواجهة
   String get displayName {
     switch (this) {
       case ReservationStatus.pending:
-        return 'pending';
+        return 'Pending'.tr;
       case ReservationStatus.accepted:
-        return 'accepted';
+        return 'accepted'.tr;
       case ReservationStatus.rejected:
-        return 'rejected';
+        return 'Rejected'.tr;
       case ReservationStatus.blocked:
-        return 'blocked';
+        return 'Blocked'.tr;
       case ReservationStatus.canceled:
-        return 'canceled';
+        return 'Canceled'.tr;
       case ReservationStatus.previous:
-        return 'previous';
+        return 'Previous'.tr;
     }
   }
 }

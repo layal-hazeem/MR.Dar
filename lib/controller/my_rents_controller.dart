@@ -30,6 +30,12 @@ class MyRentsController extends GetxController {
 
 
   }
+
+  /// 🔄 إعادة تحميل البيانات (عند تغيير اللغة)
+  Future<void> reload() async {
+    await fetchMyReservations();
+  }
+
   // 👈 هاي الدالة بس
   void handleNotification({
     required String status,
@@ -206,5 +212,8 @@ class MyRentsController extends GetxController {
         );
       },
     );
+
+
+
   }
 }

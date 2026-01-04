@@ -401,4 +401,14 @@ class ApartmentController extends GetxController {
     }
     return allApartments;
   }
+
+  /// 🔄 إعادة تحميل البيانات عند تغيير اللغة
+  Future<void> reload() async {
+    await Future.wait([
+      loadApartments(),
+      loadGovernorates(),
+      loadFavorites(),
+    ]);
+  }
+
 }
