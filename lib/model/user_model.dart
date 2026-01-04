@@ -7,6 +7,7 @@ class UserModel {
   final String dateOfBirth;
   final String? profileImage;
   final String? idImage;
+  final String status;
 
   UserModel({
     required this.id,
@@ -17,6 +18,7 @@ class UserModel {
     required this.dateOfBirth,
     required this.profileImage,
     required this.idImage,
+    required this.status,
   });
 
   // من JSON
@@ -52,6 +54,7 @@ class UserModel {
       dateOfBirth: json["date_of_birth"] ?? '',
       profileImage: parseImages(json['profile_image']),
       idImage: parseImages(json['id_image']),
+      status: json["status"] ?? 'rejected',
     );
   }
 
@@ -65,6 +68,7 @@ class UserModel {
     String? dateOfBirth,
     String? profileImage,
     String? idImage,
+    String? status,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -75,6 +79,7 @@ class UserModel {
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       profileImage: profileImage ?? this.profileImage,
       idImage: idImage ?? this.idImage,
+      status: status ?? this.status,
     );
   }
 }

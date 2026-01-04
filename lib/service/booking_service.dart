@@ -79,7 +79,7 @@ class BookingService {
       final token = prefs.getString("token") ?? "";
 
       final response = await api.dio.get(
-        EndPoint.reservations,
+        '${EndPoint.reservations}/my-rents',
         options: Options(
           headers: {
             "Authorization": "Bearer $token",

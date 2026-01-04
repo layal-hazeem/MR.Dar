@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/ApartmentController.dart';
 import '../controller/UserController.dart';
-import '../controller/authcontroller.dart';
 import '../controller/homecontroller.dart';
 import '../core/theme/theme_service.dart';
 import 'MyApartments.dart';
@@ -21,7 +20,7 @@ class Home extends StatelessWidget {
   final ThemeService themeService = Get.find();
   final UserController user = Get.find<UserController>();
   final NotificationController notificationController =
-  Get.find<NotificationController>();
+      Get.find<NotificationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -73,37 +72,37 @@ class Home extends StatelessWidget {
       centerTitle: true,
       actions: index == 0
           ? [
-        // 🔔 زر الإشعارات
-        Obx(() {
-          final hasNotifications =
-              notificationController.notifications.isNotEmpty;
+              // 🔔 زر الإشعارات
+              Obx(() {
+                final hasNotifications =
+                    notificationController.notifications.isNotEmpty;
 
-          return Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_none),
-                onPressed: () {
-                  Get.to(() => NotificationsPage());
-                },
-              ),
-
-              // 🔴 Badge
-              if (hasNotifications)
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    width: 9,
-                    height: 9,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
+                return Stack(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.notifications_none),
+                      onPressed: () {
+                        Get.to(() => NotificationsPage());
+                      },
                     ),
-                  ),
-                ),
-            ],
-          );
-        }),
+
+                    // 🔴 Badge
+                    if (hasNotifications)
+                      Positioned(
+                        right: 8,
+                        top: 8,
+                        child: Container(
+                          width: 9,
+                          height: 9,
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              }),
               Obx(() {
                 final isDark = themeService.rxIsDark.value;
                 return IconButton(
@@ -114,25 +113,6 @@ class Home extends StatelessWidget {
                   ),
                 );
               }),
-            ]
-          : index == 2
-          ? [
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () async {
-                  final apartmentController = Get.find<ApartmentController>();
-
-                  await apartmentController.loadFavorites();
-
-                  Get.snackbar(
-                    "Refreshed".tr,
-                    "Favorites list updated".tr,
-                    backgroundColor: Colors.green,
-                    colorText: Colors.white,
-                    duration: const Duration(seconds: 1),
-                  );
-                },
-              ),
             ]
           : [],
     );
@@ -167,31 +147,29 @@ class Home extends StatelessWidget {
     });
   }
 
-
   // ========================= Nav Items =========================
-   List<BottomNavigationBarItem> _renterItems() => [
-  BottomNavigationBarItem(
-  icon: Icon(Icons.home_outlined),
-  activeIcon: Icon(Icons.home),
-  label: "Home".tr,
-  ),
-  BottomNavigationBarItem(
-  icon: Icon(Icons.bookmark_added_outlined),
-  activeIcon: Icon(Icons.bookmark_added),
-  label: "My Rents".tr,
-  ),
-  BottomNavigationBarItem(
-  icon: Icon(Icons.favorite_border),
-  activeIcon: Icon(Icons.favorite),
-  label: "Favourite".tr,
-  ),
-  BottomNavigationBarItem(
-  icon: Icon(Icons.person_2_outlined),
-  activeIcon: Icon(Icons.person_2),
-  label: "Account".tr,
-  ),
+  List<BottomNavigationBarItem> _renterItems() => [
+    BottomNavigationBarItem(
+      icon: Icon(Icons.home_outlined),
+      activeIcon: Icon(Icons.home),
+      label: "Home".tr,
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.bookmark_added_outlined),
+      activeIcon: Icon(Icons.bookmark_added),
+      label: "My Rents".tr,
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.favorite_border),
+      activeIcon: Icon(Icons.favorite),
+      label: "Favourite".tr,
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.person_2_outlined),
+      activeIcon: Icon(Icons.person_2),
+      label: "Account".tr,
+    ),
   ];
-
 
   List<BottomNavigationBarItem> _ownerItems() => [
     BottomNavigationBarItem(
@@ -215,5 +193,4 @@ class Home extends StatelessWidget {
       label: "Account".tr,
     ),
   ];
-
 }

@@ -13,6 +13,7 @@ class MyAccountController extends GetxController {
   final isDeleting = false.obs;
   final deletePasswordController = TextEditingController();
   MyAccountController({required this.service});
+  final AuthController authController = Get.find<AuthController>();
 
   final user = Rxn<UserModel>();
   final isLoading = false.obs;
@@ -123,6 +124,7 @@ class MyAccountController extends GetxController {
       dateOfBirth: data['date_of_birth'] ?? '',
       profileImage: _fixImageUrl(data['profile_image']),
       idImage: _fixImageUrl(data['id_image']),
+      status: data['status'] ?? 'rejected',
     );
   }
 
@@ -136,6 +138,7 @@ class MyAccountController extends GetxController {
       'date_of_birth': user.dateOfBirth,
       'profile_image': user.profileImage,
       'id_image': user.idImage,
+      'status': user.status,
     });
   }
 
@@ -187,20 +190,68 @@ class MyAccountController extends GetxController {
   }
 
   void showDeleteAccountFlow(BuildContext context) {
-    Get.defaultDialog(
-      title: "Delete Account?",
-      middleText: "Are you sure? This action cannot be undone.",
-      textConfirm: "Next",
-      textCancel: "Cancel",
-      confirmTextColor: Colors.white,
-      buttonColor: Colors.red,
-      onConfirm: () {
-        Get.back();
-        _showPasswordVerifyDialog(context);
-      },
-      onCancel: () {
-        Get.closeAllSnackbars();
-      },
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Text(
+          "Attention!".tr,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: const Text(
+          "Are you sure you want to delete your account?\nThis action cannot be undone.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Cancel", style: TextStyle(color: Colors.red)),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.back(); // سكّر Dialog التأكيد
+              _showPasswordVerifyDialog(context); // نفس الفلو تبعك
+            },
+            child: const Text(
+              "Confirm",
+              style: TextStyle(
+                color: Color(0xFF274668),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showLogoutDialog() {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Text(
+          "Attention!".tr,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Text("Are you sure you want to logout?".tr),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text("Cancel".tr, style: const TextStyle(color: Colors.red)),
+          ),
+          TextButton(
+            onPressed: () {
+              authController.logout();
+              Get.back();
+            },
+            child: Text(
+              "Confirm".tr,
+              style: const TextStyle(
+                color: Color(0xFF274668),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

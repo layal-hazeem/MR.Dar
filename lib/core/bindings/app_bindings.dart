@@ -102,9 +102,9 @@ class AppBindings extends Bindings {
 
     Get.lazyPut<FilterController>(() => FilterController(), fenix: true);
 
-    Get.put<MyRentsController>(
-      MyRentsController(bookingService: Get.find()),
-      permanent: true,
+    Get.lazyPut<MyRentsController>(
+      () => MyRentsController(bookingService: Get.find()),
+      fenix: true,
     );
     Get.lazyPut<MyApartmentsController>(
       () => MyApartmentsController(

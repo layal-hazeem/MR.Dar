@@ -34,7 +34,7 @@ class MyAccount extends StatelessWidget {
             children: [
               const Icon(Icons.person_off, size: 80, color: Colors.grey),
               const SizedBox(height: 20),
-               Text(
+              Text(
                 "No Profile Data".tr,
                 style: TextStyle(fontSize: 20, color: Colors.grey),
               ),
@@ -48,7 +48,7 @@ class MyAccount extends StatelessWidget {
                     vertical: 12,
                   ),
                 ),
-                child:  Text(
+                child: Text(
                   "Try Again".tr,
                   style: TextStyle(color: Colors.white),
                 ),
@@ -77,9 +77,10 @@ class MyAccount extends StatelessWidget {
                   children: [
                     Icon(Icons.info_outline, color: Colors.amber.shade700),
                     const SizedBox(width: 10),
-                     Expanded(
+                    Expanded(
                       child: Text(
-                        "Showing cached data. Pull to refresh for latest updates".tr,
+                        "Showing cached data. Pull to refresh for latest updates"
+                            .tr,
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
@@ -94,25 +95,6 @@ class MyAccount extends StatelessWidget {
 
             // Options Section
             _buildOptionsSection(),
-
-            const SizedBox(height: 15),
-
-            // Refresh Button
-            OutlinedButton.icon(
-              onPressed: () => controller.loadProfile(),
-              icon: const Icon(Icons.refresh),
-              label:  Text("Refresh Profile".tr),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 14,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                side: const BorderSide(color: Color(0xFF274668)),
-              ),
-            ),
 
             const SizedBox(height: 40),
           ],
@@ -168,30 +150,6 @@ class MyAccount extends StatelessWidget {
             color: Color(0xFF274668),
           ),
         ),
-
-        const SizedBox(height: 6),
-
-        // Role
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          decoration: BoxDecoration(
-            color: user.role == 'owner'.tr
-                ? Colors.blue.shade50
-                : Colors.green.shade50,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Text(
-            user.role.toUpperCase(),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: user.role == 'owner'.tr
-                  ? Colors.blue.shade700
-                  : Colors.green.shade700,
-            ),
-          ),
-        ),
-
         const SizedBox(height: 10),
 
         // Phone
@@ -206,6 +164,76 @@ class MyAccount extends StatelessWidget {
                 fontSize: 15,
                 color: Colors.grey.shade700,
                 fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 7),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // Role
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                color: user.role == 'owner'.tr
+                    ? Colors.blue.shade50
+                    : Colors.green.shade50,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: getAccountStatusColor(user.status),
+                  width: 1,
+                ),
+              ),
+              child: Text(
+                user.role.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: user.role == 'owner'.tr
+                      ? Colors.blue.shade700
+                      : Colors.green.shade700,
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+
+            // Refresh Button
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+
+              child: OutlinedButton.icon(
+                onPressed: () => controller.loadProfile(),
+                icon: const Icon(Icons.refresh),
+                label: Text(""),
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  side: const BorderSide(color: Color(0xFF274668), width: 2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                color: getAccountStatusColor(user.status).withOpacity(0.15),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: getAccountStatusColor(user.status),
+                  width: 1,
+                ),
+              ),
+              child: Text(
+                getAccountStatusLabel(user.status),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: getAccountStatusColor(user.status),
+                ),
               ),
             ),
           ],
@@ -232,15 +260,37 @@ class MyAccount extends StatelessWidget {
           subtitle: "Update your personal information".tr,
           onTap: () async {
             await Get.to(() => EditProfileScreen());
-            controller.loadProfile();
           },
         ),
         const SizedBox(height: 12),
+
         _buildOptionCard(
           icon: Icons.settings_outlined,
           title: "Settings".tr,
           subtitle: "App preferences and configurations".tr,
           onTap: () => Get.to(() => SettingsScreen()),
+        ),
+
+        const SizedBox(height: 24),
+
+        // ===== Logout =====
+        _buildOptionCard(
+          icon: Icons.logout,
+          title: "Logout".tr,
+          subtitle: "Sign out from your account".tr,
+          onTap: () => controller.showLogoutDialog(),
+        ),
+
+        const SizedBox(height: 12),
+
+        // ===== Delete Account =====
+        _buildOptionCard(
+          icon: Icons.delete_outline,
+          title: "Delete Account".tr,
+          subtitle: "This action cannot be undone".tr,
+          iconColor: Colors.red,
+          textColor: Colors.red,
+          onTap: () => controller.showDeleteAccountFlow(Get.context!),
         ),
       ],
     );
@@ -251,6 +301,8 @@ class MyAccount extends StatelessWidget {
     required String title,
     required String subtitle,
     required VoidCallback onTap,
+    Color? iconColor,
+    Color? textColor,
   }) {
     return Material(
       color: Colors.transparent,
@@ -279,7 +331,7 @@ class MyAccount extends StatelessWidget {
                   color: const Color(0xFF274668).withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, size: 22, color: const Color(0xFF274668)),
+                child: Icon(icon, size: 22, color: iconColor),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -288,9 +340,10 @@ class MyAccount extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
+                        color: textColor ?? Colors.black,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -304,15 +357,35 @@ class MyAccount extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Colors.grey.shade400,
-              ),
+              Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFF274668)),
             ],
           ),
         ),
       ),
     );
+  }
+
+  String getAccountStatusLabel(String status) {
+    switch (status) {
+      case 'accepted':
+        return 'ACTIVE';
+      case 'blocked':
+        return 'BLOCKED';
+      case 'rejected':
+      default:
+        return 'INACTIVE';
+    }
+  }
+
+  Color getAccountStatusColor(String status) {
+    switch (status) {
+      case 'accepted':
+        return Colors.green;
+      case 'blocked':
+        return Colors.red;
+      case 'rejected':
+      default:
+        return Colors.orange;
+    }
   }
 }

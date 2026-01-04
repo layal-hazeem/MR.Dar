@@ -4,6 +4,7 @@ import '../controller/ApartmentController.dart';
 import '../model/apartment_model.dart';
 import '../widgets/apartment_card.dart';
 import 'apartment_details_page.dart';
+import 'home.dart';
 
 class Favourite extends StatefulWidget {
   const Favourite({super.key});
@@ -64,7 +65,7 @@ class _FavouriteState extends State<Favourite> {
               children: [
                 Icon(Icons.favorite_border, size: 80, color: Colors.grey[400]),
                 const SizedBox(height: 16),
-                 Text(
+                Text(
                   "No favorites yet".tr,
                   style: TextStyle(
                     fontSize: 18,
@@ -73,22 +74,22 @@ class _FavouriteState extends State<Favourite> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                 Text(
+                Text(
                   "Tap the heart icon on apartments to add them here".tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Get.back(); // العودة للصفحة الرئيسية
-                  },
-                  icon: const Icon(Icons.explore),
-                  label:  Text("Browse Apartments".tr),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF274668),
-                  ),
-                ),
+                // ElevatedButton.icon(
+                //   onPressed: () {
+                //     Get.to(Home()); // العودة للصفحة الرئيسية
+                //   },
+                //   icon: const Icon(Icons.explore),
+                //   label: Text("Browse Apartments".tr),
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: const Color(0xFF274668),
+                //   ),
+                // ),
               ],
             ),
           );

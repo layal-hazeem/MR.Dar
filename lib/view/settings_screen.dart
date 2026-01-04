@@ -15,7 +15,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(
+        title: Text(
           "Settings".tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -24,64 +24,6 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          _sectionTitle("Account".tr),
-
-          settingsCard(
-            icon: Icons.edit,
-            title: "Edit Profile".tr,
-            subtitle: "Update your personal information".tr,
-            onTap: () => Get.to(() => EditProfileScreen()),
-          ),
-
-          settingsCard(
-            icon: Icons.logout,
-            title: "Logout".tr,
-            subtitle: "Sign out from your account".tr,
-            onTap: () {
-              Get.dialog(
-                AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  title:  Text(
-                    'Attention ! '.tr,
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  content: Text(
-                    'Are you sure you want to logout?'.tr,
-                    style: TextStyle(fontSize: 17),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Get.back(),
-                      child:  Text(
-                        'CANCEL'.tr,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        authController.logout();
-                        Get.back();
-                      },
-
-                      child: Text(
-                        'Confirm'.tr,
-                        style: TextStyle(
-                          color: Color(0xFF274668),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-
           _sectionTitle("Preferences".tr),
 
           settingsCard(
@@ -96,18 +38,6 @@ class SettingsScreen extends StatelessWidget {
             title: "Language".tr,
             subtitle: "Change app language".tr,
             onTap: showLanguageSelector,
-          ),
-
-
-          _sectionTitle("Danger Zone".tr),
-
-          settingsCard(
-            icon: Icons.delete,
-            iconColor: Colors.red,
-            title: "Delete Account".tr,
-            textColor: Colors.red,
-            subtitle: "Delete your account !".tr,
-            onTap: () => accountController.showDeleteAccountFlow(context),
           ),
         ],
       ),
