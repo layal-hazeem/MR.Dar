@@ -1,7 +1,8 @@
 class EndPoint {
-static String baseUrl = "http://172.20.10.8:8000/api/";
+  //static String baseUrl = "http://172.20.10.8:8000/api/";
   //static String baseUrl = "http://192.168.1.106:8000/api/";
-  //  static String baseUrl = "http://10.0.2.2:8000/api/";
+
+  static String baseUrl = "http://10.0.2.2:8000/api/";
   static String logIn = "login";
   static String signUp = "register";
   static String logout = "logout";
@@ -9,7 +10,7 @@ static String baseUrl = "http://172.20.10.8:8000/api/";
   static const String createApartment = "houses";
   static const String getGovernorates = "governorates";
   static const String reservations = "reservations";
- static const String getMyHouses = "houses/my-houses";
+  static const String getMyHouses = "houses/my-houses";
 
   static String getAccount = "profile";
   static String updateAccount = "profile";
@@ -17,6 +18,8 @@ static String baseUrl = "http://172.20.10.8:8000/api/";
 
   static const String toggleFavorite = "favorites";
   static const String myFavorite = "favorites/my-favorites";
+
+  static const String review = "reviews";
 }
 
 class ApiKey {
