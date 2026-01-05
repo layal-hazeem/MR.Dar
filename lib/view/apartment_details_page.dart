@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/ApartmentController.dart';
 import '../controller/UserController.dart';
+import '../controller/my_account_controller.dart';
 import '../model/apartment_model.dart';
 import 'booking_date_page.dart';
 
@@ -13,6 +14,7 @@ class ApartmentDetailsPage extends StatelessWidget {
   final apartmentController = Get.find<ApartmentController>();
   final PageController _pageController = PageController();
   final RxInt currentImageIndex = 0.obs;
+  final account = Get.find<MyAccountController>();
 
   static const kPrimary = Color(0xFF274668);
 
@@ -340,20 +342,37 @@ class ApartmentDetailsPage extends StatelessWidget {
             child: Icon(icon, size: 18, color: kPrimary),
           ),
           const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title,
+
+          /// 👇 المهم
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontSize: 12, color: Colors.grey)),
-              Text(value,
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600)),
-            ],
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
+
 }

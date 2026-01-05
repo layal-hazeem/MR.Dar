@@ -291,4 +291,13 @@ class AuthService {
     await prefs.remove("role");
     await prefs.remove("date_of_birth");
   }
+  Future<void> sendDeviceToken(String fcmToken) async {
+    await api.post(
+      'device-token',
+      data: {
+        'token': fcmToken,
+      },
+    );
+  }
+
 }

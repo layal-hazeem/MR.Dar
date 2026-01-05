@@ -5,11 +5,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../controller/add_apartment_controller.dart';
 
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import '../controller/add_apartment_controller.dart';
 
 class AddApartmentPage extends StatelessWidget {
   AddApartmentPage({super.key});
@@ -22,7 +17,9 @@ class AddApartmentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: navy,
       appBar: AppBar(
         backgroundColor: navy,
@@ -34,7 +31,7 @@ class AddApartmentPage extends StatelessWidget {
         ),
         title: Text(
           "Add Apartment".tr,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
         ),
       ),
       body: Column(
@@ -63,6 +60,7 @@ class AddApartmentPage extends StatelessWidget {
         ],
       ),
     );
+
   }
 
   // ========================= STEP INDICATOR =========================
@@ -283,11 +281,18 @@ class AddApartmentPage extends StatelessWidget {
   // ========================= UI HELPERS =========================
 
   Widget _stepWrapper(Widget child) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
+    return SingleChildScrollView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      padding: EdgeInsets.only(
+        left: 24,
+        right: 24,
+        top: 24,
+        bottom: MediaQuery.of(Get.context!).viewInsets.bottom + 24,
+      ),
       child: child,
     );
   }
+
 
   Widget _sectionTitle(String title) {
     return Padding(

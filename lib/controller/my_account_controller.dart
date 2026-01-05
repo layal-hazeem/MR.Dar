@@ -18,6 +18,9 @@ class MyAccountController extends GetxController {
   final user = Rxn<UserModel>();
   final isLoading = false.obs;
   final isDataFromLocal = false.obs;
+  bool get isAccountActive {
+    return user.value?.status == 'accepted';
+  }
 
   @override
   void onInit() {

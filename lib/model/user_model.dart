@@ -8,6 +8,7 @@ class UserModel {
   final String? profileImage;
   final String? idImage;
   final String status;
+  bool get isActive => status == "accepted";
 
   UserModel({
     required this.id,

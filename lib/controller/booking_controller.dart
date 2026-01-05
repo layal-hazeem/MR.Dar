@@ -5,6 +5,8 @@ import 'package:table_calendar/table_calendar.dart';
 import '../model/apartment_model.dart';
 import '../model/booking_model.dart';
 import '../service/booking_service.dart';
+import 'UserController.dart';
+import 'my_account_controller.dart';
 
 class BookingController extends GetxController {
   final BookingService service;
@@ -12,6 +14,9 @@ class BookingController extends GetxController {
   final double rentValue;
   late Apartment apartment;
   double get totalPrice => duration.value * rentValue;
+  final accountController = Get.find<MyAccountController>();
+
+
 
   BookingController({
     required this.service,
@@ -160,6 +165,10 @@ class BookingController extends GetxController {
 
     // حالة (أ): الفحص المحلي قبل الإرسال (تضارب مع حجز مقبول نهائياً)
 
+    if (!accountController.isAccountActive) {
+      _showInactiveAccountDialog();
+      return;
+    }
     isLoading.value = true;
     final success = await service.createReservation(
       houseId: houseId,
@@ -251,7 +260,7 @@ class BookingController extends GetxController {
             child: TextButton(
               onPressed: () {
                 Get.back(); // إغلاق الديالوغ
-                if (type == 1) {
+                if (type == 1||type==2) {
                   Get.back(); // العودة من صفحة التأكيد
                   Get.back(); // العودة من صفحة التاريخ
                 }
@@ -267,4 +276,28 @@ class BookingController extends GetxController {
       barrierDismissible: false,
     );
   }
+  void _showInactiveAccountDialog() {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text("Account Not Activated"),
+        content: const Text(
+          "Your account is not activated yet.\nPlease wait for admin approval.",
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back(); // سكّر الديالوغ
+              Get.back(); // رجوع من صفحة الحجز
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+
 }

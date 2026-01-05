@@ -165,7 +165,7 @@ class HomeContent extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
-                      ),if (controller.featuredApartments.length > 5)
+                      ),if (controller.featuredApartments.length > 1)
                         TextButton(
                           onPressed: () {
                             Get.to(
@@ -177,7 +177,7 @@ class HomeContent extends StatelessWidget {
                           child:  Text(
                             "See All".tr,
                             style: TextStyle(
-                              color: Colors.blue,
+                              color: Colors.black,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
