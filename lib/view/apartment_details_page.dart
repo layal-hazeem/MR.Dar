@@ -286,15 +286,38 @@ class ApartmentDetailsPage extends StatelessWidget {
                                 ),
                               ),
                               onPressed: () {
+                                // 🔒 فحص تفعيل الحساب من البداية
+                                if (!account.isAccountActive) {
+                                  Get.dialog(
+                                    AlertDialog(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                      title: const Text("Account Not Activated"),
+                                      content: const Text(
+                                        "Your account is not activated yet.\nPlease wait for admin approval.",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Get.back(),
+                                          child: const Text("OK"),
+                                        ),
+                                      ],
+                                    ),
+                                    barrierDismissible: false,
+                                  );
+                                  return;
+                                }
+
+                                // ✅ الحساب مفعل → كمل طبيعي
                                 Get.to(
                                       () => BookingDatePage(
                                     houseId: apartment.id,
-                                    rentValue:
-                                    apartment.rentValue,
+                                    rentValue: apartment.rentValue,
                                   ),
                                   arguments: apartment,
                                 );
                               },
+
                               child:  Text(
                                 "Reserve".tr,
                                 style: TextStyle(

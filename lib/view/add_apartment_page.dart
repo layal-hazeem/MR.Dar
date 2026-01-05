@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../controller/add_apartment_controller.dart';
+import '../controller/my_account_controller.dart';
 
 
 class AddApartmentPage extends StatelessWidget {
@@ -14,10 +15,37 @@ class AddApartmentPage extends StatelessWidget {
 
   final Color navy = const Color(0xFF274668);
   final Color softGrey = const Color(0xFFF5F7FA);
+  final account = Get.find<MyAccountController>();
 
   @override
   Widget build(BuildContext context) {
+    // 🔒 فحص حالة الحساب (نفس منطق المستأجر)
+    if (!account.isAccountActive) {
+      Future.microtask(() {
+        Get.dialog(
+          AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: const Text("Account Not Activated"),
+            content: const Text(
+              "Your account is not activated yet.\nPlease wait for admin approval.",
+              textAlign: TextAlign.center,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Get.back(); // سكّر الدايلوج
+                  Get.back(); // ارجع من الصفحة
+                },
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+          barrierDismissible: false,
+        );
+      });
 
+      return const Scaffold(); // ⛔ امنع بناء الصفحة
+    }
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: navy,

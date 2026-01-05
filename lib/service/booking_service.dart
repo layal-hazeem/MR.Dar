@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/api/dio_consumer.dart';
 import '../core/api/end_points.dart';
 import '../model/booking_model.dart';
+import '../model/owner_reservation_model.dart';
 import '../model/reservation_model.dart';
 
 class BookingService {
@@ -21,6 +22,28 @@ class BookingService {
       final List list = response.data['data'];
 
       return list.map((e) => Booking.fromJson(e, houseId: houseId)).toList();
+    }
+
+    return [];
+  }
+  Future<List<OwnerReservation>> getOwnerReservations() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token") ?? "";
+
+    final response = await api.dio.get(
+      '${EndPoint.reservations}/my-rents',
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+        validateStatus: (_) => true,
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final List list = response.data['data'];
+      return list.map((e) => OwnerReservation.fromJson(e)).toList();
     }
 
     return [];

@@ -12,6 +12,7 @@ import 'myAccount.dart';
 import 'myRent.dart';
 import 'notifications_page.dart';
 import '../controller/notification_controller.dart';
+import 'owner_reservations_page.dart';
 
 class Home extends StatelessWidget {
   Home({super.key});
@@ -51,13 +52,16 @@ class Home extends StatelessWidget {
   // ========================= AppBar =========================
   AppBar _buildAppBar(BuildContext context, int index) {
     String title;
+    final isOwner = user.isOwner;
 
     if (index == 0) {
       title = 'MR.Dar';
     } else if (index == 1) {
-      title = user.isOwner ? 'My Apartments'.tr : 'My Rents'.tr;
+      title = isOwner ? 'Requests'.tr : 'My Rents'.tr;
     } else if (index == 2) {
-      title = 'Favourite'.tr;
+      title = isOwner ? 'My Apartments'.tr : 'Favourite'.tr;
+    } else if (index == 3) {
+      title = isOwner ? 'Favourite'.tr : 'My Account'.tr;
     } else {
       title = 'My Account'.tr;
     }
@@ -122,7 +126,14 @@ class Home extends StatelessWidget {
       return IndexedStack(
         index: controller.currentIndex.value,
         children: user.isOwner
-            ? [HomeContent(), MyApartments(), Favourite(), MyAccount()]
+            ? [
+          HomeContent(),
+          OwnerReservationsPage(), // 👈 الجديدة
+          MyApartments(),
+          Favourite(),
+          MyAccount(),
+        ]
+
             : [HomeContent(), MyRent(), Favourite(), MyAccount()],
       );
     });
@@ -177,6 +188,11 @@ class Home extends StatelessWidget {
       label: "Home".tr,
     ),
     BottomNavigationBarItem(
+      icon: Icon(Icons.assignment_outlined),
+      activeIcon: Icon(Icons.assignment_turned_in),
+      label: "Requests".tr,
+    ),
+    BottomNavigationBarItem(
       icon: Icon(Icons.book_outlined),
       activeIcon: Icon(Icons.book_rounded),
       label: "My Apartments".tr,
@@ -192,4 +208,5 @@ class Home extends StatelessWidget {
       label: "Account".tr,
     ),
   ];
+
 }

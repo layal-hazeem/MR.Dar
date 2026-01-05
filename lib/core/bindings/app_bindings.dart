@@ -22,6 +22,7 @@ import '../api/dio_consumer.dart';
 import '../../controller/logincontroller.dart';
 import '../../controller/signupcontroller.dart';
 import '../../service/auth_service.dart';
+import '../../controller/owner_reservations_controller.dart';
 
 class AppBindings extends Bindings {
   @override
@@ -116,5 +117,14 @@ class AppBindings extends Bindings {
       () => NotificationController(service: notificationService),
       fenix: true,
     );
+    Get.lazyPut<OwnerReservationsController>(
+          () => OwnerReservationsController(
+        service: Get.find<BookingService>(),
+      ),
+      fenix: true,
+    );
+
   }
+
+
 }
