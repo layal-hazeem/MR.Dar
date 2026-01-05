@@ -12,6 +12,7 @@ class WelcomePage extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Stack(
         children: [
           SizedBox(
@@ -28,14 +29,17 @@ class WelcomePage extends StatelessWidget {
             child: Container(
               height: 300,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .shadow
+                        .withOpacity(0.2),
                     blurRadius: 10,
                     offset: Offset(0, -3),
                   ),
@@ -52,7 +56,7 @@ class WelcomePage extends StatelessWidget {
                     Text(
                       "Welcome to MR.Dar".tr,
                       style: TextStyle(
-                        color: Color(0xFF274668),
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
@@ -64,9 +68,10 @@ class WelcomePage extends StatelessWidget {
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Color(0xFF274668), Color(0xFF3A6FA0)], // تدرج أزرق
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                              colors: [
+                                Theme.of(context).colorScheme.primary,
+                                Theme.of(context).colorScheme.primaryContainer,
+                              ],
                             ),
                             borderRadius: BorderRadius.circular(25),
                           ),
@@ -83,7 +88,7 @@ class WelcomePage extends StatelessWidget {
                             child: Text(
                               "Login".tr,
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onPrimary,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -95,9 +100,10 @@ class WelcomePage extends StatelessWidget {
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Color(0xFFE5E8EF), Color(0xFFC7D1E3)], // تدرج فاتح
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                              colors: [
+                                Theme.of(context).colorScheme.surfaceVariant,
+                                Theme.of(context).colorScheme.surface,
+                              ],
                             ),
                             borderRadius: BorderRadius.circular(25),
                           ),
@@ -114,7 +120,7 @@ class WelcomePage extends StatelessWidget {
                             child: Text(
                               "Sign Up".tr,
                               style: TextStyle(
-                                color: Colors.black87,
+                                color:  Theme.of(context).colorScheme.onSurface,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -128,18 +134,19 @@ class WelcomePage extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Color(0xFF274668), Color(0xFF3A6FA0)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                          colors: [
+                            Theme.of(context).colorScheme.primary,
+                            Theme.of(context).colorScheme.primaryContainer,
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: ElevatedButton.icon(
                         onPressed: showLanguageSelector,
-                        icon: Icon(Icons.language, color: Colors.white),
+                        icon: Icon(Icons.language, color: Theme.of(context).colorScheme.onPrimary,),
                         label: Text(
                           "Language".tr,
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 18),
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,

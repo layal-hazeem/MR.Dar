@@ -18,7 +18,7 @@ class Login extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: SizedBox(
@@ -45,7 +45,7 @@ class Login extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF274668),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
 
@@ -77,6 +77,7 @@ class Login extends StatelessWidget {
                                 return null;
                               },
                               decoration: _inputDecoration(
+                                context,
                                 "Phone Number".tr,
                                 suffix: Icons.phone,
                               ).copyWith(errorText: ctrl.phoneError),
@@ -103,6 +104,7 @@ class Login extends StatelessWidget {
                                 return null;
                               },
                               decoration: _inputDecoration(
+                                context,
                                 "Password".tr,
                                 suffixWidget: IconButton(
                                   icon: Icon(
@@ -127,7 +129,7 @@ class Login extends StatelessWidget {
                               height: 55,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF274668),
+                                  backgroundColor: Theme.of(context).colorScheme.primary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
@@ -147,7 +149,7 @@ class Login extends StatelessWidget {
                                     :  Text(
                                         "Log In".tr,
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: Theme.of(context).colorScheme.onPrimary,
                                           fontSize: 20,
                                         ),
                                       ),
@@ -168,7 +170,7 @@ class Login extends StatelessWidget {
                               child:  Text(
                                 "Sign Up".tr,
                                 style: TextStyle(
-                                  color: Color(0xFF274668),
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -208,6 +210,7 @@ class Login extends StatelessWidget {
   }
 
   InputDecoration _inputDecoration(
+      BuildContext context,
     String label, {
     IconData? suffix,
     Widget? suffixWidget,
@@ -215,9 +218,9 @@ class Login extends StatelessWidget {
     return InputDecoration(
       labelText: label,
       filled: true,
-      fillColor: Colors.white,
-      labelStyle: const TextStyle(
-        color: Colors.black54,
+      fillColor: Theme.of(context).colorScheme.surface,
+      labelStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
         fontWeight: FontWeight.bold,
       ),
       suffixIcon:
@@ -226,11 +229,11 @@ class Login extends StatelessWidget {
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(color: Color(0xFF274668), width: 3),
+        borderSide:  BorderSide(color: Theme.of(context).colorScheme.primary, width: 3),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(color: Colors.black, width: 1.5),
+        borderSide:  BorderSide(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4), width: 1.5),
       ),
     );
   }

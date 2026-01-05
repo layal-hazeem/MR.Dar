@@ -14,20 +14,20 @@ class Signup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: Text(
           "Join us & find your perfect home".tr,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 21,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF274668),
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Color(0xFF274668)),
+        iconTheme:  IconThemeData(color: Theme.of(context).colorScheme.primary),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -51,8 +51,8 @@ class Signup extends StatelessWidget {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
                                 color: ctrl.role.value == 'renter'.tr
-                                    ? const Color(0xFF274668)
-                                    : const Color(0xFFE8ECF4),
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.surfaceVariant,
                                 borderRadius: BorderRadius.circular(24),
                                 boxShadow: [
                                   BoxShadow(
@@ -69,9 +69,8 @@ class Signup extends StatelessWidget {
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: ctrl.role.value == 'renter'.tr
-                                        ? Colors.white
-                                        : const Color(0xFF274668),
-
+                                        ? Theme.of(context).colorScheme.onPrimary
+                                        : Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
                               ),
@@ -86,8 +85,8 @@ class Signup extends StatelessWidget {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
                                 color: ctrl.role.value == 'owner'.tr
-                                    ? const Color(0xFF274668)
-                                    : const Color(0xFFE8ECF4),
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.surfaceVariant,
                                 borderRadius: BorderRadius.circular(24),
                                 boxShadow: [
                                   BoxShadow(
@@ -104,8 +103,8 @@ class Signup extends StatelessWidget {
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: ctrl.role.value == 'owner'.tr
-                                        ? Colors.white
-                                        : const Color(0xFF274668),
+                                        ? Theme.of(context).colorScheme.onPrimary
+                                        : Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
                               ),
@@ -126,13 +125,13 @@ class Signup extends StatelessWidget {
                       child: TextFormField(
                         controller: controller.firstNameController,
                         maxLength: 20,
-                        style: const TextStyle(
-                          color: Color(0xFF274668),
+                        style:  TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 22,
                         ),
                         validator: (v) =>
                         v!.isEmpty ? "First name is required!".tr : null,
-                        decoration: _inputDecoration("First name".tr),
+                        decoration: _inputDecoration(context,"First name".tr),
                       ),
                     ),
                     SizedBox(width: 15),
@@ -140,13 +139,13 @@ class Signup extends StatelessWidget {
                       child: TextFormField(
                         controller: controller.lastNameController,
                         maxLength: 20,
-                        style: const TextStyle(
-                          color: Color(0xFF274668),
+                        style:  TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 22,
                         ),
                         validator: (v) =>
                         v!.isEmpty ? "Last name is required!".tr : null,
-                        decoration: _inputDecoration("Last name".tr),
+                        decoration: _inputDecoration(context,"Last name".tr),
                       ),
                     ),
                   ],
@@ -161,6 +160,7 @@ class Signup extends StatelessWidget {
                       readOnly: true,
                       controller: ctrl.birthDateController,
                       decoration: _inputDecoration(
+                        context,
                         "Date of Birth".tr,
                         suffix: Icons.calendar_today,
                       ),
@@ -200,15 +200,11 @@ class Signup extends StatelessWidget {
                                   height: 65,
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
-                                    color: Color(0xFFF5F5F5),
+                                    color: Theme.of(context).colorScheme.surface,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color:
-                                      ctrl
-                                          .profileImageError
-                                          .value
-                                          .isNotEmpty
-                                          ? Colors.red
+                                      color: ctrl.profileImageError.value.isNotEmpty
+                                          ? Theme.of(context).colorScheme.error
                                           : Colors.transparent,
                                       width: 1.5,
                                     ),
@@ -225,10 +221,7 @@ class Signup extends StatelessWidget {
                                           style: TextStyle(
                                             fontSize:
                                             16,
-                                            color:
-                                            ctrl.profileImage.value == null
-                                                ? Colors.black54
-                                                : Colors.black54,
+                                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                             fontWeight:
                                             ctrl.profileImage.value == null
                                                 ? FontWeight.w500
@@ -241,7 +234,7 @@ class Signup extends StatelessWidget {
                                       ),
                                       Icon(
                                         Icons.camera_alt,
-                                        color: Colors.black45,
+                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                         size: 22,
                                       ),
                                     ],
@@ -282,7 +275,7 @@ class Signup extends StatelessWidget {
                                   height: 65,
                                   padding: EdgeInsets.symmetric(horizontal: 16),
                                   decoration: BoxDecoration(
-                                    color: Color(0xFFF5F5F5),
+                                    color: Theme.of(context).colorScheme.surface,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
                                       color: ctrl.idImageError.value.isNotEmpty
@@ -360,7 +353,7 @@ class Signup extends StatelessWidget {
                     if (v.length != 10) return "Must be 10 digits".tr;
                     return null;
                   },
-                  decoration: _inputDecoration("Phone Number".tr, suffix: Icons.phone),
+                  decoration: _inputDecoration(context,"Phone Number".tr, suffix: Icons.phone),
                 ),
 
                 SizedBox(height: 10.h),
@@ -382,6 +375,7 @@ class Signup extends StatelessWidget {
                         return null;
                       },
                       decoration: _inputDecoration(
+                        context,
                         "Password".tr,
                         suffixWidget: IconButton(
                           icon: Icon(
@@ -418,6 +412,7 @@ class Signup extends StatelessWidget {
                         return null;
                       },
                       decoration: _inputDecoration(
+                        context,
                         "Confirm Password".tr,
                         suffixWidget: IconButton(
                           icon: Icon(
@@ -441,18 +436,18 @@ class Signup extends StatelessWidget {
                           ? null
                           : () => controller.signupUser(),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF274668),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         padding: EdgeInsets.symmetric(vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
                       ),
                       child: ctrl.isLoading
-                          ? const SizedBox(
+                          ? SizedBox(
                         height: 25,
                         width: 25,
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onPrimary,
                           strokeWidth: 3,
                         ),
                       )
@@ -477,22 +472,23 @@ class Signup extends StatelessWidget {
   }
 
   InputDecoration _inputDecoration(
+      BuildContext context,
       String label, {
         IconData? suffix,
         Widget? suffixWidget,
       }) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(
+      labelStyle: TextStyle(
         fontWeight: FontWeight.bold,
-        color: Colors.black45,
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
         fontSize: 18,
         overflow: TextOverflow.visible,
       ),
       suffixIcon:
       suffixWidget ??
           (suffix != null ? Icon(suffix, color: Colors.black45) : null),
-      fillColor: const Color(0xFFF5F5F5),
+      fillColor: Theme.of(context).colorScheme.surface,
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -504,7 +500,7 @@ class Signup extends StatelessWidget {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF274668), width: 2),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
       ),
     );
   }
