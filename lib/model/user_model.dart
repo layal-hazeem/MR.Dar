@@ -32,7 +32,6 @@ class UserModel {
 
       if (image is Map && image['url'] != null) {
         String url = image['url'].toString();
-        // تأكد من الرابط كامل
         if (url.isNotEmpty && !url.startsWith('http')) {
           if (url.startsWith('/storage/')) {
             url = 'http://10.0.2.2:8000$url';
@@ -59,7 +58,6 @@ class UserModel {
     );
   }
 
-  // ✅ أضيفي هاد
   UserModel copyWith({
     int? id,
     String? firstName,

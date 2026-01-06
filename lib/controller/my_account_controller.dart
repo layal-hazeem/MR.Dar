@@ -40,7 +40,6 @@ class MyAccountController extends GetxController {
         user.value = _createUserFromLocalData(localData);
         isDataFromLocal.value = true;
 
-        // 🔽 تحقق من رابط الصورة
         if (user.value?.profileImage != null &&
             user.value!.profileImage!.isNotEmpty) {
           await checkImageUrl(user.value!.profileImage!);
@@ -52,10 +51,8 @@ class MyAccountController extends GetxController {
         user.value = apiUser;
         isDataFromLocal.value = false;
 
-        // تحديث البيانات المحلية
         await _updateLocalData(apiUser);
 
-        // 🔽 تحقق من رابط الصورة بعد التحميل من API
         if (user.value?.profileImage != null &&
             user.value!.profileImage!.isNotEmpty) {
           await checkImageUrl(user.value!.profileImage!);
@@ -95,7 +92,6 @@ class MyAccountController extends GetxController {
       }
     }
 
-    // إصلاح localhost لـ Android emulator
     if (url.contains('localhost:8000')) {
       return url.replaceAll('localhost:8000', '10.0.2.2:8000');
     }
@@ -210,8 +206,8 @@ class MyAccountController extends GetxController {
           ),
           TextButton(
             onPressed: () {
-              Get.back(); // سكّر Dialog التأكيد
-              _showPasswordVerifyDialog(context); // نفس الفلو تبعك
+              Get.back();
+              _showPasswordVerifyDialog(context);
             },
             child: const Text(
               "Confirm",

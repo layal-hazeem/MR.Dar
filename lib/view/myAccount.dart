@@ -19,7 +19,9 @@ class MyAccount extends StatelessWidget {
       if (controller.isLoading.value) {
         return Center(
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation(Theme.of(context).colorScheme.primary),
+            valueColor: AlwaysStoppedAnimation(
+              Theme.of(context).colorScheme.primary,
+            ),
           ),
         );
       }
@@ -32,11 +34,18 @@ class MyAccount extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               Icon(Icons.person_off, size: 80, color: Theme.of(context).disabledColor),
-               SizedBox(height: 20),
+              Icon(
+                Icons.person_off,
+                size: 80,
+                color: Theme.of(context).disabledColor,
+              ),
+              SizedBox(height: 20),
               Text(
                 "No Profile Data".tr,
-                style: TextStyle(fontSize: 20, color: Theme.of(context).disabledColor),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).disabledColor,
+                ),
               ),
               const SizedBox(height: 10),
               ElevatedButton(
@@ -89,7 +98,7 @@ class MyAccount extends StatelessWidget {
               ),
 
             // Profile Header
-            _buildProfileHeader(context,user),
+            _buildProfileHeader(context, user),
 
             const SizedBox(height: 30),
 
@@ -103,7 +112,7 @@ class MyAccount extends StatelessWidget {
     });
   }
 
-  Widget _buildProfileHeader(BuildContext context,UserModel user) {
+  Widget _buildProfileHeader(BuildContext context, UserModel user) {
     return Column(
       children: [
         // Profile Image
@@ -144,7 +153,9 @@ class MyAccount extends StatelessWidget {
         // Name
         Text(
           "${user.firstName} ${user.lastName}",
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
 
@@ -152,12 +163,18 @@ class MyAccount extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.phone, size: 16, color: Theme.of(context).iconTheme.color?.withOpacity(0.7)),
+            Icon(
+              Icons.phone,
+              size: 16,
+              color: Theme.of(context).iconTheme.color?.withOpacity(0.7),
+            ),
             const SizedBox(width: 6),
             Text(
               user.phone,
-              style:  Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.color?.withOpacity(0.7),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -206,7 +223,10 @@ class MyAccount extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
+                  side: BorderSide(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 2,
+                  ),
                 ),
               ),
             ),
@@ -246,8 +266,7 @@ class MyAccount extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionsSection(BuildContext context,) {
-
+  Widget _buildOptionsSection(BuildContext context) {
     return Column(
       children: [
         _buildOptionCard(
@@ -257,7 +276,6 @@ class MyAccount extends StatelessWidget {
           subtitle: "Update your personal information".tr,
           onTap: () async {
             await Get.to(() => EditProfileScreen())?.then((value) {
-              // إذا كانت النتيجة 'updated' نحدث البيانات
               if (value == 'updated') {
                 controller.loadProfile();
               }
@@ -349,7 +367,9 @@ class MyAccount extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: textColor ?? Theme.of(context).textTheme.bodyLarge?.color,
+                        color:
+                            textColor ??
+                            Theme.of(context).textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -357,13 +377,19 @@ class MyAccount extends StatelessWidget {
                       subtitle,
                       style: TextStyle(
                         fontSize: 13,
-                        color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                        color: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.color?.withOpacity(0.7),
                       ),
                     ),
                   ],
                 ),
               ),
-              Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).colorScheme.primary),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ],
           ),
         ),
@@ -393,13 +419,5 @@ class MyAccount extends StatelessWidget {
       default:
         return Colors.orange;
     }
-  }
-
-  void _handleEditProfileResult() async {
-    // ننتظر قليلاً للتأكد من اكتمال التحديث
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    // نجبر على تحديث البيانات
-    controller.loadProfile();
   }
 }

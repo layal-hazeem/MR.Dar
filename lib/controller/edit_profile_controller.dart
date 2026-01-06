@@ -111,7 +111,6 @@ class EditProfileController extends GetxController {
         MapEntry('current_password', currentPassword),
       ]);
 
-      // تغيير كلمة المرور (إن وُجد)
       if (newPasswordController.text.isNotEmpty) {
         formData.fields.addAll([
           MapEntry('new_password', newPasswordController.text.trim()),
@@ -122,7 +121,6 @@ class EditProfileController extends GetxController {
         ]);
       }
 
-      // رفع صورة البروفايل (إن وُجدت)
       if (selectedImage.value != null) {
         formData.files.add(
           MapEntry(
@@ -135,7 +133,6 @@ class EditProfileController extends GetxController {
         );
       }
 
-      // طلب التحديث
       final response = await userService.updateProfile(formData);
 
       print('📡 API Response: ${response.toString()}');
@@ -144,7 +141,6 @@ class EditProfileController extends GetxController {
         errorMessage.value = '';
         dialogPasswordError.value = null;
 
-        // 🔥 التحديث المهم: تحديث البيانات مباشرة
         MyAccountController.refreshProfile();
         final userController = Get.find<UserController>();
         userController.loadUserRole();
@@ -178,43 +174,14 @@ class EditProfileController extends GetxController {
     confirmPasswordController.clear();
     confirmDialogPasswordController.clear();
     hasAnyChanges.value = false;
-    dialogPasswordError.value = null; // 🔽 تأكد من مسح الخطأ
-    errorMessage.value = ''; // 🔽 تأكد من مسح الرسالة
-    showDialogPassword.value = false; // 🔽 إعادة تعيين حالة إظهار كلمة السر
+    dialogPasswordError.value = null;
+    errorMessage.value = '';
+    showDialogPassword.value = false;
   }
 
   void clearDialogFields() {
     confirmDialogPasswordController.clear();
     dialogPasswordError.value = null;
-  }
-
-  Future<void> _refreshProfileData() async {
-    try {
-      // تحديث بيانات MyAccountController
-      await myAccountController.loadProfile();
-
-      // تحديث UserController إذا كان موجود
-      final userController = Get.find<UserController>();
-      await userController.loadUserRole();
-
-      // تحديث SharedPreferences إذا كان مستخدم
-      await _updateLocalPreferences();
-    } catch (e) {
-      print('Error refreshing profile: $e');
-    }
-  }
-
-  Future<void> _updateLocalPreferences() async {
-    final user = myAccountController.user.value;
-    if (user != null) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('first_name', user.firstName);
-      await prefs.setString('last_name', user.lastName);
-      await prefs.setString('phone', user.phone);
-      if (user.profileImage != null) {
-        await prefs.setString('profile_image', user.profileImage!);
-      }
-    }
   }
 
   @override

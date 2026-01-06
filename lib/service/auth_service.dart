@@ -126,7 +126,6 @@ class AuthService {
 
       final formData = FormData();
 
-      // إضافة البيانات النصية
       formData.fields.addAll([
         MapEntry('first_name', firstName),
         MapEntry('last_name', lastName),
@@ -137,7 +136,6 @@ class AuthService {
         MapEntry('date_of_birth', formattedDate),
       ]);
 
-      // إضافة ملفات الصور إذا كانت موجودة
       if (profileImage != null && profileImage.existsSync()) {
         formData.files.add(
           MapEntry(
@@ -187,7 +185,6 @@ class AuthService {
           await prefs.setString("last_name", lastName);
           await prefs.setString("phone", phone);
           await prefs.setString("date_of_birth", formattedDate);
-          // ✅ حل مشكلة الصور: التحقق بشكل أفضل من وجود الصور
           String profileImageUrl = "";
           String idImageUrl = "";
 
@@ -197,7 +194,6 @@ class AuthService {
                   userData["profile_image"]["url"]?.toString() ?? "";
             } else if (userData["profile_image"] is String) {
               profileImageUrl = userData["profile_image"];
-              // ✅ إصلاح الرابط إذا كان نسبياً
               if (profileImageUrl.startsWith('/storage/')) {
                 profileImageUrl = 'http://10.0.2.2:8000$profileImageUrl';
               } else if (profileImageUrl.startsWith('storage/')) {
@@ -216,7 +212,6 @@ class AuthService {
               idImageUrl = userData["id_image"]["url"]?.toString() ?? "";
             } else if (userData["id_image"] is String) {
               idImageUrl = userData["id_image"];
-              // ✅ إصلاح الرابط إذا كان نسبياً
               if (idImageUrl.startsWith('/storage/')) {
                 idImageUrl = 'http://10.0.2.2:8000$idImageUrl';
               } else if (idImageUrl.startsWith('storage/')) {
@@ -229,7 +224,6 @@ class AuthService {
             }
           }
 
-          // تحديث MyAccountController مباشرة بعد التسجيل
           try {
             if (Get.isRegistered<MyAccountController>()) {
               await Get.find<MyAccountController>().updateUserAfterSignup({
@@ -291,13 +285,8 @@ class AuthService {
     await prefs.remove("role");
     await prefs.remove("date_of_birth");
   }
-  Future<void> sendDeviceToken(String fcmToken) async {
-    await api.post(
-      'device-token',
-      data: {
-        'token': fcmToken,
-      },
-    );
-  }
 
+  Future<void> sendDeviceToken(String fcmToken) async {
+    await api.post('device-token', data: {'token': fcmToken});
+  }
 }

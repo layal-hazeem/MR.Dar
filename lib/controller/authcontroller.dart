@@ -7,6 +7,7 @@ import '../controller/my_account_controller.dart';
 import '../service/userService.dart';
 import '../view/WelcomePage.dart';
 import '../view/home.dart';
+import '../view/onboarding/onboarding_screen.dart';
 
 class AuthController extends GetxController {
   final AuthService authService;
@@ -26,20 +27,16 @@ class AuthController extends GetxController {
     try {
       print('🔐 Starting logout process...');
 
-      // 1️⃣ نرسل طلب logout للـ API أولاً
       try {
         await userService.logout();
         print('✅ Server logout successful');
       } catch (e) {
         print('⚠️ Server logout failed: $e');
-        // نكمل حتى لو فشل السيرفر
       }
 
-      // 2️⃣ نمسح البيانات المحلية
       await authService.signOut();
       print('✅ Local data cleared');
 
-      // 3️⃣ نظهر رسالة نجاح
       Get.snackbar(
         "Logged Out",
         "You have been logged out successfully",
@@ -47,10 +44,9 @@ class AuthController extends GetxController {
         colorText: Colors.white,
         duration: const Duration(seconds: 2),
       );
-
-      // 4️⃣ ننتقل لصفحة الترحيب
       await Future.delayed(const Duration(milliseconds: 500));
-      Get.offAll(() => const WelcomePage());
+
+      Get.offAll(() => const OnboardingScreen());
     } catch (e) {
       print('🔴 Logout error: $e');
       Get.snackbar(
@@ -62,7 +58,6 @@ class AuthController extends GetxController {
     }
   }
 
-  // دالة للتأكد من حالة تسجيل الدخول
   Future<bool> isLoggedIn() async {
     try {
       final prefs = await SharedPreferences.getInstance();

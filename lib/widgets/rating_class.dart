@@ -26,9 +26,7 @@ class RatingStars extends StatelessWidget {
     }
 
     final int fullStars = rating!.floor();
-    final bool hasHalfStar = (rating! - fullStars) >= 0.5;
 
-    // التقريب حسب القاعدة المطلوبة
     final int roundedStars;
     if (rating! - fullStars >= 0.5) {
       roundedStars = fullStars + 1;
