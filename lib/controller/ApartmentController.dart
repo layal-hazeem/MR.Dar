@@ -89,7 +89,7 @@ class ApartmentController extends GetxController {
       );
 
       topRatedApartments.assignAll(
-        await service.getApartmentsByQuery(orderBy: 'rate'),
+        await service.getApartmentsByQuery(sortBy: 'rate'),
       );
     } catch (e) {
       errorMessage.value = e.toString();
@@ -408,6 +408,14 @@ class ApartmentController extends GetxController {
       loadApartments(),
       loadGovernorates(),
       loadFavorites(),
+    ]);
+  }
+  /// 🔄 Refresh كل بيانات الهوم (مثل Facebook)
+  Future<void> refreshHome() async {
+    await Future.wait([
+      loadApartments(),     // featured + topRated + all
+      loadAllApartments(),  // pagination & filters
+      loadFavorites(),      // المفضلة
     ]);
   }
 

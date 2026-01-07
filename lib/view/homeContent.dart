@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:new_project/view/top_rated_apartments_page.dart';
 import '../controller/ApartmentController.dart';
 import '../controller/my_account_controller.dart';
 import '../widgets/apartment_card.dart';
@@ -24,9 +25,13 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(), // 🔥 ضروري
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -258,9 +263,12 @@ class HomeContent extends StatelessWidget {
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
-                      if (controller.topRatedApartments.length > 3)
+                      if (controller.topRatedApartments.length > 1)
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.to(() => TopRatedApartmentsPage());
+
+                          },
                           child: Text(
                             "See All".tr,
                             style: TextStyle(
@@ -480,6 +488,12 @@ class HomeContent extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ),);
   }
+  Future<void> _onRefresh() async {
+    await account.refreshProfile();      // حالة الحساب (accepted / rejected)
+    await controller.refreshHome();      // الشقق
+  }
+
+
 }

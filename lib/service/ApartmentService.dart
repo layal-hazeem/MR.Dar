@@ -56,14 +56,14 @@ class ApartmentService {
   //-------
   Future<List<Apartment>> getApartmentsByQuery({
     int? maxRent,
-    String? orderBy,
+    String? sortBy,
   }) async {
     try {
       final response = await api.dio.get(
         EndPoint.getApartments,
         queryParameters: {
           if (maxRent != null) 'max_rent': maxRent,
-          if (orderBy != null) 'order_by': orderBy,
+          if (sortBy != null) 'sort_by': sortBy,
         },
         options: Options(validateStatus: (status) => true),
       );

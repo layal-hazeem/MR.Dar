@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controller/homecontroller.dart';
 import '../controller/my_rents_controller.dart';
 import '../controller/notification_controller.dart';
+import 'home.dart';
 
 class NotificationsPage extends StatelessWidget {
   NotificationsPage({super.key});
@@ -26,7 +27,9 @@ class NotificationsPage extends StatelessWidget {
           return  Center(child: Text("No notifications yet".tr));
         }
 
-        return ListView.builder(
+        return RefreshIndicator(
+            onRefresh: controller.fetchNotifications, // 🔥 هون السحر
+            child:   ListView.builder(
           itemCount: controller.notifications.length,
           itemBuilder: (context, index) {
             final n = controller.notifications[index];
@@ -36,18 +39,20 @@ class NotificationsPage extends StatelessWidget {
                 final homeController = Get.find<HomeController>();
                 final myRentsController = Get.find<MyRentsController>();
 
-                // 1️⃣ روح على My Rents
-                homeController.changeTab(1);
+                // سكّري كل الصفحات وروحي عالهوم
+                Get.offAll(() => Home());
 
-                // 2️⃣ مرّري الحالة والـ id
-                myRentsController.handleNotification(
-                  status: n.status,
-                  reservationId: n.reservationId,
-                );
+                // خلي التغيير يتم بعد الرجوع
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  homeController.changeTab(1);
 
-                // 3️⃣ سكّري صفحة الإشعارات
-                Get.back();
+                  myRentsController.handleNotification(
+                    status: n.status,
+                    reservationId: n.reservationId,
+                  );
+                });
               },
+
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 padding: const EdgeInsets.all(14),
@@ -153,7 +158,7 @@ class NotificationsPage extends StatelessWidget {
 
 
           },
-        );
+        ),);
       }),
     );
   }
