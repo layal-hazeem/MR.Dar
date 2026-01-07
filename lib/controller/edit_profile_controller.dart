@@ -101,7 +101,6 @@ class EditProfileController extends GetxController {
 
       final formData = FormData();
 
-      // البيانات النصية
       formData.fields.addAll([
         MapEntry('first_name', firstNameController.text.trim()),
         MapEntry('last_name', lastNameController.text.trim()),
@@ -134,20 +133,29 @@ class EditProfileController extends GetxController {
 
       final response = await userService.updateProfile(formData);
 
-      if (response['status'] == 'success') {
-        MyAccountController.refreshProfile();
+      final isSuccess =
+          response['status'] == 'success' ||
+          response['message']?.toString().toLowerCase() == 'success';
+
+      if (isSuccess) {
+        _clearSensitiveData();
+
+        if (Get.isDialogOpen == true) {
+          Get.back();
+        }
+
+        await myAccountController.refreshProfile();
 
         final userController = Get.find<UserController>();
         await userController.loadUserRole();
 
-        _clearSensitiveData();
         return true;
-      } else {
-        final errorMsg = response['message'] ?? 'Incorrect current password';
-        errorMessage.value = errorMsg;
-        dialogPasswordError.value = errorMsg;
-        return false;
       }
+
+      /// ❌ فقط هون في error
+      dialogPasswordError.value =
+          response['message'] ?? 'Incorrect current password';
+      return false;
     } on DioException catch (e) {
       dialogPasswordError.value =
           e.response?.data['message'] ?? 'Invalid password';

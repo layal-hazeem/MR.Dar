@@ -33,7 +33,11 @@ class EditProfileScreen extends StatelessWidget {
               ),
               _buildInfoCard(context, controller),
               const SizedBox(height: 25),
-              _buildSectionTitle(context: context,'Security'.tr, Icons.lock_outline),
+              _buildSectionTitle(
+                context: context,
+                'Security'.tr,
+                Icons.lock_outline,
+              ),
               _buildPasswordCard(context, controller),
               const SizedBox(height: 80),
             ],
@@ -60,7 +64,11 @@ class EditProfileScreen extends StatelessWidget {
               }
             },
             backgroundColor: Theme.of(context).colorScheme.primary,
-            icon:  Icon(Icons.check, color:Theme.of(context).colorScheme.onPrimary, size: 24),
+            icon: Icon(
+              Icons.check,
+              color: Theme.of(context).colorScheme.onPrimary,
+              size: 24,
+            ),
             label: Text(
               'SAVE CHANGES'.tr,
               style: TextStyle(
@@ -167,9 +175,7 @@ class EditProfileScreen extends StatelessWidget {
     return Card(
       color: Theme.of(context).colorScheme.surface,
       elevation: 4,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -212,11 +218,11 @@ class EditProfileScreen extends StatelessWidget {
                   controller: ctrl.dobController,
                   decoration: InputDecoration(
                     labelText: "Date of Birth (Optional)".tr,
-                    prefixIcon:  Icon(
+                    prefixIcon: Icon(
                       Icons.cake_outlined,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    suffixIcon:  Icon(
+                    suffixIcon: Icon(
                       Icons.calendar_today,
                       color: Theme.of(context).colorScheme.primary,
                     ),
@@ -283,7 +289,7 @@ class EditProfileScreen extends StatelessWidget {
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: Theme.of(context).colorScheme.primary,),
+        prefixIcon: Icon(icon, color: Theme.of(context).colorScheme.primary),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         counterText: maxLength != null ? "" : null,
       ),
@@ -291,7 +297,10 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordCard(BuildContext context, EditProfileController controller) {
+  Widget _buildPasswordCard(
+    BuildContext context,
+    EditProfileController controller,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -353,7 +362,10 @@ class EditProfileScreen extends StatelessWidget {
       validator: validator,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(Icons.lock_outline, color: Theme.of(context).colorScheme.primary,),
+        prefixIcon: Icon(
+          Icons.lock_outline,
+          color: Theme.of(context).colorScheme.primary,
+        ),
         suffixIcon: IconButton(
           icon: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
           onPressed: onToggleVisibility,
@@ -363,18 +375,22 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title, IconData icon, {required BuildContext context}) {
+  Widget _buildSectionTitle(
+    String title,
+    IconData icon, {
+    required BuildContext context,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       child: Row(
         children: [
-          Icon(icon, size: 22, color: Theme.of(context).colorScheme.primary,),
+          Icon(icon, size: 22, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: 10),
           Text(
             title,
-            style:  Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -385,8 +401,12 @@ class EditProfileScreen extends StatelessWidget {
     BuildContext context,
     EditProfileController controller,
   ) {
-    controller.clearDialogFields();
+    controller.isUpdating.value = false;
     controller.showDialogPassword.value = false;
+    controller.dialogPasswordError.value = null;
+    controller.confirmDialogPasswordController.clear();
+
+    if (Get.isDialogOpen == true) return;
 
     Get.dialog(
       AlertDialog(
@@ -481,7 +501,7 @@ class EditProfileScreen extends StatelessWidget {
                       if (success) {
                         Get.back();
                         await Future.delayed(const Duration(milliseconds: 300));
-                        Get.back();
+                        Get.back(result: 'updated');
                         Get.snackbar(
                           "Success".tr,
                           "Your profile has been updated successfully".tr,
@@ -494,16 +514,6 @@ class EditProfileScreen extends StatelessWidget {
                           ),
                           snackPosition: SnackPosition.BOTTOM,
                         );
-                        Get.back(result: 'updated');
-                      } else {
-                        if (controller.dialogPasswordError.value ==
-                            "Success".tr) {
-                          Get.back();
-                          await Future.delayed(
-                            const Duration(milliseconds: 300),
-                          );
-                          Get.back(result: 'updated');
-                        }
                       }
                     },
               child: controller.isUpdating.value
@@ -516,7 +526,7 @@ class EditProfileScreen extends StatelessWidget {
                       ),
                     )
                   : Text(
-                      'SAVE CHANGES'.tr,
+                      'Save changes'.tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

@@ -306,9 +306,8 @@ class MyAccountController extends GetxController {
     );
   }
 
-  static void refreshProfile() {
-    final controller = Get.find<MyAccountController>();
-    controller.loadProfile();
+  Future<void> refreshProfile() async {
+    await loadProfile();
   }
 
   @override
