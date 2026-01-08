@@ -39,7 +39,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.language,
             title: "Language".tr,
             subtitle: "Change app language".tr,
-            onTap: showLanguageSelector,
+            onTap: () => showLanguageSelector(context),
           ),
         ],
       ),

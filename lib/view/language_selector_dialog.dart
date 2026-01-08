@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/locale/locale_controller.dart';
 
-void showLanguageSelector() {
+void showLanguageSelector(BuildContext context) {
   final LocaleController controller = Get.find<LocaleController>();
 
   Get.bottomSheet(
     Container(
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration:  BoxDecoration(
+        color:Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
       child: Column(
@@ -17,16 +17,24 @@ void showLanguageSelector() {
         children: [
           Text(
             "Change app language".tr,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
+              color : Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 20),
 
           ListTile(
             leading: const Text("🇸🇾", style: TextStyle(fontSize: 22)),
-            title: const Text("العربية"),
+            title: Text("العربية",
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            trailing: Get.locale?.languageCode == 'ar'
+                ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary)
+                : null,
             onTap: () {
               controller.changeLocale('ar');
               Get.back();
@@ -35,7 +43,13 @@ void showLanguageSelector() {
 
           ListTile(
             leading: const Text("🇬🇧", style: TextStyle(fontSize: 22)),
-            title: const Text("English"),
+            title:  Text(
+                "English",
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            trailing: Get.locale?.languageCode == 'en'
+                ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary)
+                : null,
             onTap: () {
               controller.changeLocale('en');
               Get.back();

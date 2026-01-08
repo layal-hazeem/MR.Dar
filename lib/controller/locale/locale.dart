@@ -218,7 +218,7 @@ class MyLocale implements Translations {
       //notifications_page
       "Notifications": "الإشعارات",
       "No notifications yet": "لم تصل أي إشعارات بعد",
-      "accepted": "مقبول",
+      "accepted": "مفعّل",
 
       //---------------------------
       //SearchSuggestionsPage

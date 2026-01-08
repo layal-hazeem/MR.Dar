@@ -35,7 +35,8 @@ class ThemeService extends GetxService {
   // تعطي ThemeData جاهزين — عدلي القيم حسب ذوقك
   ThemeData get lightTheme {
     const primaryColor = Color(0xFF274668); // كحلي
-    const textColor = Color(0xFF274668); // نفس الكحلي للنصوص
+    const textColor = Color(0xFF274668); //  الكحلي للنصوص
+
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: primaryColor,
@@ -113,6 +114,7 @@ class ThemeService extends GetxService {
     const surface = Color(0xFF162033); // كروت / عناصر
     const textPrimary = Color(0xFFE6EDF5); // أبيض مكسور
     const textSecondary = Color(0xFF9FB2C8);
+    const nevy = Color(0xFF274668);
 
     return ThemeData(
       brightness: Brightness.dark,

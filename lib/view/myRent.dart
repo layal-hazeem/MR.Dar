@@ -95,80 +95,63 @@ class _MyRentState extends State<MyRent> {
               }
 
               // 4️⃣ List
-              return ListView.builder(
-                controller: controller.scrollController,
+              return RefreshIndicator(
+                onRefresh: () async {
+                  // تستدعي الدالة اللي بتحدث البيانات عند السحب
+                  await controller.fetchMyReservations(); // أو أي دالة عندك بتجيب البيانات
+                },
+                child: ListView.builder(
+                  controller: controller.scrollController,
+                  itemCount: reservations.length,
+                  itemBuilder: (context, index) {
+                    final reservation = reservations[index];
 
-                itemCount: reservations.length,
-                itemBuilder: (context, index) {
-                  final reservation = reservations[index];
-
-                  return Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: Column(
-                      children: [
-                        ApartmentCard(
-                          apartment: reservation.apartment,
-                          onTap: () {
-                            Get.to(
-                              () => ApartmentDetailsPage(
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Column(
+                        children: [
+                          ApartmentCard(
+                            apartment: reservation.apartment,
+                            onTap: () {
+                              Get.to(() => ApartmentDetailsPage(
                                 apartment: reservation.apartment,
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 12),
-
-                        if (controller.currentStatus.value ==
-                            ReservationStatus.previous)
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                Get.to(
-                                  () => RateApartmentPage(
+                              ));
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          if (controller.currentStatus.value == ReservationStatus.previous)
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  Get.to(() => RateApartmentPage(
                                     houseId: reservation.apartment.id,
+                                  ));
+                                },
+                                icon: const Icon(Icons.star, color: Colors.amber, size: 20),
+                                label: const Text(
+                                  "Rate",
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                  backgroundColor: Theme.of(context).colorScheme.surface,
+                                  foregroundColor: Theme.of(context).colorScheme.primary,
+                                  shadowColor: Colors.black.withOpacity(0.3),
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                                size: 20,
-                              ),
-                              label: const Text(
-                                "Rate",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 12,
-                                ),
-                                backgroundColor: Theme.of(context).colorScheme.surface,
-                                foregroundColor: Theme.of(context).colorScheme.primary,
-                                shadowColor: Colors.black.withOpacity(0.3),
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
                                 ),
                               ),
                             ),
-                          ),
-
-                        // 🔽 نضيف أزرار التعديل والإلغاء للـ Pending فقط
-                        if (controller.currentStatus.value ==
-                            ReservationStatus.pending)
-                          _buildPendingActions(reservation),
-                      ],
-                    ),
-                  );
-                },
+                          if (controller.currentStatus.value == ReservationStatus.pending)
+                            _buildPendingActions(reservation),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               );
             }),
           ),

@@ -16,6 +16,7 @@ class Signup extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(
           "Join us & find your perfect home".tr,
           textAlign: TextAlign.center,
@@ -25,7 +26,6 @@ class Signup extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        backgroundColor: Colors.white,
         elevation: 0,
         iconTheme:  IconThemeData(color: Theme.of(context).colorScheme.primary),
       ),
@@ -219,8 +219,7 @@ class Signup extends StatelessWidget {
                                               ? "Profile Image".tr
                                               : "Profile Image Selected".tr,
                                           style: TextStyle(
-                                            fontSize:
-                                            16,
+                                            fontSize: 16,
                                             color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                             fontWeight:
                                             ctrl.profileImage.value == null
@@ -295,9 +294,7 @@ class Signup extends StatelessWidget {
                                               : "ID Image Selected".tr,
                                           style: TextStyle(
                                             fontSize: 16,
-                                            color: ctrl.idImage.value == null
-                                                ? Colors.black54
-                                                : Colors.black54,
+                                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                             fontWeight:
                                             ctrl.idImage.value == null
                                                 ? FontWeight.w500
@@ -310,7 +307,7 @@ class Signup extends StatelessWidget {
                                       ),
                                       Icon(
                                         Icons.photo,
-                                        color: Colors.black45,
+                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                         size: 22,
                                       ),
                                     ],
@@ -365,8 +362,8 @@ class Signup extends StatelessWidget {
                       controller: ctrl.passwordController,
                       obscureText: ctrl.isPasswordHidden,
                       maxLength: 15,
-                      style: const TextStyle(
-                        color: Colors.black87,
+                      style:  TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 22,
                       ),
                       validator: (v) {
@@ -377,12 +374,13 @@ class Signup extends StatelessWidget {
                       decoration: _inputDecoration(
                         context,
                         "Password".tr,
+
                         suffixWidget: IconButton(
                           icon: Icon(
                             ctrl.isPasswordHidden
                                 ? Icons.lock
                                 : Icons.lock_open,
-                            color: Colors.black45,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                           ),
                           onPressed: ctrl.togglePassword,
                         ),
@@ -400,8 +398,8 @@ class Signup extends StatelessWidget {
                       controller: ctrl.confirmPasswordController,
                       obscureText: ctrl.isConfirmHidden,
                       maxLength: 15,
-                      style: const TextStyle(
-                        color: Colors.black87,
+                      style:  TextStyle(
+                        color:Theme.of(context).colorScheme.onSurface,
                         fontSize: 22,
                       ),
                       validator: (v) {
@@ -417,7 +415,7 @@ class Signup extends StatelessWidget {
                         suffixWidget: IconButton(
                           icon: Icon(
                             ctrl.isConfirmHidden ? Icons.lock : Icons.lock_open,
-                            color: Colors.black45,
+                            color:  Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                           ),
                           onPressed: ctrl.toggleConfirmPassword,
                         ),
@@ -477,6 +475,7 @@ class Signup extends StatelessWidget {
         IconData? suffix,
         Widget? suffixWidget,
       }) {
+    final isLight = Theme.of(context).brightness == Brightness.light;
     return InputDecoration(
       labelText: label,
       labelStyle: TextStyle(
@@ -487,8 +486,17 @@ class Signup extends StatelessWidget {
       ),
       suffixIcon:
       suffixWidget ??
-          (suffix != null ? Icon(suffix, color: Colors.black45) : null),
-      fillColor: Theme.of(context).colorScheme.surface,
+          (suffix != null ? Icon(
+            suffix,
+            color: Theme.of(context)
+                .colorScheme
+                .onSurface
+                .withOpacity(0.6),
+          )
+              : null),
+      fillColor: isLight
+          ? Colors.grey.shade100   // رمادي ناعم بالـ Light
+          : Theme.of(context).colorScheme.surface,
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

@@ -47,11 +47,11 @@ class BookingDatePage extends StatelessWidget {
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         centerTitle: true,
-        iconTheme:  IconThemeData(color:Theme.of(context).colorScheme.onPrimary),
+        iconTheme:  IconThemeData(color:Theme.of(context).colorScheme.onSurface),
         title:  Text(
           "Select Booking Date".tr,
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
@@ -113,8 +113,8 @@ class BookingDatePage extends StatelessWidget {
                               if (controller.isStartDay(day)) {
                                 return _circleDay(
                                   day,
+                                  Theme.of(context).colorScheme.primary,
                                   Theme.of(context).colorScheme.onPrimary,
-                                  Theme.of(context).colorScheme.surface,
                                 );
                               }
 
@@ -122,8 +122,8 @@ class BookingDatePage extends StatelessWidget {
                               if (controller.isEndDay(day)) {
                                 return _circleDay(
                                   day,
+                                  Theme.of(context).colorScheme.primary,
                                   Theme.of(context).colorScheme.onPrimary,
-                                  Theme.of(context).colorScheme.surface,
                                 );
                               }
 
@@ -131,8 +131,8 @@ class BookingDatePage extends StatelessWidget {
                               if (controller.isInSelectedRange(day)) {
                                 return _circleDay(
                                   day,
+                                  Theme.of(context).colorScheme.primary.withOpacity(0.4),
                                   Theme.of(context).colorScheme.onPrimary,
-                                  Colors.black,
                                 );
                               }
 
@@ -207,11 +207,15 @@ class BookingDatePage extends StatelessWidget {
                                   return ChoiceChip(
                                     label: Text("$m"),
                                     selected: controller.duration.value == m,
-                                    selectedColor: Theme.of(context).colorScheme.onPrimary,
+                                    selectedColor: Theme.of(context).colorScheme.primary,
+                                    backgroundColor: Theme.of(context).colorScheme.surface,
                                     labelStyle: TextStyle(
                                       color: controller.duration.value == m
-                                          ? Theme.of(context).colorScheme.surface
-                                          : Colors.black,
+                                          ? Theme.of(context).colorScheme.onPrimary
+                                          : Theme.of(context).colorScheme.onSurface,
+                                    ),
+                                    side: BorderSide(
+                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
                                     ),
                                     onSelected: (_) =>
                                         controller.duration.value = m,
@@ -235,7 +239,8 @@ class BookingDatePage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -272,16 +277,20 @@ class BookingDatePage extends StatelessWidget {
   }
 
   Widget _dateInfo(IconData icon, String title, DateTime? date ,{required BuildContext context,}) {
+    final colors = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: Theme.of(context).colorScheme.onPrimary),
+        Icon(icon, color:colors.primary),
         const SizedBox(height: 6),
         Text(title, style: const TextStyle(fontSize: 12)),
         const SizedBox(height: 4),
         Text(
           date == null ? "--" : DateFormat('MMM dd, yyyy'.tr).format(date),
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: colors.onSurface.withOpacity(0.6),
+          ),
         ),
       ],
     );

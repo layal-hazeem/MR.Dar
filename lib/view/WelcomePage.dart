@@ -173,7 +173,7 @@ class WelcomePage extends StatelessWidget {
 
                         // Language (fancy text)
                         TextButton.icon(
-                          onPressed: showLanguageSelector,
+                          onPressed:() => showLanguageSelector(context),
                           icon: const Icon(Icons.language, color: Colors.white),
                           label: Text(
                             "Language".tr,
