@@ -103,13 +103,13 @@ class AddApartmentPage extends StatelessWidget {
   // ========================= STEP INDICATOR =========================
   Widget _stepIndicator(BuildContext context) {
     return Obx(
-      () => Padding(
+          () => Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
             3,
-            (index) => AnimatedContainer(
+                (index) => AnimatedContainer(
               duration: 300.milliseconds,
               margin: const EdgeInsets.symmetric(horizontal: 4),
               width: controller.currentStep.value == index ? 30 : 10,
@@ -131,7 +131,7 @@ class AddApartmentPage extends StatelessWidget {
   Widget _basicInfoStep(BuildContext context) {
     return _stepWrapper(
       Obx(
-        () => Column(
+            () => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _sectionTitle(context, "General Information".tr),
@@ -140,6 +140,8 @@ class AddApartmentPage extends StatelessWidget {
               "Apartment Title".tr,
               controller: controller.titleController,
               error: controller.titleError.value,
+              onChangedClearError: () => controller.titleError.value = null,
+
             ),
             _input(
               context,
@@ -147,6 +149,8 @@ class AddApartmentPage extends StatelessWidget {
               controller: controller.descriptionController,
               maxLines: 3,
               error: controller.descriptionError.value,
+              onChangedClearError: () => controller.descriptionError.value = null,
+
             ),
             Row(
               children: [
@@ -157,6 +161,8 @@ class AddApartmentPage extends StatelessWidget {
                     controller: controller.rentController,
                     keyboard: TextInputType.number,
                     error: controller.rentError.value,
+                    onChangedClearError: () => controller.rentError.value = null,
+
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -167,6 +173,8 @@ class AddApartmentPage extends StatelessWidget {
                     controller: controller.roomsController,
                     keyboard: TextInputType.number,
                     error: controller.roomsError.value,
+                    onChangedClearError: () => controller.roomsError.value = null,
+
                   ),
                 ),
               ],
@@ -177,6 +185,8 @@ class AddApartmentPage extends StatelessWidget {
               controller: controller.spaceController,
               keyboard: TextInputType.number,
               error: controller.spaceError.value,
+              onChangedClearError: () => controller.spaceError.value = null,
+
             ),
             const SizedBox(height: 20),
             _nextButton(context, () {
@@ -191,11 +201,10 @@ class AddApartmentPage extends StatelessWidget {
   }
 
   // ========================= STEP 2 =========================
-  // ========================= STEP 2 (المعدلة لإعادة الإحداثيات) =========================
   Widget _locationStep(BuildContext context) {
     return _stepWrapper(
       Obx(
-        () => Column(
+            () => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _sectionTitle(context, "Location Details".tr),
@@ -206,10 +215,14 @@ class AddApartmentPage extends StatelessWidget {
               items: controller.governorates
                   .map(
                     (g) => DropdownMenuItem(value: g.id, child: Text(g.name)),
-                  )
+              )
                   .toList(),
-              onChanged: (v) =>
-                  v != null ? controller.onGovernorateSelected(v) : null,
+              onChanged: (v) {
+                if (v != null) {
+                  controller.onGovernorateSelected(v);
+                  controller.governorateError.value = null; // ✅
+                }
+              },
               error: controller.governorateError.value,
             ),
             _dropdown(
@@ -219,9 +232,14 @@ class AddApartmentPage extends StatelessWidget {
               items: controller.cities
                   .map(
                     (c) => DropdownMenuItem(value: c.id, child: Text(c.name)),
-                  )
+              )
                   .toList(),
-              onChanged: (v) => v != null ? controller.onCitySelected(v) : null,
+              onChanged: (v) {
+                if (v != null) {
+                  controller.onCitySelected(v);
+                  controller.cityError.value = null; // ✅
+                }
+              },
               error: controller.cityError.value,
             ),
             _input(
@@ -229,12 +247,16 @@ class AddApartmentPage extends StatelessWidget {
               "Street Name".tr,
               controller: controller.streetController,
               error: controller.streetError.value,
+              onChangedClearError: () => controller.streetError.value = null,
+
             ),
             _input(
               context,
               "Flat Number".tr,
               controller: controller.flatNumberController,
               error: controller.flatError.value,
+              onChangedClearError: () => controller.flatError.value = null,
+
             ),
 
             // 📍 إضافة الإحداثيات هنا بجانب بعضهما
@@ -246,6 +268,7 @@ class AddApartmentPage extends StatelessWidget {
                     "Longitude (opt)".tr,
                     controller: controller.longitudeController,
                     keyboard: TextInputType.number,
+
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -255,6 +278,7 @@ class AddApartmentPage extends StatelessWidget {
                     "Latitude (opt)".tr,
                     controller: controller.latitudeController,
                     keyboard: TextInputType.number,
+
                   ),
                 ),
               ],
@@ -299,13 +323,13 @@ class AddApartmentPage extends StatelessWidget {
 
           // 🖼 جزء عرض الصور المختار
           Obx(
-            () => Wrap(
+                () => Wrap(
               spacing: 12,
               runSpacing: 12,
               children: [
                 // عرض الصور المختارة
                 ...controller.images.map(
-                  (img) => Stack(
+                      (img) => Stack(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(15),
@@ -366,6 +390,21 @@ class AddApartmentPage extends StatelessWidget {
               ],
             ),
           ),
+          Obx(() {
+            if (controller.imageError.value == null) {
+              return const SizedBox();
+            }
+            return Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                controller.imageError.value!,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 12,
+                ),
+              ),
+            );
+          }),
 
           const SizedBox(
             height: 40,
@@ -376,7 +415,7 @@ class AddApartmentPage extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Obx(
-                  () => ElevatedButton(
+                      () => ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       minimumSize: const Size(double.infinity, 56),
@@ -387,34 +426,29 @@ class AddApartmentPage extends StatelessWidget {
                     onPressed: controller.isLoading.value
                         ? null
                         : () {
-                            if (controller.images.isEmpty) {
-                              Get.snackbar(
-                                "Required".tr,
-                                "Please add at least one image".tr,
-                                snackPosition: SnackPosition.BOTTOM,
-                                backgroundColor: Colors.orange,
-                                colorText: Colors.white,
-                              );
-                            } else {
-                              controller.submit();
-                            }
-                          },
+                      if (controller.images.isEmpty) {
+                        controller.imageError.value = "Please add at least one image";
+                      } else {
+                        controller.submit();
+                      }
+
+                    },
                     child: controller.isLoading.value
                         ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
                         : Text(
-                            "Finish & Post".tr,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                      "Finish & Post".tr,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -455,19 +489,26 @@ class AddApartmentPage extends StatelessWidget {
   }
 
   Widget _input(
-    BuildContext context,
-    String hint, {
-    required TextEditingController controller,
-    String? error,
-    int maxLines = 1,
-    TextInputType keyboard = TextInputType.text,
-  }) {
+      BuildContext context,
+      String hint, {
+        required TextEditingController controller,
+        String? error,
+        int maxLines = 1,
+        TextInputType keyboard = TextInputType.text,
+        VoidCallback? onChangedClearError, // ⭐️
+
+      }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
         controller: controller,
         maxLines: maxLines,
         keyboardType: keyboard,
+        onChanged: (_) {
+          if (onChangedClearError != null) {
+            onChangedClearError();
+          }
+        },
         decoration: InputDecoration(
           labelText: hint,
           alignLabelWithHint: true,
@@ -551,6 +592,8 @@ class AddApartmentPage extends StatelessWidget {
     final imgs = await picker.pickMultiImage();
     if (imgs != null && imgs.isNotEmpty) {
       controller.images.addAll(imgs);
+      controller.imageError.value = null; // ✅
+
     }
   }
 }

@@ -24,6 +24,7 @@ class AddApartmentController extends GetxController {
     );
   }
 
+
   void goBack(PageController pageController) {
     if (currentStep.value > 0) {
       currentStep.value--;

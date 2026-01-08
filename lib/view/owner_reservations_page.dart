@@ -46,70 +46,93 @@ class OwnerReservationsPage extends StatelessWidget {
   }
 
   Widget _buildList(List reservations) {
-    if (reservations.isEmpty) {
-      return const Center(child: Text("No bookings"));
-    }
+    return RefreshIndicator(
+      onRefresh: () async {
+        await controller.loadReservations();
+      },
+      child: reservations.isEmpty
+          ? ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: const [
+          SizedBox(height: 200),
+          Center(child: Text("No bookings")),
+        ],
+      )
+          : ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: reservations.length,
+        itemBuilder: (context, index) {
+          final r = reservations[index];
 
-    return ListView.builder(
-      itemCount: reservations.length,
-      itemBuilder: (context, index) {
-        final r = reservations[index];
-
-        return Card(
-          margin: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (r.house.images.isNotEmpty)
-                Image.network(
-                  r.house.images.first,
-                  height: 180,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      r.house.title,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text("From ${r.startDate} → ${r.endDate}"),
-                    Text("Renter: ${r.user.firstName} ${r.user.lastName}"),
-                    Text("Phone: ${r.user.phone}"),
-                    const SizedBox(height: 8),
-
-                    if (r.status == 'pending')
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () => controller.acceptReservation(r.id),
-                            child: const Text("Accept"),
-                          ),
-                          const SizedBox(width: 8),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                            onPressed: () => controller.rejectReservation(r.id),
-                            child: const Text("Reject"),
-                          ),
-                        ],
-                      )
-                    else
+          return Card(
+            margin: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (r.house.images.isNotEmpty)
+                  Image.network(
+                    r.house.images.first,
+                    height: 180,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        "Status: ${r.status}",
-                        style: TextStyle(
-                          color: r.status == 'accepted' ? Colors.green : Colors.red,
+                        r.house.title,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                  ],
+                      Text("From ${r.startDate} → ${r.endDate}"),
+                      Text(
+                          "Renter: ${r.user.firstName} ${r.user.lastName}"),
+                      Text("Phone: ${r.user.phone}"),
+                      const SizedBox(height: 8),
+
+                      if (r.status == 'pending')
+                        Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                await controller.acceptReservation(r.id);
+                              },
+                              child: const Text("Accept"),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              onPressed: () async {
+                                await controller.rejectReservation(r.id);
+                              },
+                              child: const Text("Reject"),
+                            ),
+                          ],
+                        )
+                      else
+                        Text(
+                          "Status: ${r.status}",
+                          style: TextStyle(
+                            color: r.status == 'accepted'
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
+
 }
