@@ -32,10 +32,7 @@ class Login extends StatelessWidget {
                   height: 250,
                   width: 320,
 
-                  child: Image.asset(
-                    "images/ChatGPT Image Jan 6, 2026, 09_51_23 PM.png",
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image.asset("images/app_icon.png", fit: BoxFit.cover),
                 ),
 
                 const SizedBox(height: 30),
@@ -111,7 +108,9 @@ class Login extends StatelessWidget {
                                     ctrl.isPasswordHidden
                                         ? Icons.lock
                                         : Icons.lock_open,
-                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface.withOpacity(0.7),
                                   ),
                                   onPressed: ctrl.togglePassword,
                                 ),
@@ -229,11 +228,14 @@ class Login extends StatelessWidget {
       ),
       suffixIcon:
           suffixWidget ??
-          (suffix != null ? Icon(
-            suffix,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-          )
-           : null),
+          (suffix != null
+              ? Icon(
+                  suffix,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.6),
+                )
+              : null),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),

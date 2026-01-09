@@ -154,6 +154,7 @@ class MyAccountController extends GetxController {
         "Error",
         "Please enter your password",
         backgroundColor: Colors.red,
+        colorText: Colors.white,
       );
       return;
     }
@@ -163,9 +164,11 @@ class MyAccountController extends GetxController {
 
       final response = await service.deleteAccount(password);
 
-      if (response['status'] == 'success' || response['message'] != null) {
-        if (Get.isDialogOpen!) Get.back();
-        final authController = Get.find<AuthController>();
+      // سكّر dialog كلمة السر
+      if (Get.isDialogOpen!) Get.back();
+
+      // نجاح
+      if (response['data'] == true) {
         await authController.logout();
 
         Get.snackbar(
@@ -175,17 +178,61 @@ class MyAccountController extends GetxController {
           colorText: Colors.white,
         );
       }
+    }
+    // ⬇️⬇️⬇️ هون المهم
+    on DioException catch (e) {
+      if (Get.isDialogOpen!) Get.back();
+
+      final data = e.response?.data;
+
+      if (data != null && data['message'] != null) {
+        _showCannotDeleteDialog(data['message']);
+      } else {
+        Get.snackbar(
+          "Failed",
+          "Could not delete account.",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
     } catch (e) {
-      print("Delete Error: $e");
+      if (Get.isDialogOpen!) Get.back();
+
       Get.snackbar(
-        "Failed",
-        "Could not delete account. Please check your password.",
+        "Error",
+        "Something went wrong",
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
     } finally {
       isDeleting.value = false;
     }
+  }
+
+  void _showCannotDeleteDialog(String message) {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text(
+          "Action not allowed",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text(
+              "OK",
+              style: TextStyle(
+                color: Color(0xFF274668),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
   }
 
   void showDeleteAccountFlow(BuildContext context) {

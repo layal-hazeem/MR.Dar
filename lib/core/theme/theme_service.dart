@@ -79,38 +79,66 @@ class ThemeService extends GetxService {
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
         selectedItemColor: primaryColor, // العنصر المختار كحلي
-        unselectedItemColor: primaryColor.withOpacity(0.5), // العناصر العادية فاتحة شوي
-      ), checkboxTheme: CheckboxThemeData(
- fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
- if (states.contains(WidgetState.disabled)) { return null; }
- if (states.contains(WidgetState.selected)) { return primaryColor; }
- return null;
- }),
- ), radioTheme: RadioThemeData(
- fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
- if (states.contains(WidgetState.disabled)) { return null; }
- if (states.contains(WidgetState.selected)) { return primaryColor; }
- return null;
- }),
- ), switchTheme: SwitchThemeData(
- thumbColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
- if (states.contains(WidgetState.disabled)) { return null; }
- if (states.contains(WidgetState.selected)) { return primaryColor; }
- return null;
- }),
- trackColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
- if (states.contains(WidgetState.disabled)) { return null; }
- if (states.contains(WidgetState.selected)) { return primaryColor; }
- return null;
- }),
- ), // مثل Checkbox & Switch
+        unselectedItemColor: primaryColor.withOpacity(
+          0.5,
+        ), // العناصر العادية فاتحة شوي
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.resolveWith<Color?>((
+          Set<WidgetState> states,
+        ) {
+          if (states.contains(WidgetState.disabled)) {
+            return null;
+          }
+          if (states.contains(WidgetState.selected)) {
+            return primaryColor;
+          }
+          return null;
+        }),
+      ),
+      radioTheme: RadioThemeData(
+        fillColor: WidgetStateProperty.resolveWith<Color?>((
+          Set<WidgetState> states,
+        ) {
+          if (states.contains(WidgetState.disabled)) {
+            return null;
+          }
+          if (states.contains(WidgetState.selected)) {
+            return primaryColor;
+          }
+          return null;
+        }),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith<Color?>((
+          Set<WidgetState> states,
+        ) {
+          if (states.contains(WidgetState.disabled)) {
+            return null;
+          }
+          if (states.contains(WidgetState.selected)) {
+            return primaryColor;
+          }
+          return null;
+        }),
+        trackColor: WidgetStateProperty.resolveWith<Color?>((
+          Set<WidgetState> states,
+        ) {
+          if (states.contains(WidgetState.disabled)) {
+            return null;
+          }
+          if (states.contains(WidgetState.selected)) {
+            return primaryColor;
+          }
+          return null;
+        }),
+      ), // مثل Checkbox & Switch
     );
   }
 
-
   ThemeData get darkTheme {
     const primary = Color(0xFF6FA8DC); // أزرق هادئ ومريح
-    const bg = Color(0xFF0E1625);      // خلفية رئيسية
+    const bg = Color(0xFF0E1625); // خلفية رئيسية
     const surface = Color(0xFF162033); // كروت / عناصر
     const textPrimary = Color(0xFFE6EDF5); // أبيض مكسور
     const textSecondary = Color(0xFF9FB2C8);
@@ -142,10 +170,7 @@ class ThemeService extends GetxService {
       textTheme: const TextTheme(
         bodyLarge: TextStyle(color: textPrimary),
         bodyMedium: TextStyle(color: textPrimary),
-        titleLarge: TextStyle(
-          color: textPrimary,
-          fontWeight: FontWeight.bold,
-        ),
+        titleLarge: TextStyle(color: textPrimary, fontWeight: FontWeight.bold),
         labelMedium: TextStyle(color: textSecondary),
       ),
 
