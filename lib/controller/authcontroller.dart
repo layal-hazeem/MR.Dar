@@ -42,8 +42,8 @@ class AuthController extends GetxController {
       print('Local data cleared');
 
       Get.snackbar(
-        "Logged Out",
-        "You have been logged out successfully",
+        "Logged Out".tr,
+        "You have been logged out successfully".tr,
         backgroundColor: Colors.green,
         colorText: Colors.white,
         duration: const Duration(seconds: 2),
@@ -57,8 +57,8 @@ class AuthController extends GetxController {
     } catch (e) {
       print(' Logout error: $e');
       Get.snackbar(
-        "Error",
-        "Failed to logout: ${e.toString()}",
+        "Error".tr,
+        "Failed to logout: ${e.toString()}".tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );

@@ -25,7 +25,7 @@ class MyRentsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('و🔥 MyRentsController INIT ${hashCode}');
+    print('🔥 MyRentsController INIT ${hashCode}');
     fetchMyReservations();
   }
 
@@ -73,7 +73,7 @@ class MyRentsController extends GetxController {
       print("🟢 allReservations now: ${allReservations.length}");
     } catch (e) {
       print("🔴 ERROR: $e");
-      errorMessage.value = 'load reservation failed';
+      errorMessage.value = 'load reservation failed'.tr;
     } finally {
       isLoading.value = false;
     }
@@ -87,7 +87,7 @@ class MyRentsController extends GetxController {
       print("🟢 fetched reservations: ${reservations.length}");
       allReservations.assignAll(reservations);
     } catch (e) {
-      errorMessage.value = 'load reservation failed';
+      errorMessage.value = 'load reservation failed'.tr;
     } finally {
       isLoading.value = false;
     }
@@ -157,18 +157,18 @@ class MyRentsController extends GetxController {
         }
 
         Get.snackbar(
-          "Success",
-          "Reservation cancelled successfully",
+          "Success".tr,
+          "Reservation cancelled successfully".tr,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
       } else {
-        throw Exception("Failed to cancel reservation");
+        throw Exception("Failed to cancel reservation".tr);
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
-        "Failed to cancel reservation: ${e.toString()}",
+        "Error".tr,
+        "Failed to cancel reservation: ${e.toString()}".tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -181,11 +181,11 @@ class MyRentsController extends GetxController {
   void editReservation(ReservationModel reservation) {
     // 1. نسأل المستخدم إذا مؤكد
     Get.defaultDialog(
-      title: "Edit Reservation",
+      title: "Edit Reservation".tr,
       middleText:
-          "Editing will cancel the current request and create a new one. Continue?",
-      textConfirm: "Yes, Edit",
-      textCancel: "Cancel",
+          "Editing will cancel the current request and create a new one. Continue?".tr,
+      textConfirm: "Yes, Edit".tr,
+      textCancel: "CANCEL".tr,
       confirmTextColor: Colors.white,
       buttonColor: const Color(0xFF274668),
       onConfirm: () async {

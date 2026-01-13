@@ -46,10 +46,10 @@ class LoginController extends GetxController {
       await userCtrl.loadUserRole();
       if (userCtrl.isAdmin) {
         Get.defaultDialog(
-          title: "Admin Account",
+          title: "Admin Account".tr,
           middleText:
-              "Admin dashboard is under development.\nPlease use a regular user account.",
-          textConfirm: "OK",
+              "Admin dashboard is under development.\nPlease use a regular user account.".tr,
+          textConfirm: "OK".tr,
           confirmTextColor: Colors.white,
           buttonColor: const Color(0xFF274668),
           onConfirm: () {
@@ -78,7 +78,7 @@ class LoginController extends GetxController {
       update();
 
       Get.snackbar(
-        "Error",
+        "Error".tr,
         e.errModel.errorMessage,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -88,8 +88,8 @@ class LoginController extends GetxController {
       update();
 
       Get.snackbar(
-        "Error",
-        "An unexpected error occurred: $e",
+        "Error".tr,
+        "An unexpected error occurred: $e".tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );

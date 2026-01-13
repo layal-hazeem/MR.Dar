@@ -96,12 +96,19 @@ class _MyRentState extends State<MyRent> {
 
               // 4️⃣ List
               return RefreshIndicator(
-                onRefresh: () async {
-                  // تستدعي الدالة اللي بتحدث البيانات عند السحب
-                  await controller.fetchMyReservations(); // أو أي دالة عندك بتجيب البيانات
-                },
+                onRefresh: controller.currentStatus.value == ReservationStatus.accepted
+                    ? () async {
+                  await controller.fetchMyReservations();
+                }
+                    : () async {},
                 child: ListView.builder(
                   controller: controller.scrollController,
+
+                  // 🔐 التحكم بالسحب
+                  physics: controller.currentStatus.value == ReservationStatus.accepted
+                      ? const AlwaysScrollableScrollPhysics()
+                      : const NeverScrollableScrollPhysics(),
+
                   itemCount: reservations.length,
                   itemBuilder: (context, index) {
                     final reservation = reservations[index];

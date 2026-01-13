@@ -45,7 +45,7 @@ class MyApartmentsController extends GetxController {
         print('Apartment ${apt.id}: status = ${apt.apartmentStatus}');
       }
     } catch (e) {
-      errorMessage.value = 'load apartments failed';
+      errorMessage.value = 'load apartments failed'.tr;
     } finally {
       isLoading.value = false;
     }

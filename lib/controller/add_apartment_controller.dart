@@ -80,17 +80,17 @@ class AddApartmentController extends GetxController {
 
   bool validateStep1() {
     titleError.value = titleController.text.isEmpty
-        ? "Title is required"
+        ? "Title is required".tr
         : null;
     descriptionError.value = descriptionController.text.isEmpty
-        ? "Description is required"
+        ? "Description is required".tr
         : null;
-    rentError.value = rentController.text.isEmpty ? "Price is required" : null;
+    rentError.value = rentController.text.isEmpty ? "Price is required".tr : null;
     roomsError.value = roomsController.text.isEmpty
-        ? "Rooms is required"
+        ? "Rooms number is required".tr
         : null;
     spaceError.value = spaceController.text.isEmpty
-        ? "Space is required"
+        ? "Space is required".tr
         : null;
 
     return titleError.value == null &&
@@ -102,14 +102,14 @@ class AddApartmentController extends GetxController {
 
   bool validateStep2() {
     governorateError.value = selectedGovernorateId.value == null
-        ? "Governorate is required"
+        ? "Governorate is required".tr
         : null;
-    cityError.value = selectedCityId.value == null ? "City is required" : null;
+    cityError.value = selectedCityId.value == null ? "City is required".tr : null;
     streetError.value = streetController.text.isEmpty
-        ? "Street is required"
+        ? "Street is required".tr
         : null;
     flatError.value = flatNumberController.text.isEmpty
-        ? "Flat number is required"
+        ? "Flat number is required".tr
         : null;
 
     return governorateError.value == null &&
@@ -119,7 +119,7 @@ class AddApartmentController extends GetxController {
   }
   bool validateStep3() {
     if (images.isEmpty) {
-      imageError.value = "Please select at least one image";
+      imageError.value = "Please select at least one image".tr;
       return false;
     }
     imageError.value = null;
@@ -169,8 +169,8 @@ class AddApartmentController extends GetxController {
       Get.offAllNamed('/home');
 
       Get.snackbar(
-        "Apartment added ",
-        "Your apartment was added successfully\nWaiting for admin approval",
+        "Apartment added".tr,
+        "Your apartment was added successfully\nWaiting for admin approval".tr,
         backgroundColor: const Color(0xFF0F2A44),
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
@@ -180,7 +180,7 @@ class AddApartmentController extends GetxController {
       );
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Error".tr,
         e.toString(),
         backgroundColor: Colors.red,
         colorText: Colors.white,

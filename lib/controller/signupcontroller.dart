@@ -52,7 +52,7 @@ class SignupController extends GetxController {
         children: [
           ListTile(
             leading: const Icon(Icons.photo_library),
-            title: const Text("Gallery"),
+            title:  Text("Gallery".tr),
             onTap: () async {
               Get.back();
               final XFile? image = await picker.pickImage(
@@ -69,7 +69,7 @@ class SignupController extends GetxController {
           ),
           ListTile(
             leading: const Icon(Icons.camera_alt),
-            title: const Text("Camera"),
+            title: Text("Camera".tr),
             onTap: () async {
               Get.back();
               final XFile? image = await picker.pickImage(
@@ -98,7 +98,7 @@ class SignupController extends GetxController {
         children: [
           ListTile(
             leading: const Icon(Icons.photo_library),
-            title: const Text("Gallery"),
+            title:  Text("Gallery".tr),
             onTap: () async {
               Get.back();
               final XFile? image = await picker.pickImage(
@@ -114,7 +114,7 @@ class SignupController extends GetxController {
           ),
           ListTile(
             leading: const Icon(Icons.camera_alt),
-            title: const Text("Camera"),
+            title:  Text("Camera".tr),
             onTap: () async {
               Get.back();
               final XFile? image = await picker.pickImage(
@@ -158,17 +158,17 @@ class SignupController extends GetxController {
     }
 
     profileImageError.value =
-    profileImage.value == null ? "Profile image is required!" : "";
+    profileImage.value == null ? "Profile image is required!".tr : "";
 
     idImageError.value =
-    idImage.value == null ? "ID image is required!" : "";
+    idImage.value == null ? "ID image is required!".tr : "";
 
     if (birthDate.value.isEmpty) {
       isValid = false;
     }
 
     if (role.value.isEmpty) {
-      Get.snackbar('Error', 'Please select a role');
+      Get.snackbar('Error'.tr, 'Please select your account type'.tr);
       isValid = false;
     }
 
@@ -203,8 +203,8 @@ class SignupController extends GetxController {
       update();
 
       Get.snackbar(
-        'Success',
-        'Account created successfully!',
+        'Success'.tr,
+        'Account created successfully!'.tr,
         colorText: Colors.white,
         backgroundColor: Colors.green,
       );
@@ -240,8 +240,8 @@ class SignupController extends GetxController {
       isLoading = false;
       update();
       Get.snackbar(
-        'Unexpected Error',
-        'Something went wrong: $e',
+        'Unexpected Error'.tr,
+        'Something went wrong: $e'.tr,
         colorText: Colors.white,
         backgroundColor: Colors.red,
       );

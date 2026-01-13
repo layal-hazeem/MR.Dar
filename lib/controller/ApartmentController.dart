@@ -70,7 +70,7 @@ class ApartmentController extends GetxController {
 
       await Future.wait([loadAllApartments()]);
     } catch (e) {
-      errorMessage.value = "Failed to load initial data: ${e.toString()}";
+      errorMessage.value = "Failed to load initial data: ${e.toString()}".tr;
     } finally {
       isLoading.value = false;
     }
@@ -89,7 +89,7 @@ class ApartmentController extends GetxController {
       );
 
       topRatedApartments.assignAll(
-        await service.getApartmentsByQuery(sortBy: 'rate'),
+        await service.getApartmentsByQuery(sortBy: 'rate'.tr),
       );
     } catch (e) {
       errorMessage.value = e.toString();
@@ -155,7 +155,7 @@ class ApartmentController extends GetxController {
       totalItems.value = response['total_items'];
       hasMore.value = response['has_more'];
     } catch (e) {
-      errorMessage.value = "Failed to apply filter: ${e.toString()}";
+      errorMessage.value = "Failed to apply filter: ${e.toString()}".tr;
     } finally {
       isFilterLoading.value = false;
     }
@@ -183,7 +183,7 @@ class ApartmentController extends GetxController {
     } catch (e) {
       filteredApartments.assignAll([]);
 
-      print("Search error: $e");
+      print("Search error: $e".tr);
     } finally {
       isSearching.value = false;
     }
@@ -233,7 +233,7 @@ class ApartmentController extends GetxController {
       hasMore.value = response['has_more'];
       totalPages.value = response['total_pages'];
     } catch (e) {
-      errorMessage.value = "Failed to load more: ${e.toString()}";
+      errorMessage.value = "Failed to load more: ${e.toString()}".tr;
       currentPage.value--;
     } finally {
       isLoadingMore.value = false;
@@ -245,7 +245,7 @@ class ApartmentController extends GetxController {
       isLoading.value = true;
       governorates.value = await service.getGovernorates();
     } catch (e) {
-      errorMessage.value = "Failed to load governorates";
+      errorMessage.value = "Failed to load governorates".tr;
     } finally {
       isLoading.value = false;
     }
@@ -303,10 +303,10 @@ class ApartmentController extends GetxController {
       // تحديث البيانات بعد الإضافة
       await loadInitialData();
 
-      createMessage.value = "Apartment added successfully";
+      createMessage.value = "Apartment added successfully".tr;
       return true;
     } catch (e) {
-      createMessage.value = "Failed to add apartment: $e";
+      createMessage.value = "Failed to add apartment: $e".tr;
       return false;
     } finally {
       isCreating.value = false;

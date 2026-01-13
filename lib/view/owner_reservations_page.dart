@@ -22,10 +22,10 @@ class OwnerReservationsPage extends StatelessWidget {
         child: Column(
           children: [
             TabBar(
-              tabs: const [
-                Tab(text: 'Pending'),
-                Tab(text: 'Accepted'),
-                Tab(text: 'Rejected'),
+              tabs:  [
+                Tab(text: 'Pending'.tr),
+                Tab(text: 'accepted'.tr),
+                Tab(text: 'Rejected'.tr),
               ],
               labelColor: Colors.blue,
               unselectedLabelColor: Colors.grey,
@@ -53,9 +53,9 @@ class OwnerReservationsPage extends StatelessWidget {
       child: reservations.isEmpty
           ? ListView(
         physics: const AlwaysScrollableScrollPhysics(),
-        children: const [
+        children:  [
           SizedBox(height: 200),
-          Center(child: Text("No bookings")),
+          Center(child: Text("No bookings".tr)),
         ],
       )
           : ListView.builder(
@@ -88,20 +88,19 @@ class OwnerReservationsPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text("From ${r.startDate} → ${r.endDate}"),
-                      Text(
-                          "Renter: ${r.user.firstName} ${r.user.lastName}"),
-                      Text("Phone: ${r.user.phone}"),
+                      Text("From ${r.startDate} → ${r.endDate}".tr),
+                      Text("Renter: ${r.user.firstName} ${r.user.lastName}".tr),
+                      Text("Phone: ${r.user.phone}".tr),
                       const SizedBox(height: 8),
 
-                      if (r.status == 'pending')
+                      if (r.status == 'Pending'.tr)
                         Row(
                           children: [
                             ElevatedButton(
                               onPressed: () async {
                                 await controller.acceptReservation(r.id);
                               },
-                              child: const Text("Accept"),
+                              child: Text("Accept".tr),
                             ),
                             const SizedBox(width: 8),
                             ElevatedButton(
@@ -111,15 +110,15 @@ class OwnerReservationsPage extends StatelessWidget {
                               onPressed: () async {
                                 await controller.rejectReservation(r.id);
                               },
-                              child: const Text("Reject"),
+                              child:  Text("Reject".tr),
                             ),
                           ],
                         )
                       else
                         Text(
-                          "Status: ${r.status}",
+                          "Status: ${r.status}".tr,
                           style: TextStyle(
-                            color: r.status == 'accepted'
+                            color: r.status == 'accepted'.tr
                                 ? Colors.green
                                 : Colors.red,
                           ),

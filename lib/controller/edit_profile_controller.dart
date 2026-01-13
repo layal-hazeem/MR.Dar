@@ -134,8 +134,8 @@ class EditProfileController extends GetxController {
       final response = await userService.updateProfile(formData);
 
       final isSuccess =
-          response['status'] == 'success' ||
-          response['message']?.toString().toLowerCase() == 'success';
+          response['status'] == 'Success'.tr ||
+          response['message']?.toString().toLowerCase() == 'Success'.tr;
 
       if (isSuccess) {
         _clearSensitiveData();
@@ -154,14 +154,14 @@ class EditProfileController extends GetxController {
 
       /// ❌ فقط هون في error
       dialogPasswordError.value =
-          response['message'] ?? 'Incorrect current password';
+          response['message'] ?? 'Incorrect current password'.tr;
       return false;
     } on DioException catch (e) {
       dialogPasswordError.value =
-          e.response?.data['message'] ?? 'Invalid password';
+          e.response?.data['message'] ?? 'Invalid password'.tr;
       return false;
     } catch (_) {
-      dialogPasswordError.value = 'Connection error';
+      dialogPasswordError.value = 'Connection error'.tr;
       return false;
     } finally {
       isUpdating.value = false;

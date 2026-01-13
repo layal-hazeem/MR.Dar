@@ -60,7 +60,7 @@ class MyAccountController extends GetxController {
       } catch (e) {
         print("Failed to fetch from API: $e");
         if (user.value == null) {
-          throw Exception("No data available");
+          throw Exception("No data available".tr);
         }
       }
     } catch (e) {
@@ -151,8 +151,8 @@ class MyAccountController extends GetxController {
   Future<void> verifyAndDeleteAccount(String password) async {
     if (password.isEmpty) {
       Get.snackbar(
-        "Error",
-        "Please enter your password",
+        "Error".tr,
+        "Please enter your password".tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -172,8 +172,8 @@ class MyAccountController extends GetxController {
         await authController.logout();
 
         Get.snackbar(
-          "Account Deleted",
-          "Your account has been permanently removed",
+          "Account Deleted".tr,
+          "Your account has been permanently removed".tr,
           backgroundColor: Colors.black,
           colorText: Colors.white,
         );
@@ -189,8 +189,8 @@ class MyAccountController extends GetxController {
         _showCannotDeleteDialog(data['message']);
       } else {
         Get.snackbar(
-          "Failed",
-          "Could not delete account.",
+          "Failed".tr,
+          "Could not delete account.".tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -199,8 +199,8 @@ class MyAccountController extends GetxController {
       if (Get.isDialogOpen!) Get.back();
 
       Get.snackbar(
-        "Error",
-        "Something went wrong",
+        "Error".tr,
+        "Something went wrong".tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -213,16 +213,16 @@ class MyAccountController extends GetxController {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: const Text(
-          "Action not allowed",
+        title:  Text(
+          "Action not allowed".tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text(
-              "OK",
+            child: Text(
+              "OK".tr,
               style: TextStyle(
                 color: Color(0xFF274668),
                 fontWeight: FontWeight.bold,
@@ -243,21 +243,21 @@ class MyAccountController extends GetxController {
           "Attention!".tr,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        content: const Text(
-          "Are you sure you want to delete your account?\nThis action cannot be undone.",
+        content:  Text(
+          "Are you sure you want to delete your account?\nThis action cannot be undone.".tr,
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text("Cancel", style: TextStyle(color: Colors.red)),
+            child:  Text("CANCEL".tr, style: TextStyle(color: Colors.red)),
           ),
           TextButton(
             onPressed: () {
               Get.back();
               _showPasswordVerifyDialog(context);
             },
-            child: const Text(
-              "Confirm",
+            child:  Text(
+              "Confirm".tr,
               style: TextStyle(
                 color: Color(0xFF274668),
                 fontWeight: FontWeight.bold,
@@ -281,7 +281,7 @@ class MyAccountController extends GetxController {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text("Cancel".tr, style: const TextStyle(color: Colors.red)),
+            child: Text("CANCEL".tr, style: const TextStyle(color: Colors.red)),
           ),
           TextButton(
             onPressed: () {
@@ -307,25 +307,25 @@ class MyAccountController extends GetxController {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: const Text("Verify Password"),
+        title:  Text("Verify Password".tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Please enter your password to confirm deletion:"),
+             Text("Please enter your password to confirm deletion:".tr),
             const SizedBox(height: 15),
             TextField(
               controller: deletePasswordController,
               obscureText: true,
-              decoration: const InputDecoration(
+              decoration:  InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: "Password",
+                labelText: "Password".tr,
                 prefixIcon: Icon(Icons.lock_outline),
               ),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
+          TextButton(onPressed: () => Get.back(), child:  Text("CANCEL".tr)),
           Obx(
             () => ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -341,8 +341,8 @@ class MyAccountController extends GetxController {
                         strokeWidth: 2,
                       ),
                     )
-                  : const Text(
-                      "Confirm Delete",
+                  :  Text(
+                      "Confirm Delete".tr,
                       style: TextStyle(color: Colors.white),
                     ),
             ),

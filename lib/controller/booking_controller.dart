@@ -180,33 +180,33 @@ class BookingController extends GetxController {
     if (success) {
       // حالة (ب): نجاح (سواء كان التاريخ فارغاً أو عليه طلبات Pending لغيرك)
       Get.snackbar(
-        "Success",
-        "Your reservation request has been sent",
+        "Success".tr,
+        "Your reservation request has been sent".tr,
         backgroundColor: Colors.green.withOpacity(0.8),
         colorText: Colors.white,
         icon: const Icon(Icons.check_circle, color: Colors.white),
         snackPosition: SnackPosition.BOTTOM,
       );
       _showResultDialog(
-        title: "Booking Sent",
+        title: "Booking Sent".tr,
         message:
-            "Your request is pending. The owner can now see it and choose to accept it.",
+            "Your request is pending. The owner can now see it and choose to accept it.".tr,
         type: 1, // success
       );
     } else {
       // حالة (ج): فشل من السيرفر (غالباً لأن المستخدم لديه طلب Pending مسبق لنفس البيت)
       Get.snackbar(
-        "Duplicate Request",
-        "You already have a pending request for this house.",
+        "Duplicate Request".tr,
+        "You already have a pending request for this house.".tr,
         backgroundColor: Colors.orange.withOpacity(0.8),
         colorText: Colors.white,
         icon: const Icon(Icons.warning, color: Colors.white),
         snackPosition: SnackPosition.BOTTOM,
       );
       _showResultDialog(
-        title: "Request Exists",
+        title: "Request Exists".tr,
         message:
-            "You have already sent a request for this house. Please wait for the owner's response.",
+            "You have already sent a request for this house. Please wait for the owner's response.".tr,
         type: 2, // تنبيه
       );
     }
@@ -226,17 +226,17 @@ class BookingController extends GetxController {
       case 1:
         mainColor = Colors.green;
         mainIcon = Icons.check_circle;
-        buttonText = "Great!";
+        buttonText = "Great!".tr;
         break;
       case 2:
         mainColor = Colors.orange;
         mainIcon = Icons.warning_amber_rounded;
-        buttonText = "I Understand";
+        buttonText = "I Understand".tr;
         break;
       default:
         mainColor = Colors.red;
         mainIcon = Icons.error_outline;
-        buttonText = "Try Again";
+        buttonText = "Try Again".tr;
     }
 
     Get.dialog(
@@ -282,9 +282,9 @@ class BookingController extends GetxController {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text("Account Not Activated"),
-        content: const Text(
-          "Your account is not activated yet.\nPlease wait for admin approval.",
+        title: Text("Account Not Activated".tr),
+        content:  Text(
+          "Your account is not activated yet.\nPlease wait for admin approval.".tr,
           textAlign: TextAlign.center,
         ),
         actions: [
@@ -293,7 +293,7 @@ class BookingController extends GetxController {
               Get.back(); // سكّر الديالوغ
               Get.back(); // رجوع من صفحة الحجز
             },
-            child: const Text("OK"),
+            child: Text("OK".tr),
           ),
         ],
       ),
