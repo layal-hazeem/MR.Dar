@@ -67,49 +67,58 @@ class MyAccount extends StatelessWidget {
         );
       }
 
-      return SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-        child: Column(
-          children: [
-            // Cached Data Indicator
-            if (controller.isDataFromLocal.value)
-              Container(
-                padding: const EdgeInsets.all(12),
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.amber.shade50,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.amber.shade300),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline, color: Colors.amber.shade700),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        "Showing cached data. Pull to refresh for latest updates"
-                            .tr,
-                        style: TextStyle(fontSize: 13),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+      return RefreshIndicator(
+        onRefresh: () async {
+          await controller.refreshProfile();
+        },
+        color: Theme.of(context).colorScheme.primary,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          child: Column(
+            children: [
+              // Cached Data Indicator
+              if (controller.isDataFromLocal.value) _cachedDataBanner(context),
 
-            // Profile Header
-            _buildProfileHeader(context, user),
-
-            const SizedBox(height: 30),
-
-            // Options Section
-            _buildOptionsSection(context),
-
-            const SizedBox(height: 40),
-          ],
+              _buildProfileHeader(context, user),
+              const SizedBox(height: 30),
+              _buildOptionsSection(context),
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       );
     });
+  }
+
+  Widget _cachedDataBanner(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.withOpacity(0.6)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.cloud_off, size: 18, color: Colors.orange),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              "Showing cached data. Pull down to refresh.".tr,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.orange.shade800,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildProfileHeader(BuildContext context, UserModel user) {
@@ -212,26 +221,25 @@ class MyAccount extends StatelessWidget {
             const SizedBox(height: 15),
 
             // Refresh Button
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-
-              child: OutlinedButton.icon(
-                onPressed: () => controller.loadProfile(),
-                icon: const Icon(Icons.refresh),
-                label: Text(""),
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  side: BorderSide(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 2,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-
+            // Container(
+            //   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            //
+            //   child: OutlinedButton.icon(
+            //     onPressed: () => controller.loadProfile(),
+            //     icon: const Icon(Icons.refresh),
+            //     label: Text(""),
+            //     style: OutlinedButton.styleFrom(
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(20),
+            //       ),
+            //       side: BorderSide(
+            //         color: Theme.of(context).colorScheme.primary,
+            //         width: 2,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(

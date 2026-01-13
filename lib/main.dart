@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_project/service/local_notification_service.dart';
+import 'package:new_project/view/base_url_page.dart';
 import 'package:new_project/view/onboarding/onboarding_screen.dart';
 import 'fcm_test.dart';
 import 'controller/locale/locale.dart';
@@ -15,29 +16,35 @@ import 'view/login.dart';
 import 'view/signup.dart';
 import 'package:get_storage/get_storage.dart';
 import 'core/theme/theme_service.dart';
+import 'core/api/api_config.dart';
+import 'core/storage/app_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init(); // لازم قبل استخدام GetStorage
 
+  await GetStorage.init();
   final storage = GetStorage();
+
   final themeService = ThemeService(storage);
-
-  // نخزّن الخدمة كـ singleton
   Get.put<ThemeService>(themeService, permanent: true);
-
-  // نطبق الثيم اللي مخزون
   Get.changeThemeMode(themeService.themeMode);
-  WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
-  await initFcm(); // 👈 هون
+  await initFcm();
   await LocalNotificationService.init();
 
-  runApp(const MyApp());
+  final savedBaseUrl = await AppStorage.getBaseUrl();
+  if (savedBaseUrl != null) {
+    ApiConfig.baseUrl = savedBaseUrl;
+    AppBindings().dependencies();
+  }
+  runApp(MyApp(hasBaseUrl: savedBaseUrl != null));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool hasBaseUrl;
+
+  const MyApp({super.key, required this.hasBaseUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +61,12 @@ class MyApp extends StatelessWidget {
           locale: Get.deviceLocale,
           translations: MyLocale(),
 
-          initialBinding: AppBindings(),
+          initialBinding: null,
           debugShowCheckedModeBanner: false,
           theme: themeService.lightTheme,
           darkTheme: themeService.darkTheme,
           themeMode: themeService.themeMode,
-          home: Splash(),
+          home: hasBaseUrl ? Splash() : BaseUrlPage(),
           getPages: [
             GetPage(name: "/home", page: () => Home()),
             GetPage(name: "/signup", page: () => Signup()),

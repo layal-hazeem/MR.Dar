@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/ApartmentController.dart';
 import '../controller/UserController.dart';
 import '../controller/homecontroller.dart';
 import '../core/theme/theme_service.dart';
@@ -29,11 +28,10 @@ class Home extends StatelessWidget {
       final currentIndex = controller.currentIndex.value;
 
       return Scaffold(
-        appBar: _buildAppBar(context,currentIndex),
+        appBar: _buildAppBar(context, currentIndex),
         body: _buildIndexedStack(),
         bottomNavigationBar: _buildBottomNavigationBar(context),
 
-        // ➕ زر إضافة شقة (Owner فقط)
         floatingActionButton: user.isOwner && controller.currentIndex.value == 0
             ? FloatingActionButton(
                 backgroundColor: const Color(0xFF274668),
@@ -74,7 +72,6 @@ class Home extends StatelessWidget {
       centerTitle: true,
       actions: index == 0
           ? [
-              // 🔔 زر الإشعارات
               Obx(() {
                 final hasNotifications =
                     notificationController.notifications.isNotEmpty;
@@ -88,7 +85,6 @@ class Home extends StatelessWidget {
                       },
                     ),
 
-                    // 🔴 Badge
                     if (hasNotifications)
                       Positioned(
                         right: 8,
@@ -127,13 +123,12 @@ class Home extends StatelessWidget {
         index: controller.currentIndex.value,
         children: user.isOwner
             ? [
-          HomeContent(),
-          OwnerReservationsPage(), // 👈 الجديدة
-          MyApartments(),
-          Favourite(),
-          MyAccount(),
-        ]
-
+                HomeContent(),
+                OwnerReservationsPage(),
+                MyApartments(),
+                Favourite(),
+                MyAccount(),
+              ]
             : [HomeContent(), MyRent(), Favourite(), MyAccount()],
       );
     });
@@ -150,8 +145,9 @@ class Home extends StatelessWidget {
         onTap: controller.changeTab,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor:
-        Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+        unselectedItemColor: Theme.of(
+          context,
+        ).colorScheme.onSurface.withOpacity(0.6),
         items: isOwner ? _ownerItems() : _renterItems(),
       );
     });
@@ -208,5 +204,4 @@ class Home extends StatelessWidget {
       label: "Account".tr,
     ),
   ];
-
 }
