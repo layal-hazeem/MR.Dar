@@ -30,7 +30,6 @@ void main() async {
   Get.changeThemeMode(themeService.themeMode);
 
   await Firebase.initializeApp();
-  await initFcm();
   await LocalNotificationService.init();
 
   final savedBaseUrl = await AppStorage.getBaseUrl();

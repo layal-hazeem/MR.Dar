@@ -68,8 +68,10 @@ class NotificationsPage extends StatelessWidget {
                   ],
                 ),
                 child: Row(
+
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     // 🔵 أيقونة الحالة
                     Icon(
                       getStatusIcon(n.status),
@@ -194,5 +196,21 @@ Color getStatusColor(String status) {
       return Colors.red.shade700;
     default:
       return Colors.blueGrey;
+  }
+}
+String normalizeStatus(String status) {
+  switch (status) {
+    case 'مقبول':
+      return 'accepted';
+    case 'مرفوض':
+      return 'rejected';
+    case 'معلق':
+      return 'pending';
+    case 'ملغى':
+      return 'canceled';
+    case 'محظور':
+      return 'blocked';
+    default:
+      return status.toLowerCase();
   }
 }

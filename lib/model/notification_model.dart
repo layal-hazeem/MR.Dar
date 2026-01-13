@@ -1,3 +1,5 @@
+import '../view/notifications_page.dart';
+
 class AppNotification {
   final String type;
   final int reservationId;
@@ -28,7 +30,7 @@ class AppNotification {
       type: json['type'],
       reservationId: json['reservation_id'],
       houseId: json['house_id'],
-      status: json['status'],
+      status: normalizeStatus(json['status']),
       title: json['title'],
       message: json['message'],
 

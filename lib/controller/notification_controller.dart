@@ -21,8 +21,9 @@ class NotificationController extends GetxController {
       final data = await service.getNotifications();
 
       notifications.value = data
-          .map((e) => AppNotification.fromJson(e['data']))
+          .map((e) => AppNotification.fromJson(e))
           .toList();
+
     } finally {
       isLoading.value = false;
     }
