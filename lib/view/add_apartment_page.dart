@@ -244,6 +244,13 @@ class AddApartmentPage extends StatelessWidget {
             ),
             _input(
               context,
+              "Any notes or if your city does not exist".tr,
+              controller: controller.cityNotesController, // لازم تضيفي هذا الـ TextEditingController
+              maxLines: 2,
+            ),
+
+            _input(
+              context,
               "Street Name".tr,
               controller: controller.streetController,
               error: controller.streetError.value,
@@ -374,7 +381,7 @@ class AddApartmentPage extends StatelessWidget {
                       border: Border.all(
                         color: Theme.of(context).colorScheme.primary,
                         width: 2,
-                        // style: BorderStyle.dashed, // يجعل الشكل أجمل
+                    //     style: BorderStyle.dashed, // يجعل الشكل أجمل
                       ),
                       color: Theme.of(
                         context,

@@ -56,6 +56,7 @@ class AddApartmentController extends GetxController {
   final spaceController = TextEditingController();
   final streetController = TextEditingController();
   final flatNumberController = TextEditingController();
+  var cityNotesController = TextEditingController();
 
   final longitudeController = TextEditingController();
   final latitudeController = TextEditingController();

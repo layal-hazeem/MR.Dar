@@ -191,7 +191,7 @@ class BookingController extends GetxController {
         title: "Booking Sent",
         message:
             "Your request is pending. The owner can now see it and choose to accept it.",
-        type: 1, // نجاح
+        type: 1, // success
       );
     } else {
       // حالة (ج): فشل من السيرفر (غالباً لأن المستخدم لديه طلب Pending مسبق لنفس البيت)
@@ -263,6 +263,8 @@ class BookingController extends GetxController {
                 if (type == 1||type==2) {
                   Get.back(); // العودة من صفحة التأكيد
                   Get.back(); // العودة من صفحة التاريخ
+                  Get.back(); // العودة من صفحة التاريخ
+
                 }
               },
               child: Text(

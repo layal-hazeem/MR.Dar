@@ -79,11 +79,10 @@ class BookingDatePage extends StatelessWidget {
                         child: TableCalendar(
                           key: ValueKey(controller.reservations.length),
 
-                          firstDay: DateTime.now(),
-                          lastDay: DateTime.now().add(
-                            const Duration(days: 365),
-                          ),
-                          focusedDay: DateTime.now(),
+                          firstDay: DateTime(DateTime.now().year, 1, 1), // أول يوم بالسنة الحالية
+                          lastDay: DateTime(DateTime.now().year + 5, 12, 31), // آخر يوم بعد 5 سنوات
+
+                          focusedDay: controller.selectedStartDate.value ?? DateTime.now(),
 
                           calendarFormat: CalendarFormat.month,
                           availableCalendarFormats:  {
