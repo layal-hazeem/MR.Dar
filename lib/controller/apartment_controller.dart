@@ -389,3 +389,4 @@ class ApartmentController extends GetxController {
     await Future.wait([loadApartments(), loadAllApartments(), loadFavorites()]);
   }
 }
+
