@@ -482,6 +482,7 @@ class AddApartmentPage extends StatelessWidget {
   }
 
   Widget _sectionTitle(BuildContext context, String title) {
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Text(
@@ -496,6 +497,7 @@ class AddApartmentPage extends StatelessWidget {
   }
 
   Widget _input(
+
       BuildContext context,
       String hint, {
         required TextEditingController controller,
@@ -505,6 +507,7 @@ class AddApartmentPage extends StatelessWidget {
         VoidCallback? onChangedClearError, // ⭐️
 
       }) {
+    final isLight = Theme.of(context).brightness == Brightness.light;
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
@@ -517,11 +520,14 @@ class AddApartmentPage extends StatelessWidget {
           }
         },
         decoration: InputDecoration(
+
           labelText: hint,
           alignLabelWithHint: true,
           errorText: error,
           filled: true,
-          fillColor: Theme.of(context).colorScheme.background.withOpacity(0.1),
+          fillColor:  isLight
+              ? Colors.grey.shade100
+              : Theme.of(context).colorScheme.surface,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide.none,

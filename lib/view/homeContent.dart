@@ -41,30 +41,24 @@ class HomeContent extends StatelessWidget {
                   // Search Bar
                   Expanded(
                     child: TextField(
-                      controller: controller.searchController,
+                      readOnly: true, // مهم 🔥
                       decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.search,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withOpacity(0.6),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.6),
                         ),
                         hintText: "Search".tr,
-                        hintStyle: TextStyle(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withOpacity(0.5),
-                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 20,
-                        ),
                       ),
-                      onChanged: (value) {
-                        controller.searchApartments(value);
+                      onTap: () {
+                        Get.to(() => AllApartmentsPage(), arguments: {
+                          "focusSearch": true,
+                        });
                       },
                     ),
                   ),
