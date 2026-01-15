@@ -274,17 +274,16 @@ class _MyApartmentsState extends State<MyApartments> {
   }
 }
 
-Color _getStatusColor(ApartmentStatus status) {
-  switch (status) {
-    case ApartmentStatus.pending:
-      return Colors.orange;
-    case ApartmentStatus.accepted:
-      return Colors.green;
-    case ApartmentStatus.rejected:
-      return Colors.red;
-    case ApartmentStatus.blocked:
-      return Colors.grey;
-    case ApartmentStatus.canceled:
-      return Colors.purple;
-  }
-}
+// Color _getStatusColor(ApartmentStatus status) {
+//   switch (status) {
+//     case ApartmentStatus.pending:
+//       return Colors.orange;
+//     case ApartmentStatus.accepted:
+//       return Colors.green;
+//     case ApartmentStatus.rejected:
+//       return Colors.red;
+//     case ApartmentStatus.blocked:
+//       return Colors.grey;
+//
+//   }
+// }

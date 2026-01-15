@@ -134,7 +134,7 @@ class MyLocale implements Translations {
       "Apartment Filters": "فلاتر الشقق",
       "Clear All": "مسح الكل",
       "Rent Range (SYP)": "نطاق الإيجار (الليرة السورية)",
-      "SYP": "الليرة السورية",
+      "SYP": "ل.س",
       "Rooms Number": "عدد الغرف",
       "Space Range (m²)": "نطاق المساحة (م²)",
       "Search by name or description": "ابحث بالاسم أو الوصف",

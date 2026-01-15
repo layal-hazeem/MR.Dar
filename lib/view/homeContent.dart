@@ -40,28 +40,46 @@ class HomeContent extends StatelessWidget {
                 children: [
                   // Search Bar
                   Expanded(
-                    child: TextField(
-                      readOnly: true, // مهم 🔥
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.6),
-                        ),
-                        hintText: "Search".tr,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
-                      onTap: () {
-                        Get.to(() => AllApartmentsPage(), arguments: {
-                          "focusSearch": true,
-                        });
-                      },
+                      child: TextField(
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          hintText: "Search".tr,
+                          prefixIcon: Icon(
+                            Icons.search_rounded,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.5),
+                          ),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        onTap: () {
+                          Get.to(() => AllApartmentsPage(), arguments: {
+                            "focusSearch": true,
+                          });
+                        },
+                      ),
                     ),
                   ),
+
 
                   const SizedBox(width: 12),
 
@@ -69,21 +87,37 @@ class HomeContent extends StatelessWidget {
                   GestureDetector(
                     onTap: _openFilterPage,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
+                      width: 56,
+                      height: 56,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(12),
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context).colorScheme.primary,
+                            Theme.of(context).colorScheme.primary.withOpacity(0.85),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.4),
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
                       ),
                       child: const Icon(
-                        Icons.tune,
+                        Icons.tune_rounded,
                         color: Colors.white,
-                        size: 28,
+                        size: 26,
                       ),
                     ),
                   ),
+
                 ],
               ),
 
@@ -319,7 +353,7 @@ class HomeContent extends StatelessWidget {
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
-                        if (controller.topRatedApartments.length > 1)
+                        if (controller.allApartments.length > 1)
                           TextButton(
                             onPressed: () {
                               Get.to(() => AllApartmentsPage());

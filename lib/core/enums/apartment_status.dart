@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-enum ApartmentStatus { pending, accepted, rejected, blocked, canceled }
+enum ApartmentStatus { pending, accepted, rejected, blocked }
 
 extension ApartmentStatusExtension on ApartmentStatus {
   static ApartmentStatus fromString(String? status) {
@@ -18,8 +18,7 @@ extension ApartmentStatusExtension on ApartmentStatus {
         return 'Rejected'.tr;
       case ApartmentStatus.blocked:
         return 'Blocked'.tr;
-      case ApartmentStatus.canceled:
-        return 'Canceled'.tr;
+
     }
   }
 
@@ -33,8 +32,7 @@ extension ApartmentStatusExtension on ApartmentStatus {
         return Colors.red;
       case ApartmentStatus.blocked:
         return Colors.grey;
-      case ApartmentStatus.canceled:
-        return Colors.purple;
+
     }
   }
 
@@ -48,8 +46,7 @@ extension ApartmentStatusExtension on ApartmentStatus {
         return Icons.cancel;
       case ApartmentStatus.blocked:
         return Icons.block;
-      case ApartmentStatus.canceled:
-        return Icons.do_not_disturb_on;
+
     }
   }
 
@@ -63,8 +60,7 @@ extension ApartmentStatusExtension on ApartmentStatus {
         return 'Not approved by admin';
       case ApartmentStatus.blocked:
         return 'Temporarily unavailable';
-      case ApartmentStatus.canceled:
-        return 'Booking was canceled';
+
     }
   }
 
@@ -86,10 +82,7 @@ extension ApartmentStatusExtension on ApartmentStatus {
       case '4':
       case 'blocked':
         return ApartmentStatus.blocked;
-      case '5':
-      case 'canceled':
-      case 'cancelled':
-        return ApartmentStatus.canceled;
+
       default:
         if (strValue.contains('.')) {
           final parts = strValue.split('.');
@@ -111,8 +104,7 @@ extension ApartmentStatusExtension on ApartmentStatus {
         return 3;
       case ApartmentStatus.blocked:
         return 4;
-      case ApartmentStatus.canceled:
-        return 5;
+
     }
   }
 }
