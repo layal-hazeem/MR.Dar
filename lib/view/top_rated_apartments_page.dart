@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/ApartmentController.dart';
+import '../controller/apartment_controller.dart';
 import '../widgets/apartment_card.dart';
 import 'apartment_details_page.dart';
 
@@ -15,10 +15,7 @@ class TopRatedApartmentsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Top Rated".tr,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -31,8 +28,9 @@ class TopRatedApartmentsPage extends StatelessWidget {
               "No top rated apartments available".tr,
               style: TextStyle(
                 fontSize: 16,
-                color:
-                Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
           );
@@ -49,9 +47,7 @@ class TopRatedApartmentsPage extends StatelessWidget {
               child: ApartmentCard(
                 apartment: apt,
                 onTap: () {
-                  Get.to(
-                        () => ApartmentDetailsPage(apartment: apt),
-                  );
+                  Get.to(() => ApartmentDetailsPage(apartment: apt));
                 },
               ),
             );

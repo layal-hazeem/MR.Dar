@@ -57,7 +57,6 @@ class _MyRentState extends State<MyRent> {
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-
                       ),
                       onSelected: (_) => controller.changeStatus(status),
                     ),
@@ -96,16 +95,18 @@ class _MyRentState extends State<MyRent> {
 
               // 4️⃣ List
               return RefreshIndicator(
-                onRefresh: controller.currentStatus.value == ReservationStatus.accepted
+                onRefresh:
+                    controller.currentStatus.value == ReservationStatus.accepted
                     ? () async {
-                  await controller.fetchMyReservations();
-                }
+                        await controller.fetchMyReservations();
+                      }
                     : () async {},
                 child: ListView.builder(
                   controller: controller.scrollController,
 
-                  // 🔐 التحكم بالسحب
-                  physics: controller.currentStatus.value == ReservationStatus.accepted
+                  physics:
+                      controller.currentStatus.value ==
+                          ReservationStatus.accepted
                       ? const AlwaysScrollableScrollPhysics()
                       : const NeverScrollableScrollPhysics(),
 
@@ -114,37 +115,61 @@ class _MyRentState extends State<MyRent> {
                     final reservation = reservations[index];
 
                     return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       child: Column(
                         children: [
                           ApartmentCard(
                             apartment: reservation.apartment,
                             onTap: () {
-                              Get.to(() => ApartmentDetailsPage(
-                                apartment: reservation.apartment,
-                              ));
+                              Get.to(
+                                () => ApartmentDetailsPage(
+                                  apartment: reservation.apartment,
+                                ),
+                              );
                             },
                           ),
                           const SizedBox(height: 12),
-                          if (controller.currentStatus.value == ReservationStatus.previous)
+                          if (controller.currentStatus.value ==
+                              ReservationStatus.previous)
                             Align(
                               alignment: Alignment.centerRight,
                               child: ElevatedButton.icon(
                                 onPressed: () {
-                                  Get.to(() => RateApartmentPage(
-                                    houseId: reservation.apartment.id,
-                                  ));
+                                  Get.to(
+                                    () => RateApartmentPage(
+                                      houseId: reservation.apartment.id,
+                                    ),
+                                  );
                                 },
-                                icon: const Icon(Icons.star, color: Colors.amber, size: 20),
+                                icon: const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 20,
+                                ),
                                 label: const Text(
                                   "Rate",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                                  backgroundColor: Theme.of(context).colorScheme.surface,
-                                  foregroundColor: Theme.of(context).colorScheme.primary,
-                                  shadowColor: Colors.black.withOpacity(0.3),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 12,
+                                  ),
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.surface,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                  shadowColor: Colors.black.withValues(
+                                    alpha: 0.3,
+                                  ),
                                   elevation: 5,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
@@ -152,7 +177,8 @@ class _MyRentState extends State<MyRent> {
                                 ),
                               ),
                             ),
-                          if (controller.currentStatus.value == ReservationStatus.pending)
+                          if (controller.currentStatus.value ==
+                              ReservationStatus.pending)
                             _buildPendingActions(reservation),
                         ],
                       ),
@@ -173,7 +199,6 @@ class _MyRentState extends State<MyRent> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // زر التعديل
           ElevatedButton.icon(
             onPressed: () => controller.editReservation(reservation),
             icon: const Icon(Icons.edit, size: 16),
@@ -187,7 +212,6 @@ class _MyRentState extends State<MyRent> {
 
           const SizedBox(width: 8),
 
-          // زر الإلغاء
           ElevatedButton.icon(
             onPressed: () => _showCancelDialog(reservation.id),
             icon: const Icon(Icons.close, size: 16),

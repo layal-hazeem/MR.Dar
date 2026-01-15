@@ -4,9 +4,8 @@ import '../core/errors/exceptions.dart';
 import '../fcm_test.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
-import 'UserController.dart';
-import 'homecontroller.dart';
-import 'my_account_controller.dart';
+import 'user_controller.dart';
+import 'home_controller.dart';
 
 class LoginController extends GetxController {
   bool isLoading = false;
@@ -35,7 +34,7 @@ class LoginController extends GetxController {
     isLoading = true;
     update();
     try {
-      final token = await api.login(
+      await api.login(
         phone: phoneController.text.trim(),
         password: passwordController.text.trim(),
       );
@@ -48,7 +47,8 @@ class LoginController extends GetxController {
         Get.defaultDialog(
           title: "Admin Account".tr,
           middleText:
-              "Admin dashboard is under development.\nPlease use a regular user account.".tr,
+              "Admin dashboard is under development.\nPlease use a regular user account."
+                  .tr,
           textConfirm: "OK".tr,
           confirmTextColor: Colors.white,
           buttonColor: const Color(0xFF274668),

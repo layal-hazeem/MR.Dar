@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:image_picker/image_picker.dart'; // تأكد من إضافته
+import 'package:image_picker/image_picker.dart';
 import '../core/api/dio_consumer.dart';
 import '../core/api/end_points.dart';
 import '../core/errors/error_model.dart';
@@ -78,7 +78,7 @@ class ApartmentService {
       return [];
     }
   }
-  // ApartmentService.dart
+  // apartment_service.dart
 
   Future<List<GovernorateModel>> getGovernorates() async {
     try {
@@ -340,15 +340,15 @@ class ApartmentService {
           return list.map((e) => Apartment.fromJson(e)).toList();
         } else {
           throw ServerException(
-            errModel: ErrorModel(errorMessage: "Invalid data format from server"),
+            errModel: ErrorModel(
+              errorMessage: "Invalid data format from server",
+            ),
           );
         }
       } else {
         final errorMsg =
             response.data["message"] ?? "Failed to fetch my apartments";
-        throw ServerException(
-          errModel: ErrorModel(errorMessage: errorMsg),
-        );
+        throw ServerException(errModel: ErrorModel(errorMessage: errorMsg));
       }
     } on DioException catch (e) {
       throw ServerException(
@@ -356,6 +356,4 @@ class ApartmentService {
       );
     }
   }
-
-
 }

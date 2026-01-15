@@ -35,10 +35,4 @@ class ApiKey {
   static String errorsList = "errors";
   static String phone = "phone";
   static String password = "password";
-
-  /*
-  static String email = "email";
-  static String token = "token";
-  static String id = "id";
-   */
 }

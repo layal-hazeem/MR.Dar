@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
-import 'UserController.dart';
-import 'homecontroller.dart';
+import 'user_controller.dart';
+import 'home_controller.dart';
 import 'my_account_controller.dart';
 
 class SignupController extends GetxController {
@@ -52,7 +52,7 @@ class SignupController extends GetxController {
         children: [
           ListTile(
             leading: const Icon(Icons.photo_library),
-            title:  Text("Gallery".tr),
+            title: Text("Gallery".tr),
             onTap: () async {
               Get.back();
               final XFile? image = await picker.pickImage(
@@ -98,7 +98,7 @@ class SignupController extends GetxController {
         children: [
           ListTile(
             leading: const Icon(Icons.photo_library),
-            title:  Text("Gallery".tr),
+            title: Text("Gallery".tr),
             onTap: () async {
               Get.back();
               final XFile? image = await picker.pickImage(
@@ -114,7 +114,7 @@ class SignupController extends GetxController {
           ),
           ListTile(
             leading: const Icon(Icons.camera_alt),
-            title:  Text("Camera".tr),
+            title: Text("Camera".tr),
             onTap: () async {
               Get.back();
               final XFile? image = await picker.pickImage(
@@ -149,7 +149,6 @@ class SignupController extends GetxController {
     update();
   }
 
-
   bool validateAllFields() {
     bool isValid = true;
 
@@ -157,11 +156,13 @@ class SignupController extends GetxController {
       isValid = false;
     }
 
-    profileImageError.value =
-    profileImage.value == null ? "Profile image is required!".tr : "";
+    profileImageError.value = profileImage.value == null
+        ? "Profile image is required!".tr
+        : "";
 
-    idImageError.value =
-    idImage.value == null ? "ID image is required!".tr : "";
+    idImageError.value = idImage.value == null
+        ? "ID image is required!".tr
+        : "";
 
     if (birthDate.value.isEmpty) {
       isValid = false;

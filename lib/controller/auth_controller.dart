@@ -5,12 +5,11 @@ import '../fcm_test.dart';
 import '../service/auth_service.dart';
 import '../controller/my_account_controller.dart';
 import '../service/userService.dart';
-import '../view/WelcomePage.dart';
 import '../view/home.dart';
 import '../view/onboarding/onboarding_screen.dart';
-import 'ApartmentController.dart';
-import 'UserController.dart';
-import 'homecontroller.dart';
+import 'apartment_controller.dart';
+import 'user_controller.dart';
+import 'home_controller.dart';
 import 'notification_controller.dart';
 
 class AuthController extends GetxController {
@@ -29,17 +28,17 @@ class AuthController extends GetxController {
 
   Future<void> logout() async {
     try {
-      print('Starting logout process...');
+      debugPrint('Starting logout process...');
 
       try {
         await userService.logout();
-        print(' Server logout successful');
+        debugPrint(' Server logout successful');
       } catch (e) {
-        print(' Server logout failed: $e');
+        debugPrint(' Server logout failed: $e');
       }
 
       await authService.signOut();
-      print('Local data cleared');
+      debugPrint('Local data cleared');
 
       Get.snackbar(
         "Logged Out".tr,
@@ -55,7 +54,7 @@ class AuthController extends GetxController {
       Get.delete<NotificationController>();
       Get.offAll(() => const OnboardingScreen());
     } catch (e) {
-      print(' Logout error: $e');
+      debugPrint(' Logout error: $e');
       Get.snackbar(
         "Error".tr,
         "Failed to logout: ${e.toString()}".tr,

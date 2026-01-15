@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'onboarding_page.dart';
-import '../WelcomePage.dart';
+import '../welcome_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -31,7 +30,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Stack(
           children: [
@@ -45,12 +44,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 });
               },
               children: [
-                 OnboardingPage(
+                OnboardingPage(
                   title: 'Find Your Perfect Apartment'.tr,
                   subtitle: "The easiest and fastest way to book apartments".tr,
                   image: "images/House searching-rafiki.png",
                 ),
-                 OnboardingPage(
+                OnboardingPage(
                   title: "Choose With Confidence".tr,
                   subtitle:
                       "Clear photos, full details, and transparent prices".tr,
@@ -76,9 +75,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         borderRadius: BorderRadius.circular(25),
                       ),
                     ),
-                    child:  Text(
+                    child: Text(
                       "Get Started".tr,
-                      style: TextStyle(fontSize: 18, color:  Theme.of(context).colorScheme.onPrimary),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                     ),
                   ),
                 ),
@@ -98,10 +100,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       curve: Curves.easeInOut,
                     );
                   },
-                  child:  Text(
+                  child: Text(
                     "Skip".tr,
-                    style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.primary
-                  ),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ),
               ),
@@ -125,7 +129,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         decoration: BoxDecoration(
                           color: currentIndex == index
                               ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                              : Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       );
@@ -150,7 +156,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       child: Text(
                         "Next".tr,
-                        style: TextStyle(fontSize: 18, color:  Theme.of(context).colorScheme.onPrimary),
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
                       ),
                     ),
                 ],

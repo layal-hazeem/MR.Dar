@@ -45,7 +45,6 @@ class RateApartmentPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // ⭐⭐⭐⭐ النجوم
               Obx(
                 () => Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +68,6 @@ class RateApartmentPage extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // زر ارسال التقييم
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

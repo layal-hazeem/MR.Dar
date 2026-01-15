@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:new_project/model/apartment_model.dart';
 
-import 'ApartmentController.dart';
+import 'apartment_controller.dart';
 
 class SearchController extends GetxController {
   final ApartmentController apartmentController = Get.find();

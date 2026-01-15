@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-enum ApartmentStatus {
-  pending,
-  accepted,
-  rejected,
-  blocked,
-  canceled,
-}
+enum ApartmentStatus { pending, accepted, rejected, blocked, canceled }
 
 extension ApartmentStatusExtension on ApartmentStatus {
-  /// تحويل String من الباك إلى enum (للتوافق مع الكود القديم)
   static ApartmentStatus fromString(String? status) {
     return fromDynamic(status);
   }
 
-  /// اسم جاهز للعرض بالواجهة
   String get displayName {
     switch (this) {
       case ApartmentStatus.pending:
@@ -31,7 +23,6 @@ extension ApartmentStatusExtension on ApartmentStatus {
     }
   }
 
-  /// لون الحالة
   Color get color {
     switch (this) {
       case ApartmentStatus.pending:
@@ -47,7 +38,6 @@ extension ApartmentStatusExtension on ApartmentStatus {
     }
   }
 
-  /// أيقونة الحالة
   IconData get icon {
     switch (this) {
       case ApartmentStatus.pending:
@@ -63,7 +53,6 @@ extension ApartmentStatusExtension on ApartmentStatus {
     }
   }
 
-  /// وصف الحالة
   String get description {
     switch (this) {
       case ApartmentStatus.pending:
@@ -79,7 +68,6 @@ extension ApartmentStatusExtension on ApartmentStatus {
     }
   }
 
-  /// دالة لتحويل من رقم أو نص إلى ApartmentStatus
   static ApartmentStatus fromDynamic(dynamic value) {
     if (value == null) return ApartmentStatus.pending;
 
@@ -103,7 +91,6 @@ extension ApartmentStatusExtension on ApartmentStatus {
       case 'cancelled':
         return ApartmentStatus.canceled;
       default:
-      // إذا كانت القيمة مثل 'ApartmentStatus.accepted'
         if (strValue.contains('.')) {
           final parts = strValue.split('.');
           if (parts.length > 1) {
@@ -114,7 +101,6 @@ extension ApartmentStatusExtension on ApartmentStatus {
     }
   }
 
-  /// تحويل Enum إلى الرقم المقابل
   int get numericValue {
     switch (this) {
       case ApartmentStatus.pending:

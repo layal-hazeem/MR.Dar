@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../service/userService.dart';
 import '../controller/my_account_controller.dart';
-import 'UserController.dart';
+import 'user_controller.dart';
 
 class EditProfileController extends GetxController {
   final UserService userService;

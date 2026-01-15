@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/my_account_controller.dart';
-import '../controller/authcontroller.dart';
-import 'edit_profile.dart';
+import '../controller/auth_controller.dart';
 import 'language_selector_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -24,7 +23,7 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          _sectionTitle(context,"Preferences".tr),
+          _sectionTitle(context, "Preferences".tr),
 
           settingsCard(
             context: context,
@@ -86,7 +85,8 @@ class SettingsScreen extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: enabled
-                            ? textColor ?? Theme.of(context).textTheme.bodyMedium?.color
+                            ? textColor ??
+                                  Theme.of(context).textTheme.bodyMedium?.color
                             : Theme.of(context).disabledColor,
                       ),
                     ),
@@ -94,9 +94,11 @@ class SettingsScreen extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         subtitle,
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -111,7 +113,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _sectionTitle(BuildContext context,String title) {
+  Widget _sectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Text(
@@ -119,7 +121,9 @@ class SettingsScreen extends StatelessWidget {
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+          color: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
         ),
       ),
     );

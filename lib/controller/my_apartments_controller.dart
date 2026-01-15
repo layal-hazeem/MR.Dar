@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 import '../model/apartment_model.dart';
 import '../core/enums/apartment_status.dart';
-import '../service/ApartmentService.dart';
+import '../service/apartment_service.dart';
 
 class MyApartmentsController extends GetxController {
   final ApartmentService apartmentService;

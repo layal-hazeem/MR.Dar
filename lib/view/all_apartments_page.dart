@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/ApartmentController.dart';
+import '../controller/apartment_controller.dart';
 import '../widgets/apartment_card.dart';
 import 'apartment_details_page.dart';
-import 'FilterPage.dart';
+import 'filter_page.dart';
 
 class AllApartmentsPage extends StatelessWidget {
   AllApartmentsPage({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class AllApartmentsPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title:  Text("All Apartments".tr),
+        title: Text("All Apartments".tr),
       ),
       body: Column(
         children: [
@@ -36,17 +36,25 @@ class AllApartmentsPage extends StatelessWidget {
                   child: TextField(
                     controller: controller.searchController,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search,   color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.6),
                       ),
                       hintText: "Search".tr,
-                        hintStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                        ),
+                      hintStyle: TextStyle(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.6),
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 20),
+                        vertical: 16,
+                        horizontal: 20,
+                      ),
                     ),
                     onChanged: (value) {
                       controller.searchQuery.value = value;
@@ -58,13 +66,16 @@ class AllApartmentsPage extends StatelessWidget {
                 GestureDetector(
                   onTap: _openFilterPage,
                   child: Container(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child:  Icon(Icons.tune,
+                    child: Icon(
+                      Icons.tune,
                       color: Theme.of(context).colorScheme.onPrimary,
                       size: 28,
                     ),
@@ -80,9 +91,11 @@ class AllApartmentsPage extends StatelessWidget {
               final apartments = controller.displayApartments;
 
               if (controller.isLoading.value && apartments.isEmpty) {
-                return  Center(child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.primary,
-                ));
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                );
               }
 
               if (apartments.isEmpty) {
@@ -91,7 +104,9 @@ class AllApartmentsPage extends StatelessWidget {
                     "No apartments found".tr,
                     style: TextStyle(
                       fontSize: 16,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
                 );
@@ -108,7 +123,10 @@ class AllApartmentsPage extends StatelessWidget {
                   return false;
                 },
                 child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
                   itemCount: apartments.length + 1,
                   itemBuilder: (context, index) {
                     if (index < apartments.length) {
@@ -124,14 +142,20 @@ class AllApartmentsPage extends StatelessWidget {
                       );
                     } else {
                       // Loader عند تحميل المزيد
-                      return Obx(() => controller.isLoadingMore.value
-                          ?  Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        child: Center(child: CircularProgressIndicator(
-                          color: Theme.of(context).colorScheme.primary,
-                        )),
-                      )
-                          : const SizedBox());
+                      return Obx(
+                        () => controller.isLoadingMore.value
+                            ? Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(),
+                      );
                     }
                   },
                 ),

@@ -5,9 +5,7 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 class ApiInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.headers['Accept-Language'] =
-        Get.locale?.languageCode ?? 'ar';
-    print('LANG => ${options.headers['Accept-Language']}');
+    options.headers['Accept-Language'] = Get.locale?.languageCode ?? 'ar';
 
     return handler.next(options);
   }

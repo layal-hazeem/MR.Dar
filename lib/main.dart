@@ -5,12 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_project/service/local_notification_service.dart';
 import 'package:new_project/view/base_url_page.dart';
 import 'package:new_project/view/onboarding/onboarding_screen.dart';
-import 'fcm_test.dart';
 import 'controller/locale/locale.dart';
 import 'view/apartment_details_page.dart';
 import 'core/bindings/app_bindings.dart';
-import 'view/Splash.dart';
-import 'view/WelcomePage.dart';
+import 'view/splash.dart';
+import 'view/welcome_page.dart';
 import 'view/home.dart';
 import 'view/login.dart';
 import 'view/signup.dart';
@@ -71,7 +70,6 @@ class MyApp extends StatelessWidget {
             GetPage(name: "/signup", page: () => Signup()),
             GetPage(name: "/login", page: () => Login()),
             GetPage(name: "/welcome", page: () => WelcomePage()),
-            // ✅ أضف هذه الصفحة
             GetPage(
               name: "/apartmentDetails",
               page: () {

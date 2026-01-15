@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../controller/ApartmentController.dart';
-import '../controller/FilterController.dart';
+import '../controller/filter_controller.dart';
 
 class SearchSuggestionsPage extends StatelessWidget {
   final controller = Get.find<FilterController>();
@@ -13,7 +11,7 @@ class SearchSuggestionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:  Text("Search Apartments".tr)),
+      appBar: AppBar(title: Text("Search Apartments".tr)),
       body: Column(
         children: [
           Padding(
@@ -38,7 +36,7 @@ class SearchSuggestionsPage extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
               if (controller.searchResults.isEmpty) {
-                return  Center(child: Text("No results found".tr));
+                return Center(child: Text("No results found".tr));
               }
               return ListView.builder(
                 itemCount: controller.searchResults.length,
@@ -48,7 +46,7 @@ class SearchSuggestionsPage extends StatelessWidget {
                     title: Text(apt.title),
                     subtitle: Text(apt.cityName),
                     onTap: () {
-                      Get.back(result: apt); // ترجع الشقة المختارة للصفحة السابقة
+                      Get.back(result: apt);
                     },
                   );
                 },

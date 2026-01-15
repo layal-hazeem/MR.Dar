@@ -1,11 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../model/user_model.dart';
-import '../service/UserLocalService.dart';
+import '../service/user_local_service.dart';
 import '../service/userService.dart';
-import 'authcontroller.dart';
+import 'auth_controller.dart';
 
 class MyAccountController extends GetxController {
   final UserService service;
@@ -58,13 +57,13 @@ class MyAccountController extends GetxController {
           await checkImageUrl(user.value!.profileImage!);
         }
       } catch (e) {
-        print("Failed to fetch from API: $e");
+        debugPrint("Failed to fetch from API: $e");
         if (user.value == null) {
           throw Exception("No data available".tr);
         }
       }
     } catch (e) {
-      print("Error loading profile: $e");
+      debugPrint("Error loading profile: $e");
       if (user.value == null) {
         user.value = null;
       }
@@ -77,17 +76,16 @@ class MyAccountController extends GetxController {
   String _fixImageUrl(String? url) {
     if (url == null || url.isEmpty) return '';
 
-    print('🖼️ Original URL: $url');
+    debugPrint('Original URL: $url');
 
-    // إصلاح الروابط النسبية
     if (!url.startsWith('http')) {
       if (url.startsWith('/storage/')) {
         final fixed = 'http://10.0.2.2:8000$url';
-        print('🛠️ Fixed URL (with slash): $fixed');
+        debugPrint('🛠️ Fixed URL (with slash): $fixed');
         return fixed;
       } else if (url.startsWith('storage/')) {
         final fixed = 'http://10.0.2.2:8000/storage/${url.substring(8)}';
-        print('🛠️ Fixed URL (without slash): $fixed');
+        debugPrint('🛠️ Fixed URL (without slash): $fixed');
         return fixed;
       }
     }
@@ -105,11 +103,11 @@ class MyAccountController extends GetxController {
 
   Future<void> checkImageUrl(String url) async {
     try {
-      print('🔍 Testing image URL: $url');
+      debugPrint('🔍 Testing image URL: $url');
       final response = await Dio().head(url);
-      print('✅ Image exists - Status: ${response.statusCode}');
+      debugPrint('✅ Image exists - Status: ${response.statusCode}');
     } catch (e) {
-      print('❌ Image not accessible: $e');
+      debugPrint('❌ Image not accessible: $e');
     }
   }
 
@@ -164,10 +162,8 @@ class MyAccountController extends GetxController {
 
       final response = await service.deleteAccount(password);
 
-      // سكّر dialog كلمة السر
       if (Get.isDialogOpen!) Get.back();
 
-      // نجاح
       if (response['data'] == true) {
         await authController.logout();
 
@@ -178,9 +174,7 @@ class MyAccountController extends GetxController {
           colorText: Colors.white,
         );
       }
-    }
-    // ⬇️⬇️⬇️ هون المهم
-    on DioException catch (e) {
+    } on DioException catch (e) {
       if (Get.isDialogOpen!) Get.back();
 
       final data = e.response?.data;
@@ -213,9 +207,9 @@ class MyAccountController extends GetxController {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title:  Text(
+        title: Text(
           "Action not allowed".tr,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         content: Text(message),
         actions: [
@@ -223,7 +217,7 @@ class MyAccountController extends GetxController {
             onPressed: () => Get.back(),
             child: Text(
               "OK".tr,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Color(0xFF274668),
                 fontWeight: FontWeight.bold,
               ),
@@ -243,22 +237,23 @@ class MyAccountController extends GetxController {
           "Attention!".tr,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        content:  Text(
-          "Are you sure you want to delete your account?\nThis action cannot be undone.".tr,
+        content: Text(
+          "Are you sure you want to delete your account?\nThis action cannot be undone."
+              .tr,
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child:  Text("CANCEL".tr, style: TextStyle(color: Colors.red)),
+            child: Text("CANCEL".tr, style: const TextStyle(color: Colors.red)),
           ),
           TextButton(
             onPressed: () {
               Get.back();
               _showPasswordVerifyDialog(context);
             },
-            child:  Text(
+            child: Text(
               "Confirm".tr,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Color(0xFF274668),
                 fontWeight: FontWeight.bold,
               ),
@@ -307,25 +302,25 @@ class MyAccountController extends GetxController {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title:  Text("Verify Password".tr),
+        title: Text("Verify Password".tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-             Text("Please enter your password to confirm deletion:".tr),
+            Text("Please enter your password to confirm deletion:".tr),
             const SizedBox(height: 15),
             TextField(
               controller: deletePasswordController,
               obscureText: true,
-              decoration:  InputDecoration(
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
                 labelText: "Password".tr,
-                prefixIcon: Icon(Icons.lock_outline),
+                prefixIcon: const Icon(Icons.lock_outline),
               ),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child:  Text("CANCEL".tr)),
+          TextButton(onPressed: () => Get.back(), child: Text("CANCEL".tr)),
           Obx(
             () => ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -341,9 +336,9 @@ class MyAccountController extends GetxController {
                         strokeWidth: 2,
                       ),
                     )
-                  :  Text(
+                  : Text(
                       "Confirm Delete".tr,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
             ),
           ),

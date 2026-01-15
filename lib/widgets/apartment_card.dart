@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/ApartmentController.dart';
+import '../controller/apartment_controller.dart';
 import '../model/apartment_model.dart';
 
 class ApartmentCard extends StatelessWidget {

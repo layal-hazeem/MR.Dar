@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:new_project/view/settings_screen.dart';
 import '../controller/my_account_controller.dart';
-import '../controller/authcontroller.dart';
+import '../controller/auth_controller.dart';
 import '../model/user_model.dart';
 import 'edit_profile.dart';
 
@@ -99,9 +99,9 @@ class MyAccount extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.12),
+        color: Colors.orange.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.withOpacity(0.6)),
+        border: Border.all(color: Colors.orange.withValues(alpha: 0.6)),
       ),
       child: Row(
         children: [
@@ -175,7 +175,7 @@ class MyAccount extends StatelessWidget {
             Icon(
               Icons.phone,
               size: 16,
-              color: Theme.of(context).iconTheme.color?.withOpacity(0.7),
+              color: Theme.of(context).iconTheme.color?.withValues(alpha: 0.7),
             ),
             const SizedBox(width: 6),
             Text(
@@ -183,7 +183,7 @@ class MyAccount extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(
                   context,
-                ).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                ).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -199,8 +199,12 @@ class MyAccount extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
                 color: user.role == 'owner'.tr
-                    ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                    : Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                    ? Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.1)
+                    : Theme.of(
+                        context,
+                      ).colorScheme.secondary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: getAccountStatusColor(user.status),
@@ -243,7 +247,9 @@ class MyAccount extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
-                color: getAccountStatusColor(user.status).withOpacity(0.15),
+                color: getAccountStatusColor(
+                  user.status,
+                ).withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: getAccountStatusColor(user.status),
@@ -349,7 +355,7 @@ class MyAccount extends StatelessWidget {
             border: Border.all(color: Theme.of(context).dividerColor),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -360,7 +366,9 @@ class MyAccount extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, size: 22, color: iconColor),
@@ -387,7 +395,7 @@ class MyAccount extends StatelessWidget {
                         fontSize: 13,
                         color: Theme.of(
                           context,
-                        ).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                        ).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                       ),
                     ),
                   ],

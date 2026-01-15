@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../controller/signupcontroller.dart';
+import '../controller/signup_controller.dart';
 import '../service/auth_service.dart';
 
 class Signup extends StatelessWidget {
@@ -14,7 +13,7 @@ class Signup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(
@@ -27,7 +26,7 @@ class Signup extends StatelessWidget {
           ),
         ),
         elevation: 0,
-        iconTheme:  IconThemeData(color: Theme.of(context).colorScheme.primary),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -37,27 +36,27 @@ class Signup extends StatelessWidget {
             autovalidateMode: AutovalidateMode.onUserInteraction,
 
             child: Column(
-
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(height: 20.h),
 
-                // اختيار النوع
                 GetBuilder<SignupController>(
                   builder: (ctrl) {
                     return Row(
                       children: [
                         Expanded(
                           child: GestureDetector(
-                    onTap: () => ctrl.setRole('renter'.tr),
+                            onTap: () => ctrl.setRole('renter'.tr),
                             child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
                                 color: ctrl.role.value == 'renter'.tr
                                     ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.surfaceVariant,
+                                    : Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceContainerHighest,
                                 borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
                                     color: Colors.black12,
                                     blurRadius: 4,
@@ -72,7 +71,9 @@ class Signup extends StatelessWidget {
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: ctrl.role.value == 'renter'.tr
-                                        ? Theme.of(context).colorScheme.onPrimary
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimary
                                         : Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
@@ -80,18 +81,20 @@ class Signup extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(width: 15),
+                        const SizedBox(width: 15),
                         Expanded(
                           child: GestureDetector(
-                    onTap: () => ctrl.setRole('owner'.tr),
+                            onTap: () => ctrl.setRole('owner'.tr),
                             child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
                                 color: ctrl.role.value == 'owner'.tr
                                     ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.surfaceVariant,
+                                    : Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceContainerHighest,
                                 borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
                                     color: Colors.black12,
                                     blurRadius: 4,
@@ -106,7 +109,9 @@ class Signup extends StatelessWidget {
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: ctrl.role.value == 'owner'.tr
-                                        ? Theme.of(context).colorScheme.onPrimary
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimary
                                         : Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
@@ -128,27 +133,27 @@ class Signup extends StatelessWidget {
                       child: TextFormField(
                         controller: controller.firstNameController,
                         maxLength: 20,
-                        style:  TextStyle(
+                        style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 22,
                         ),
                         validator: (v) =>
-                        v!.isEmpty ? "First name is required!".tr : null,
-                        decoration: _inputDecoration(context,"First name".tr),
+                            v!.isEmpty ? "First name is required!".tr : null,
+                        decoration: _inputDecoration(context, "First name".tr),
                       ),
                     ),
-                    SizedBox(width: 15),
+                    const SizedBox(width: 15),
                     Expanded(
                       child: TextFormField(
                         controller: controller.lastNameController,
                         maxLength: 20,
-                        style:  TextStyle(
+                        style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 22,
                         ),
                         validator: (v) =>
-                        v!.isEmpty ? "Last name is required!".tr : null,
-                        decoration: _inputDecoration(context,"Last name".tr),
+                            v!.isEmpty ? "Last name is required!".tr : null,
+                        decoration: _inputDecoration(context, "Last name".tr),
                       ),
                     ),
                   ],
@@ -181,7 +186,7 @@ class Signup extends StatelessWidget {
                         }
                       },
                       validator: (v) =>
-                      v!.isEmpty ? "Date of Birth is required".tr : null,
+                          v!.isEmpty ? "Date of Birth is required".tr : null,
                     );
                   },
                 ),
@@ -201,12 +206,20 @@ class Signup extends StatelessWidget {
                               children: [
                                 Container(
                                   height: 65,
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.surface,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surface,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: ctrl.profileImageError.value.isNotEmpty
+                                      color:
+                                          ctrl
+                                              .profileImageError
+                                              .value
+                                              .isNotEmpty
                                           ? Theme.of(context).colorScheme.error
                                           : Colors.transparent,
                                       width: 1.5,
@@ -214,7 +227,7 @@ class Signup extends StatelessWidget {
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -223,20 +236,25 @@ class Signup extends StatelessWidget {
                                               : "Profile Image Selected".tr,
                                           style: TextStyle(
                                             fontSize: 16,
-                                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.7),
                                             fontWeight:
-                                            ctrl.profileImage.value == null
+                                                ctrl.profileImage.value == null
                                                 ? FontWeight.w500
                                                 : FontWeight.w600,
                                           ),
                                           maxLines: 2,
-                                          overflow: TextOverflow
-                                              .ellipsis,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                       Icon(
                                         Icons.camera_alt,
-                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: 0.5),
                                         size: 22,
                                       ),
                                     ],
@@ -250,7 +268,7 @@ class Signup extends StatelessWidget {
                                     ),
                                     child: Text(
                                       ctrl.profileImageError.value,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.red,
                                         fontSize: 12,
                                       ),
@@ -275,9 +293,13 @@ class Signup extends StatelessWidget {
                               children: [
                                 Container(
                                   height: 65,
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.surface,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surface,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
                                       color: ctrl.idImageError.value.isNotEmpty
@@ -288,7 +310,7 @@ class Signup extends StatelessWidget {
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -297,26 +319,30 @@ class Signup extends StatelessWidget {
                                               : "ID Image Selected".tr,
                                           style: TextStyle(
                                             fontSize: 16,
-                                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.7),
                                             fontWeight:
-                                            ctrl.idImage.value == null
+                                                ctrl.idImage.value == null
                                                 ? FontWeight.w500
                                                 : FontWeight.w600,
                                           ),
                                           maxLines: 2,
-                                          overflow: TextOverflow
-                                              .ellipsis,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                       Icon(
                                         Icons.photo,
-                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: 0.5),
                                         size: 22,
                                       ),
                                     ],
                                   ),
                                 ),
-                                // ⬅️ عرض رسالة الخطأ تحت الحقل
                                 if (ctrl.idImageError.value.isNotEmpty)
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -325,7 +351,7 @@ class Signup extends StatelessWidget {
                                     ),
                                     child: Text(
                                       ctrl.idImageError.value,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.red,
                                         fontSize: 12,
                                       ),
@@ -353,7 +379,11 @@ class Signup extends StatelessWidget {
                     if (v.length != 10) return "Must be 10 digits".tr;
                     return null;
                   },
-                  decoration: _inputDecoration(context,"Phone Number".tr, suffix: Icons.phone),
+                  decoration: _inputDecoration(
+                    context,
+                    "Phone Number".tr,
+                    suffix: Icons.phone,
+                  ),
                 ),
 
                 SizedBox(height: 10.h),
@@ -365,7 +395,7 @@ class Signup extends StatelessWidget {
                       controller: ctrl.passwordController,
                       obscureText: ctrl.isPasswordHidden,
                       maxLength: 15,
-                      style:  TextStyle(
+                      style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 22,
                       ),
@@ -383,7 +413,9 @@ class Signup extends StatelessWidget {
                             ctrl.isPasswordHidden
                                 ? Icons.lock
                                 : Icons.lock_open,
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                           onPressed: ctrl.togglePassword,
                         ),
@@ -401,8 +433,8 @@ class Signup extends StatelessWidget {
                       controller: ctrl.confirmPasswordController,
                       obscureText: ctrl.isConfirmHidden,
                       maxLength: 15,
-                      style:  TextStyle(
-                        color:Theme.of(context).colorScheme.onSurface,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 22,
                       ),
                       validator: (v) {
@@ -418,7 +450,9 @@ class Signup extends StatelessWidget {
                         suffixWidget: IconButton(
                           icon: Icon(
                             ctrl.isConfirmHidden ? Icons.lock : Icons.lock_open,
-                            color:  Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                           onPressed: ctrl.toggleConfirmPassword,
                         ),
@@ -438,27 +472,27 @@ class Signup extends StatelessWidget {
                           : () => controller.signupUser(),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
-                        padding: EdgeInsets.symmetric(vertical: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
                       ),
                       child: ctrl.isLoading
                           ? SizedBox(
-                        height: 25,
-                        width: 25,
-                        child: CircularProgressIndicator(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          strokeWidth: 3,
-                        ),
-                      )
-                          :  Text(
-                        "Sign Up".tr,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
+                              height: 25,
+                              width: 25,
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                strokeWidth: 3,
+                              ),
+                            )
+                          : Text(
+                              "Sign Up".tr,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            ),
                     );
                   },
                 ),
@@ -473,32 +507,32 @@ class Signup extends StatelessWidget {
   }
 
   InputDecoration _inputDecoration(
-      BuildContext context,
-      String label, {
-        IconData? suffix,
-        Widget? suffixWidget,
-      }) {
+    BuildContext context,
+    String label, {
+    IconData? suffix,
+    Widget? suffixWidget,
+  }) {
     final isLight = Theme.of(context).brightness == Brightness.light;
     return InputDecoration(
       labelText: label,
       labelStyle: TextStyle(
         fontWeight: FontWeight.bold,
-        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
         fontSize: 18,
         overflow: TextOverflow.visible,
       ),
       suffixIcon:
-      suffixWidget ??
-          (suffix != null ? Icon(
-            suffix,
-            color: Theme.of(context)
-                .colorScheme
-                .onSurface
-                .withOpacity(0.6),
-          )
+          suffixWidget ??
+          (suffix != null
+              ? Icon(
+                  suffix,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
+                )
               : null),
       fillColor: isLight
-          ? Colors.grey.shade100   // رمادي ناعم بالـ Light
+          ? Colors.grey.shade100
           : Theme.of(context).colorScheme.surface,
       filled: true,
       border: OutlineInputBorder(
@@ -511,7 +545,10 @@ class Signup extends StatelessWidget {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.primary,
+          width: 2,
+        ),
       ),
     );
   }

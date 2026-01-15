@@ -1,4 +1,3 @@
-// lib/core/theme/theme_service.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -7,54 +6,47 @@ class ThemeService extends GetxService {
   static const _key = 'isDarkMode';
   final GetStorage _box;
 
-  // Rx -> لنقدر نستخدم Obx لتحديث الأيقونة فوراً
   final RxBool _isDark = false.obs;
 
   ThemeService(this._box) {
-    // عند الإنشاء نحمّل القيمة المخزنة
     _isDark.value = _box.read(_key) ?? false;
   }
 
-  // getter للسمة الحالية
   bool get isDarkMode => _isDark.value;
 
-  // Stream / observable لو حبيت تراقب
   RxBool get rxIsDark => _isDark;
 
   ThemeMode get themeMode => isDarkMode ? ThemeMode.dark : ThemeMode.light;
 
-  // Toggle مع حفظ القيمة
   void toggleTheme() {
     final newVal = !_isDark.value;
     _isDark.value = newVal;
     _box.write(_key, newVal);
-    // يغير ثيم التطبيق فوراً
     Get.changeThemeMode(newVal ? ThemeMode.dark : ThemeMode.light);
   }
 
-  // تعطي ThemeData جاهزين — عدلي القيم حسب ذوقك
   ThemeData get lightTheme {
-    const primaryColor = Color(0xFF274668); // كحلي
-    const textColor = Color(0xFF274668); //  الكحلي للنصوص
+    const primaryColor = Color(0xFF274668);
+    const textColor = Color(0xFF274668);
 
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: primaryColor,
-      scaffoldBackgroundColor: Colors.white, // الخلفية الرئيسية
+      scaffoldBackgroundColor: Colors.white,
       appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white, // أبيض
+        backgroundColor: Colors.white,
         elevation: 0,
-        foregroundColor: primaryColor, // كتابة الكحلي
-        iconTheme: IconThemeData(color: primaryColor), // أيقونات الكحلي
+        foregroundColor: primaryColor,
+        iconTheme: IconThemeData(color: primaryColor),
       ),
       colorScheme: const ColorScheme.light(
-        primary: primaryColor, // لون رئيسي
-        secondary: Color(0xFF274668), // لون ثانوي
-        background: Colors.white, // خلفية عامة
-        surface: Colors.white, // خلفية عناصر مثل البطاقات
-        onPrimary: Colors.white, // نص على العناصر المختارة
+        primary: primaryColor,
+        secondary: Color(0xFF274668),
+        background: Colors.white,
+        surface: Colors.white,
+        onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onBackground: primaryColor, // نصوص عامة
+        onBackground: primaryColor,
         onSurface: primaryColor,
       ),
       textTheme: const TextTheme(
@@ -64,13 +56,13 @@ class ThemeService extends GetxService {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFFF5F5F5), // خلفية الحقول فاتحة
+        fillColor: const Color(0xFFF5F5F5),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor, // لون الزر الأساسي
-          foregroundColor: Colors.white, // كتابة الزر بيضاء
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
@@ -78,10 +70,8 @@ class ThemeService extends GetxService {
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
-        selectedItemColor: primaryColor, // العنصر المختار كحلي
-        unselectedItemColor: primaryColor.withOpacity(
-          0.5,
-        ), // العناصر العادية فاتحة شوي
+        selectedItemColor: primaryColor,
+        unselectedItemColor: primaryColor.withOpacity(0.5),
       ),
       checkboxTheme: CheckboxThemeData(
         fillColor: WidgetStateProperty.resolveWith<Color?>((
@@ -132,15 +122,15 @@ class ThemeService extends GetxService {
           }
           return null;
         }),
-      ), // مثل Checkbox & Switch
+      ),
     );
   }
 
   ThemeData get darkTheme {
-    const primary = Color(0xFF6FA8DC); // أزرق هادئ ومريح
-    const bg = Color(0xFF0E1625); // خلفية رئيسية
-    const surface = Color(0xFF162033); // كروت / عناصر
-    const textPrimary = Color(0xFFE6EDF5); // أبيض مكسور
+    const primary = Color(0xFF6FA8DC);
+    const bg = Color(0xFF0E1625);
+    const surface = Color(0xFF162033);
+    const textPrimary = Color(0xFFE6EDF5);
     const textSecondary = Color(0xFF9FB2C8);
     const nevy = Color(0xFF274668);
 

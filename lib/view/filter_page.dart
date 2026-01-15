@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/ApartmentController.dart';
-import '../controller/FilterController.dart';
+import '../controller/apartment_controller.dart';
 import '../model/filter_model.dart';
 
 class FilterPage extends StatelessWidget {
-  FilterPage({Key? key}) : super(key: key);
+  FilterPage({super.key});
 
   final ApartmentController controller = Get.find<ApartmentController>();
 
@@ -19,7 +18,6 @@ class FilterPage extends StatelessWidget {
   final RxString selectedSortBy = RxString('created_at'.tr);
   final RxString selectedSortDir = RxString('asc'.tr);
   final RxList<Map<String, dynamic>> sortOptionsFromApi = RxList([]);
-
 
   // متغيرات للمحافظة والمدينة المختارة (بالـ IDs)
   final RxInt selectedGovernorateId = RxInt(0);
@@ -40,7 +38,7 @@ class FilterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(
+        title: Text(
           "Apartment Filters".tr,
           style: Theme.of(context).textTheme.titleLarge,
         ),
@@ -51,14 +49,13 @@ class FilterPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: _resetFilters,
-            child:  Text(
+            child: Text(
               "Clear All".tr,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
-
           ),
         ],
       ),
@@ -138,25 +135,30 @@ class FilterPage extends StatelessWidget {
       children: [
         Text(
           "Search".tr,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
         TextField(
           controller: searchController,
           decoration: InputDecoration(
             labelText: "Search by name or description".tr,
-            prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.primary),
+            prefixIcon: Icon(
+              Icons.search,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             suffixIcon: searchController.text.isNotEmpty
                 ? IconButton(
-              icon: Icon(Icons.clear, color: Theme.of(context).colorScheme.primary),
-              onPressed: () => searchController.clear(),
-            )
+                    icon: Icon(
+                      Icons.clear,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    onPressed: () => searchController.clear(),
+                  )
                 : null,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-          ),),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
           onChanged: (value) {},
         ),
       ],
@@ -170,39 +172,45 @@ class FilterPage extends StatelessWidget {
       children: [
         Text(
           "Sort By".tr,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        Obx(() => Column(
-          children: sortOptions.entries.map((entry) {
-            return RadioListTile<String>(
-              title: Text(entry.value,style: Theme.of(context).textTheme.bodyMedium,),
-              value: entry.key,
-              groupValue: selectedSortBy.value,
-              onChanged: (String? value) {
-                if (value != null) {
-                  selectedSortBy.value = value;
-                  // إذا كان الخيار متعلق بالإيجار، نضبط الاتجاه المناسب
+        Obx(
+          () => Column(
+            children: sortOptions.entries.map((entry) {
+              return RadioListTile<String>(
+                title: Text(
+                  entry.value,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                value: entry.key,
+                groupValue: selectedSortBy.value,
+                onChanged: (String? value) {
+                  if (value != null) {
+                    selectedSortBy.value = value;
+                    // إذا كان الخيار متعلق بالإيجار، نضبط الاتجاه المناسب
 
-                  if (value == 'rent_value') {
-                    selectedSortDir.value = 'asc'.tr;
-                  } else if (value == 'rent_desc') {
-                    selectedSortDir.value = 'desc'.tr;
+                    if (value == 'rent_value') {
+                      selectedSortDir.value = 'asc'.tr;
+                    } else if (value == 'rent_desc') {
+                      selectedSortDir.value = 'desc'.tr;
+                    }
                   }
-                }
-              },
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              activeColor: Theme.of(context).colorScheme.primary,
-            );
-          }).toList(),
-        )),
+                },
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                activeColor: Theme.of(context).colorScheme.primary,
+              );
+            }).toList(),
+          ),
+        ),
 
         // خيار الاتجاه (لخيارات محددة فقط)
         Obx(() {
-          final shouldShowSortDir = selectedSortBy.value == 'Rooms'.tr ||
+          final shouldShowSortDir =
+              selectedSortBy.value == 'Rooms'.tr ||
               selectedSortBy.value == 'Space'.tr ||
               selectedSortBy.value == 'created_at'.tr;
 
@@ -214,15 +222,15 @@ class FilterPage extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 "Order Direction".tr,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
               ),
               Row(
                 children: [
                   Expanded(
                     child: RadioListTile<String>(
-                      title:  Text('Ascending'.tr),
+                      title: Text('Ascending'.tr),
                       value: 'asc'.tr,
                       groupValue: selectedSortDir.value,
                       onChanged: (value) => selectedSortDir.value = value!,
@@ -232,7 +240,7 @@ class FilterPage extends StatelessWidget {
                   ),
                   Expanded(
                     child: RadioListTile<String>(
-                      title:  Text('Descending'.tr),
+                      title: Text('Descending'.tr),
                       value: 'desc'.tr,
                       groupValue: selectedSortDir.value,
                       onChanged: (value) => selectedSortDir.value = value!,
@@ -256,76 +264,91 @@ class FilterPage extends StatelessWidget {
       children: [
         Text(
           "Location Filter".tr,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Dropdown المحافظة
-            Obx(() => DropdownButtonFormField<int>(
-              value: selectedGovernorateId.value == 0 ? null : selectedGovernorateId.value,
-              decoration:  InputDecoration(
-                labelText: "Select Governorate".tr,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12),),
-                prefixIcon: Icon(Icons.location_city, color: Theme.of(context).colorScheme.primary),
-              ),
-              items: [
-                 DropdownMenuItem<int>(
-                  value: 0,
-                  child: Text("All Governorates".tr),
+            Obx(
+              () => DropdownButtonFormField<int>(
+                initialValue: selectedGovernorateId.value == 0
+                    ? null
+                    : selectedGovernorateId.value,
+                decoration: InputDecoration(
+                  labelText: "Select Governorate".tr,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.location_city,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
-                ...controller.governorates.map<DropdownMenuItem<int>>((gov) {
-                  return DropdownMenuItem<int>(
-                    value: gov.id,
-                    child: Text(gov.name),
+                items: [
+                  DropdownMenuItem<int>(
+                    value: 0,
+                    child: Text("All Governorates".tr),
+                  ),
+                  ...controller.governorates.map<DropdownMenuItem<int>>((gov) {
+                    return DropdownMenuItem<int>(
+                      value: gov.id,
+                      child: Text(gov.name),
+                    );
+                  }),
+                ],
+                onChanged: (int? value) {
+                  selectedGovernorateId.value = value ?? 0;
+                  selectedCityId.value = 0;
+
+                  if (value == null || value == 0) {
+                    filteredCities.clear();
+                    return;
+                  }
+
+                  final gov = controller.governorates.firstWhere(
+                    (g) => g.id == value,
                   );
-                }).toList(),
-              ],
-    onChanged: (int? value) {
-    selectedGovernorateId.value = value ?? 0;
-    selectedCityId.value = 0;
 
-    if (value == null || value == 0) {
-    filteredCities.clear();
-    return;
-    }
-
-    final gov = controller.governorates
-        .firstWhere((g) => g.id == value);
-
-    filteredCities.value = gov.cities
-        .map((c) => {'id'.tr: c.id, 'name'.tr: c.name})
-        .toList();
-
-              },
-            )),
+                  filteredCities.value = gov.cities
+                      .map((c) => {'id'.tr: c.id, 'name'.tr: c.name})
+                      .toList();
+                },
+              ),
+            ),
             const SizedBox(height: 15),
 
             // Dropdown المدينة
-            Obx(() => DropdownButtonFormField<int>(
-              value: selectedCityId.value == 0 ? null : selectedCityId.value,
-              decoration:  InputDecoration(
-                labelText: "Select City".tr,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12),),
-                prefixIcon: Icon(Icons.location_on, color: Theme.of(context).colorScheme.primary),
-              ),
-              items: [
-                 DropdownMenuItem<int>(
-                  value: 0,
-                  child: Text("All Cities".tr),
+            Obx(
+              () => DropdownButtonFormField<int>(
+                initialValue: selectedCityId.value == 0
+                    ? null
+                    : selectedCityId.value,
+                decoration: InputDecoration(
+                  labelText: "Select City".tr,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.location_on,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
-                ...filteredCities.map<DropdownMenuItem<int>>((city) {
-                  return DropdownMenuItem<int>(
-                    value: city['id'.tr],
-                    child: Text(city['name'.tr]),
-                  );
-                }).toList(),
-              ],
-              onChanged: (int? value) => selectedCityId.value = value ?? 0,
-            )),
+                items: [
+                  DropdownMenuItem<int>(value: 0, child: Text("All Cities".tr)),
+                  ...filteredCities.map<DropdownMenuItem<int>>((city) {
+                    return DropdownMenuItem<int>(
+                      value: city['id'.tr],
+                      child: Text(city['name'.tr]),
+                    );
+                  }),
+                ],
+                onChanged: (int? value) => selectedCityId.value = value ?? 0,
+              ),
+            ),
           ],
         ),
       ],
@@ -334,58 +357,68 @@ class FilterPage extends StatelessWidget {
 
   // قسم النطاقات (الإيجار، الغرف، المساحة)
   Widget _buildRangeSection(
-      BuildContext context, {
-        required String title,
-        required Rx<RangeValues> range,
-        required double min,
-        required double max,
-        required int divisions,
-        required String unit,
-      }) {
+    BuildContext context, {
+    required String title,
+    required Rx<RangeValues> range,
+    required double min,
+    required double max,
+    required int divisions,
+    required String unit,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        Obx(() => Column(
-          children: [
-            RangeSlider(
-              values: range.value,
-              min: min,
-              max: max,
-              divisions: divisions,
-              labels: RangeLabels(
-                '${range.value.start.round()} $unit',
-                '${range.value.end.round()} $unit',
+        Obx(
+          () => Column(
+            children: [
+              RangeSlider(
+                values: range.value,
+                min: min,
+                max: max,
+                divisions: divisions,
+                labels: RangeLabels(
+                  '${range.value.start.round()} $unit',
+                  '${range.value.end.round()} $unit',
+                ),
+                activeColor: Theme.of(context).colorScheme.primary,
+                inactiveColor: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.3),
+                onChanged: (RangeValues values) => range.value = values,
               ),
-              activeColor: Theme.of(context).colorScheme.primary,
-              inactiveColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-              onChanged: (RangeValues values) => range.value = values,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Chip(
-                    label: Text('Min: ${range.value.start.round()} $unit'.tr),
-                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                    labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
-                  ),
-                  Chip(
-                    label: Text('Max: ${range.value.end.round()} $unit'.tr),
-                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Chip(
+                      label: Text('Min: ${range.value.start.round()} $unit'.tr),
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.1),
+                      labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    Chip(
+                      label: Text('Max: ${range.value.end.round()} $unit'.tr),
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.1),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        )),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -402,13 +435,13 @@ class FilterPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 16),
               side: BorderSide(color: Theme.of(context).colorScheme.primary),
             ),
-            child:  Text(
+            child: Text(
               "Reset All".tr,
-              style: TextStyle(fontSize: 16,
+              style: TextStyle(
+                fontSize: 16,
                 color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
-
             ),
           ),
         ),
@@ -421,7 +454,7 @@ class FilterPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 16),
               backgroundColor: Theme.of(context).primaryColor,
             ),
-            child:  Text(
+            child: Text(
               "Apply Filters".tr,
               style: TextStyle(
                 fontSize: 16,
@@ -434,7 +467,6 @@ class FilterPage extends StatelessWidget {
       ],
     );
   }
-
 
   // دالة إعادة تعيين جميع الفلاتر
   void _resetFilters() {
@@ -451,7 +483,6 @@ class FilterPage extends StatelessWidget {
     controller.resetFilter(); // إعادة تحميل كل البيانات بدون فلتر
   }
 
-
   // دالة تطبيق الفلاتر
   void _applyFilters() {
     String finalSortBy = selectedSortBy.value;
@@ -466,9 +497,7 @@ class FilterPage extends StatelessWidget {
       governorateId: selectedGovernorateId.value == 0
           ? null
           : selectedGovernorateId.value,
-      cityId: selectedCityId.value == 0
-          ? null
-          : selectedCityId.value,
+      cityId: selectedCityId.value == 0 ? null : selectedCityId.value,
       minRent: rentRange.value.start.round(),
       maxRent: rentRange.value.end.round(),
       minRooms: roomsRange.value.start.round(),
@@ -482,5 +511,4 @@ class FilterPage extends StatelessWidget {
     controller.applyFilter(filter); // جلب البيانات من الباك
     Get.back(); // إغلاق صفحة الفلاتر
   }
-
 }

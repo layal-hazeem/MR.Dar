@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/ApartmentController.dart';
-import '../controller/UserController.dart';
+import '../controller/apartment_controller.dart';
+import '../controller/user_controller.dart';
 import '../controller/my_account_controller.dart';
 import '../model/apartment_model.dart';
 import '../widgets/rating_class.dart';

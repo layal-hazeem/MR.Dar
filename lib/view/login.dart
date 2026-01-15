@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/logincontroller.dart';
+import '../controller/login_controller.dart';
 import '../service/auth_service.dart';
-import 'home.dart';
 import 'signup.dart';
 
 class Login extends StatelessWidget {
@@ -18,7 +17,7 @@ class Login extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
           child: SizedBox(
@@ -108,9 +107,10 @@ class Login extends StatelessWidget {
                                     ctrl.isPasswordHidden
                                         ? Icons.lock
                                         : Icons.lock_open,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurface.withOpacity(0.7),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.7),
                                   ),
                                   onPressed: ctrl.togglePassword,
                                 ),
@@ -223,7 +223,7 @@ class Login extends StatelessWidget {
       filled: true,
       fillColor: Theme.of(context).colorScheme.surface,
       labelStyle: TextStyle(
-        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
         fontWeight: FontWeight.bold,
       ),
       suffixIcon:
@@ -233,7 +233,7 @@ class Login extends StatelessWidget {
                   suffix,
                   color: Theme.of(
                     context,
-                  ).colorScheme.onSurface.withOpacity(0.6),
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
                 )
               : null),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
@@ -247,7 +247,7 @@ class Login extends StatelessWidget {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
         borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
           width: 1.5,
         ),
       ),

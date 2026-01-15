@@ -7,8 +7,6 @@ class AppNotification {
   final String status;
   final String title;
   final String message;
-
-  // 🔥 الجدد
   final String? house;
   final String? date;
   final String? time;
@@ -34,7 +32,6 @@ class AppNotification {
       title: json['title'],
       message: json['message'],
 
-      // 👇 الجدد
       house: json['house'],
       date: json['date'],
       time: json['time'],

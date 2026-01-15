@@ -30,7 +30,7 @@ class _MyApartmentsState extends State<MyApartments> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
-        title:  Text('My Apartments'.tr),
+        title: Text('My Apartments'.tr),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -42,81 +42,86 @@ class _MyApartmentsState extends State<MyApartments> {
         children: [
           // -------- Status Tabs --------
           Container(
-            color: Theme.of(context).colorScheme.surfaceVariant, // أو dividerColor مع opacity خفيفة
-            child: Obx(
-                  () {
-                // 🔴 **استخدام الدالة الجديدة لحساب العدد**
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Row(
-                    children: ApartmentStatus.values.map((status) {
-                      final isSelected = controller.currentStatus.value == status;
-                      // 🔴 **استخدام getApartmentCountByStatus**
-                      final count = controller.getApartmentCountByStatus(status);
+            color: Theme.of(context).colorScheme.surfaceVariant,
+            child: Obx(() {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: Row(
+                  children: ApartmentStatus.values.map((status) {
+                    final isSelected = controller.currentStatus.value == status;
+                    final count = controller.getApartmentCountByStatus(status);
 
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          label: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(status.displayName),
-                              if (count > 0) ...[
-                                const SizedBox(width: 4),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        label: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(status.displayName),
+                            if (count > 0) ...[
+                              const SizedBox(width: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? Colors.white.withValues(alpha: 0.3)
+                                      : Colors.grey.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  count.toString(),
+                                  style: TextStyle(
+                                    fontSize: 12,
                                     color: isSelected
-                                        ? Colors.white.withOpacity(0.3)
-                                        : Colors.grey.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    count.toString(),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: isSelected
-                                          ? Theme.of(context).colorScheme.onPrimary
-                                          : Theme.of(context).colorScheme.onSurface,
-                                    ),
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimary
+                                        : Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface,
                                   ),
                                 ),
-                              ],
+                              ),
                             ],
-                          ),
-                          selected: isSelected,
-                          selectedColor: Theme.of(context).colorScheme.primary,
-                          labelStyle: TextStyle(
-                            color: isSelected
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context).colorScheme.onSurface,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-
-                          ),
-                          onSelected: (_) => controller.changeStatus(status),
+                          ],
                         ),
-                      );
-                    }).toList(),
-                  ),
-                );
-              },
-            ),
+                        selected: isSelected,
+                        selectedColor: Theme.of(context).colorScheme.primary,
+                        labelStyle: TextStyle(
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.onPrimary
+                              : Theme.of(context).colorScheme.onSurface,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        onSelected: (_) => controller.changeStatus(status),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            }),
           ),
 
           // -------- Apartments List --------
           Expanded(
             child: Obx(() {
               // 1️⃣ Loading
-              if (controller.isLoading.value && controller.allApartments.isEmpty) {
-                return  Center(
+              if (controller.isLoading.value &&
+                  controller.allApartments.isEmpty) {
+                return Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(Theme.of(context).colorScheme.primary),
+                    valueColor: AlwaysStoppedAnimation(
+                      Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 );
               }
@@ -128,15 +133,15 @@ class _MyApartmentsState extends State<MyApartments> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Icon(
+                      Icon(
                         Icons.error_outline,
                         size: 60,
-                          color: Theme.of(context).colorScheme.error
+                        color: Theme.of(context).colorScheme.error,
                       ),
                       const SizedBox(height: 16),
                       Text(
                         controller.errorMessage.value,
-                        style:  TextStyle(
+                        style: TextStyle(
                           color: Theme.of(context).colorScheme.error,
                           fontSize: 16,
                         ),
@@ -145,7 +150,7 @@ class _MyApartmentsState extends State<MyApartments> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () => controller.fetchMyApartments(),
-                        child:  Text('Retry'.tr),
+                        child: Text('Retry'.tr),
                       ),
                     ],
                   ),
@@ -160,24 +165,31 @@ class _MyApartmentsState extends State<MyApartments> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Icon(
+                      Icon(
                         Icons.apartment,
                         size: 80,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.3),
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'No apartments in ${controller.currentStatus.value.displayName}'.tr,
-                        style:  TextStyle(
+                        'No apartments in ${controller.currentStatus.value.displayName}'
+                            .tr,
+                        style: TextStyle(
                           fontSize: 16,
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: 8),
-                      if (controller.currentStatus.value != ApartmentStatus.pending)
+                      if (controller.currentStatus.value !=
+                          ApartmentStatus.pending)
                         ElevatedButton(
-                          onPressed: () => controller.changeStatus(ApartmentStatus.pending),
-                          child:  Text('View Pending Apartments'.tr),
+                          onPressed: () =>
+                              controller.changeStatus(ApartmentStatus.pending),
+                          child: Text('View Pending Apartments'.tr),
                         ),
                     ],
                   ),
@@ -242,7 +254,10 @@ class _MyApartmentsState extends State<MyApartments> {
                           ApartmentCard(
                             apartment: apartment,
                             onTap: () {
-                              Get.to(() => ApartmentDetailsPage(apartment: apartment));
+                              Get.to(
+                                () =>
+                                    ApartmentDetailsPage(apartment: apartment),
+                              );
                             },
                           ),
                         ],
@@ -258,17 +273,18 @@ class _MyApartmentsState extends State<MyApartments> {
     );
   }
 }
-  Color _getStatusColor(ApartmentStatus status) {
-    switch (status) {
-      case ApartmentStatus.pending:
-        return Colors.orange;
-      case ApartmentStatus.accepted:
-        return Colors.green;
-      case ApartmentStatus.rejected:
-        return Colors.red;
-      case ApartmentStatus.blocked:
-        return Colors.grey;
-      case ApartmentStatus.canceled:
-        return Colors.purple;
-    }
+
+Color _getStatusColor(ApartmentStatus status) {
+  switch (status) {
+    case ApartmentStatus.pending:
+      return Colors.orange;
+    case ApartmentStatus.accepted:
+      return Colors.green;
+    case ApartmentStatus.rejected:
+      return Colors.red;
+    case ApartmentStatus.blocked:
+      return Colors.grey;
+    case ApartmentStatus.canceled:
+      return Colors.purple;
   }
+}

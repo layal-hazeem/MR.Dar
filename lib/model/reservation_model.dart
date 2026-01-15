@@ -5,7 +5,7 @@ import 'apartment_model.dart';
 class ReservationModel {
   final int id;
   final Apartment apartment;
-  final UserModel? user; // موجود فقط عند المالك
+  final UserModel? user;
   final String startDate;
   final String endDate;
   final int duration;
@@ -35,7 +35,6 @@ class ReservationModel {
     );
   }
 
-  // إضافة copyWith
   ReservationModel copyWith({
     int? id,
     Apartment? apartment,

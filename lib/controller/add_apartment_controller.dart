@@ -1,12 +1,9 @@
-import 'dart:ui';
-import 'package:flutter/animation.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../model/city_model.dart';
 import '../model/governorate_model.dart';
-import '../service/ApartmentService.dart';
+import '../service/apartment_service.dart';
 
 class AddApartmentController extends GetxController {
   final ApartmentService service;
@@ -23,7 +20,6 @@ class AddApartmentController extends GetxController {
       curve: Curves.ease,
     );
   }
-
 
   void goBack(PageController pageController) {
     if (currentStep.value > 0) {
@@ -69,7 +65,7 @@ class AddApartmentController extends GetxController {
 
   // images
   var images = <XFile>[].obs;
-  var imageError = RxnString(); // متغير لحمل نص الخطأ
+  var imageError = RxnString();
   var isLoading = false.obs;
 
   @override
@@ -85,7 +81,9 @@ class AddApartmentController extends GetxController {
     descriptionError.value = descriptionController.text.isEmpty
         ? "Description is required".tr
         : null;
-    rentError.value = rentController.text.isEmpty ? "Price is required".tr : null;
+    rentError.value = rentController.text.isEmpty
+        ? "Price is required".tr
+        : null;
     roomsError.value = roomsController.text.isEmpty
         ? "Rooms number is required".tr
         : null;
@@ -104,7 +102,9 @@ class AddApartmentController extends GetxController {
     governorateError.value = selectedGovernorateId.value == null
         ? "Governorate is required".tr
         : null;
-    cityError.value = selectedCityId.value == null ? "City is required".tr : null;
+    cityError.value = selectedCityId.value == null
+        ? "City is required".tr
+        : null;
     streetError.value = streetController.text.isEmpty
         ? "Street is required".tr
         : null;
@@ -117,6 +117,7 @@ class AddApartmentController extends GetxController {
         streetError.value == null &&
         flatError.value == null;
   }
+
   bool validateStep3() {
     if (images.isEmpty) {
       imageError.value = "Please select at least one image".tr;

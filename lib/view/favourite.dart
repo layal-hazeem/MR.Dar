@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/ApartmentController.dart';
+import '../controller/apartment_controller.dart';
 import '../model/apartment_model.dart';
 import '../widgets/apartment_card.dart';
 import 'apartment_details_page.dart';
-import 'home.dart';
 
 class Favourite extends StatefulWidget {
   const Favourite({super.key});
@@ -22,12 +21,9 @@ class _FavouriteState extends State<Favourite> {
     super.initState();
     _loadFavorites();
 
-    // إضافة listener لسحب للتحديث
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        // يمكن إضافة pagination هنا إذا احتجت
-      }
+          _scrollController.position.maxScrollExtent) {}
     });
   }
 
@@ -35,7 +31,7 @@ class _FavouriteState extends State<Favourite> {
     try {
       await controller.loadFavorites();
     } catch (e) {
-      print("Error loading favorites: $e");
+      debugPrint("Error loading favorites: $e");
     }
   }
 
@@ -64,8 +60,12 @@ class _FavouriteState extends State<Favourite> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.favorite_border, size: 80,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                Icon(
+                  Icons.favorite_border,
+                  size: 80,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.3),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -73,29 +73,23 @@ class _FavouriteState extends State<Favourite> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   "Tap the heart icon on apartments to add them here".tr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: 20),
-                // ElevatedButton.icon(
-                //   onPressed: () {
-                //     Get.to(Home()); // العودة للصفحة الرئيسية
-                //   },
-                //   icon: const Icon(Icons.explore),
-                //   label: Text("Browse Apartments".tr),
-                //   style: ElevatedButton.styleFrom(
-                //   backgroundColor: Theme.of(context).colorScheme.primary,
-                //   foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                // ),
-                // ),
               ],
             ),
           );

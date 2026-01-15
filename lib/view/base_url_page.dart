@@ -4,8 +4,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import '../core/api/api_config.dart';
 import '../core/bindings/app_bindings.dart';
 import '../core/storage/app_storage.dart';
-import 'Splash.dart';
-import 'home.dart';
+import 'splash.dart';
 
 class BaseUrlPage extends StatelessWidget {
   BaseUrlPage({super.key});

@@ -5,7 +5,7 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    currentIndex.value = 0; // 🔥 إجباري
+    currentIndex.value = 0;
     super.onInit();
   }
 

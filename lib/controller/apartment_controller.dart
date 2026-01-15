@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../model/apartment_model.dart';
 import '../model/city_model.dart';
 import '../model/filter_model.dart';
 import '../model/governorate_model.dart';
-import '../service/ApartmentService.dart';
+import '../service/apartment_service.dart';
 
 class ApartmentController extends GetxController {
   final ApartmentService service;
@@ -26,20 +26,17 @@ class ApartmentController extends GetxController {
   int? selectedGovernorateId;
   int? selectedCityId;
 
-  // بيانات الشقق
   RxList<Apartment> allApartments = <Apartment>[].obs;
   RxList<Apartment> featuredApartments = <Apartment>[].obs;
   RxList<Apartment> topRatedApartments = <Apartment>[].obs;
   RxList<Apartment> filteredApartments = <Apartment>[].obs;
 
-  // حالة التحميل والأخطاء
   RxBool isLoading = false.obs;
   RxBool isCreating = false.obs;
   RxBool isFilterLoading = false.obs;
   RxString errorMessage = ''.obs;
   RxString createMessage = ''.obs;
 
-  // بيانات الـ Pagination
   RxInt currentPage = 1.obs;
   RxInt totalPages = 1.obs;
   RxInt totalItems = 0.obs;
@@ -50,20 +47,18 @@ class ApartmentController extends GetxController {
   RxString searchQuery = ''.obs;
   final Rx<FilterModel> currentFilter = FilterModel().obs;
 
-  // ✅ NEW: للتتبع إذا تم تحميل الشقق
   RxBool isApartmentsLoaded = false.obs;
   RxBool isFavoritesLoaded = false.obs;
 
   @override
   void onInit() {
-    super.onInit(); // استدعاء الدالة الأصلية أولاً
-    loadApartments(); // دالة تحميل الشقق
-    loadInitialData(); // دالة تحميل البيانات الابتدائية
+    super.onInit();
+    loadApartments();
+    loadInitialData();
     loadGovernorates();
     loadFavorites();
   }
 
-  // تحميل البيانات الأولية
   Future<void> loadInitialData() async {
     try {
       isLoading.value = true;
@@ -98,7 +93,6 @@ class ApartmentController extends GetxController {
     }
   }
 
-  // تحميل كل الشقق
   Future<void> loadAllApartments({bool refresh = true}) async {
     try {
       if (refresh) {
@@ -135,7 +129,6 @@ class ApartmentController extends GetxController {
     }
   }
 
-  // تطبيق الفلتر
   Future<void> applyFilter(FilterModel filter) async {
     try {
       isFilterLoading.value = true;
@@ -161,11 +154,10 @@ class ApartmentController extends GetxController {
     }
   }
 
-  // البحث
   Future<void> searchApartments(String query) async {
     searchQuery.value = query;
 
-    if (query.length < 1) {
+    if (query.isEmpty) {
       filteredApartments.assignAll(allApartments);
       return;
     }
@@ -183,7 +175,7 @@ class ApartmentController extends GetxController {
     } catch (e) {
       filteredApartments.assignAll([]);
 
-      print("Search error: $e".tr);
+      debugPrint("Search error: $e");
     } finally {
       isSearching.value = false;
     }
@@ -210,7 +202,6 @@ class ApartmentController extends GetxController {
   //   }
   // }
 
-  // تحميل المزيد من البيانات (Pagination)
   Future<void> loadMore() async {
     if (isLoadingMore.value || !hasMore.value) return;
 
@@ -257,14 +248,12 @@ class ApartmentController extends GetxController {
     selectedCityId = null;
   }
 
-  // إعادة تعيين الفلتر
   void resetFilter() {
     currentFilter.value = FilterModel();
     searchQuery.value = '';
     loadAllApartments();
   }
 
-  // دالة إنشاء شقة
   Future<bool> createApartment({
     required String title,
     required String description,
@@ -284,7 +273,7 @@ class ApartmentController extends GetxController {
       isCreating.value = true;
       createMessage.value = "";
 
-      final response = await service.createApartment(
+      await service.createApartment(
         title: title,
         description: description,
         rentValue: rentValue,
@@ -300,7 +289,6 @@ class ApartmentController extends GetxController {
         houseImages: houseImages,
       );
 
-      // تحديث البيانات بعد الإضافة
       await loadInitialData();
 
       createMessage.value = "Apartment added successfully".tr;
@@ -320,7 +308,6 @@ class ApartmentController extends GetxController {
         (ap) => ap.id == houseId,
       );
 
-      // التحديث الفوري في UI
       if (isFav) {
         favoriteIds.remove(houseId);
         favoriteApartments.removeWhere((ap) => ap.id == houseId);
@@ -332,17 +319,14 @@ class ApartmentController extends GetxController {
         }
       }
 
-      // إرسال التغيير للخادم
       await service.toggleFavorite(houseId);
 
-      print("✅ Favorite toggled: House $houseId - isFav: ${!isFav}");
+      debugPrint("✅ Favorite toggled: House $houseId - isFav: ${!isFav}");
 
-      // تحديث التطبيق
       update();
     } catch (e) {
-      print("❌ Failed to toggle favorite: $e");
+      debugPrint("❌ Failed to toggle favorite: $e");
 
-      // التراجع عن التغيير في حالة الخطأ
       final bool wasFav = favoriteIds.contains(houseId);
       if (wasFav) {
         favoriteIds.remove(houseId);
@@ -367,7 +351,7 @@ class ApartmentController extends GetxController {
       final List<Apartment> serverFavorites = await service.getMyFavorites();
 
       favoriteApartments.assignAll(serverFavorites);
-      favoriteIds.value = serverFavorites.map((e) => e.id).toSet();
+      favoriteIds.assignAll(serverFavorites.map((e) => e.id).toSet());
     } catch (e) {
       favoriteApartments.clear();
       favoriteIds.clear();
@@ -380,21 +364,16 @@ class ApartmentController extends GetxController {
 
   Future<void> loadUserRelatedData() async {
     try {
-      await Future.wait([
-        loadFavorites(),
-        // يمكن إضافة تحميل بيانات أخرى متعلقة بالمستخدم هنا
-      ]);
+      await Future.wait([loadFavorites()]);
     } catch (e) {
-      print("⚠️ Error loading user data: $e");
+      debugPrint("⚠️ Error loading user data: $e");
     }
   }
 
-  // فحص إذا كان هناك فلتر أو بحث نشط
   bool get hasActiveFilter {
     return currentFilter.value.hasActiveFilters || searchQuery.value.isNotEmpty;
   }
 
-  // الحصول على القائمة المناسبة للعرض
   List<Apartment> get displayApartments {
     if (hasActiveFilter) {
       return filteredApartments;
@@ -402,21 +381,11 @@ class ApartmentController extends GetxController {
     return allApartments;
   }
 
-  /// 🔄 إعادة تحميل البيانات عند تغيير اللغة
   Future<void> reload() async {
-    await Future.wait([
-      loadApartments(),
-      loadGovernorates(),
-      loadFavorites(),
-    ]);
-  }
-  /// 🔄 Refresh كل بيانات الهوم (مثل Facebook)
-  Future<void> refreshHome() async {
-    await Future.wait([
-      loadApartments(),     // featured + topRated + all
-      loadAllApartments(),  // pagination & filters
-      loadFavorites(),      // المفضلة
-    ]);
+    await Future.wait([loadApartments(), loadGovernorates(), loadFavorites()]);
   }
 
+  Future<void> refreshHome() async {
+    await Future.wait([loadApartments(), loadAllApartments(), loadFavorites()]);
+  }
 }

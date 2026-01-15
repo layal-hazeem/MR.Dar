@@ -36,7 +36,7 @@ class DioConsumer extends ApiConsumer {
         responseHeader: true,
         error: true,
       ),
-    ); //مراقبة ال request وال response
+    );
   }
 
   @override
@@ -120,6 +120,4 @@ class DioConsumer extends ApiConsumer {
       handleDioException(e);
     }
   }
-
-
 }

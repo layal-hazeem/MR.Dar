@@ -5,7 +5,6 @@ import 'package:table_calendar/table_calendar.dart';
 import '../model/apartment_model.dart';
 import '../model/booking_model.dart';
 import '../service/booking_service.dart';
-import 'UserController.dart';
 import 'my_account_controller.dart';
 
 class BookingController extends GetxController {
@@ -16,20 +15,16 @@ class BookingController extends GetxController {
   double get totalPrice => duration.value * rentValue;
   final accountController = Get.find<MyAccountController>();
 
-
-
   BookingController({
     required this.service,
     required this.houseId,
     required this.rentValue,
   });
 
-  /// بيانات الحجز
   var selectedStartDate = Rxn<DateTime>();
-  var duration = 1.obs; // بالشهر
+  var duration = 1.obs;
   var isLoading = false.obs;
 
-  /// الحجوزات الحالية
   var reservations = <Booking>[].obs;
 
   @override
@@ -43,7 +38,6 @@ class BookingController extends GetxController {
     reservations.refresh(); // 👈 مهم
   }
 
-  /// الأيام المحجوزة (للتقويم)
   List<DateTime> get bookedDays {
     List<DateTime> days = [];
 
@@ -76,7 +70,6 @@ class BookingController extends GetxController {
       final startDay = DateTime(start.year, start.month, start.day);
       final endDay = DateTime(end.year, end.month, end.day);
 
-      // اليوم ضمن الفترة
       if (!checkDay.isBefore(startDay) && !checkDay.isAfter(endDay)) {
         return true;
       }
@@ -89,15 +82,12 @@ class BookingController extends GetxController {
 
     final start = selectedStartDate.value!;
 
-    // 1. منجرب نحسب التاريخ بإضافة المدة
     DateTime tempEnd = DateTime(
       start.year,
       start.month + duration.value,
       start.day,
     );
 
-    // 2. إذا نط التاريخ لشهر زيادة (يعني اليوم اختلف)
-    // منقله لـ Dart: أعطيني آخر يوم بالشهر المطلوب (يوم 0 من الشهر التالي هو آخر يوم بالحالي)
     if (tempEnd.day != start.day) {
       tempEnd = DateTime(tempEnd.year, tempEnd.month, 0);
     }
@@ -129,7 +119,6 @@ class BookingController extends GetxController {
     return d.isAfter(start) && d.isBefore(end);
   }
 
-  // دالة لمعرفة حالة اليوم بدقة
   int getDayStatus(DateTime day) {
     bool hasPending = false;
 
@@ -138,16 +127,16 @@ class BookingController extends GetxController {
       DateTime end = DateTime.parse(r.endDate);
 
       if (!day.isBefore(start) && !day.isAfter(end)) {
-        if (r.status == 'accepted') return 2; // مؤكد -> أحمر مباشرة
-        if (r.status == 'pending')
-          hasPending = true; // مؤقتاً إذا وجدت حالة معلقة
+        if (r.status == 'accepted') return 2;
+        if (r.status == 'pending') {
+          hasPending = true;
+        }
       }
     }
 
-    return hasPending ? 1 : 0; // إذا لا يوجد تأكيد فقط، نرجع Pending أو متاح
+    return hasPending ? 1 : 0;
   }
 
-  // المنطق الجديد لفحص توفر الفترة قبل الإرسال
   bool isRangeAvailable() {
     if (selectedStartDate.value == null || endDate == null) return false;
 
@@ -163,8 +152,6 @@ class BookingController extends GetxController {
   Future<void> confirmBooking() async {
     if (selectedStartDate.value == null) return;
 
-    // حالة (أ): الفحص المحلي قبل الإرسال (تضارب مع حجز مقبول نهائياً)
-
     if (!accountController.isAccountActive) {
       _showInactiveAccountDialog();
       return;
@@ -178,11 +165,10 @@ class BookingController extends GetxController {
     isLoading.value = false;
 
     if (success) {
-      // حالة (ب): نجاح (سواء كان التاريخ فارغاً أو عليه طلبات Pending لغيرك)
       Get.snackbar(
         "Success".tr,
         "Your reservation request has been sent".tr,
-        backgroundColor: Colors.green.withOpacity(0.8),
+        backgroundColor: Colors.green.withValues(alpha: 0.8),
         colorText: Colors.white,
         icon: const Icon(Icons.check_circle, color: Colors.white),
         snackPosition: SnackPosition.BOTTOM,
@@ -190,15 +176,15 @@ class BookingController extends GetxController {
       _showResultDialog(
         title: "Booking Sent".tr,
         message:
-            "Your request is pending. The owner can now see it and choose to accept it.".tr,
+            "Your request is pending. The owner can now see it and choose to accept it."
+                .tr,
         type: 1, // success
       );
     } else {
-      // حالة (ج): فشل من السيرفر (غالباً لأن المستخدم لديه طلب Pending مسبق لنفس البيت)
       Get.snackbar(
         "Duplicate Request".tr,
         "You already have a pending request for this house.".tr,
-        backgroundColor: Colors.orange.withOpacity(0.8),
+        backgroundColor: Colors.orange.withValues(alpha: 0.8),
         colorText: Colors.white,
         icon: const Icon(Icons.warning, color: Colors.white),
         snackPosition: SnackPosition.BOTTOM,
@@ -206,17 +192,17 @@ class BookingController extends GetxController {
       _showResultDialog(
         title: "Request Exists".tr,
         message:
-            "You have already sent a request for this house. Please wait for the owner's response.".tr,
-        type: 2, // تنبيه
+            "You have already sent a request for this house. Please wait for the owner's response."
+                .tr,
+        type: 2,
       );
     }
   }
 
-  /// 6. الديالوغ الموحد للألوان الثلاثة
   void _showResultDialog({
     required String title,
     required String message,
-    required int type, // 0: فشل، 1: نجاح، 2: تنبيه
+    required int type,
   }) {
     Color mainColor;
     IconData mainIcon;
@@ -259,12 +245,11 @@ class BookingController extends GetxController {
           Center(
             child: TextButton(
               onPressed: () {
-                Get.back(); // إغلاق الديالوغ
-                if (type == 1||type==2) {
-                  Get.back(); // العودة من صفحة التأكيد
-                  Get.back(); // العودة من صفحة التاريخ
-                  Get.back(); // العودة من صفحة التاريخ
-
+                Get.back();
+                if (type == 1 || type == 2) {
+                  Get.back();
+                  Get.back();
+                  Get.back();
                 }
               },
               child: Text(
@@ -278,20 +263,22 @@ class BookingController extends GetxController {
       barrierDismissible: false,
     );
   }
+
   void _showInactiveAccountDialog() {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text("Account Not Activated".tr),
-        content:  Text(
-          "Your account is not activated yet.\nPlease wait for admin approval.".tr,
+        content: Text(
+          "Your account is not activated yet.\nPlease wait for admin approval."
+              .tr,
           textAlign: TextAlign.center,
         ),
         actions: [
           TextButton(
             onPressed: () {
-              Get.back(); // سكّر الديالوغ
-              Get.back(); // رجوع من صفحة الحجز
+              Get.back();
+              Get.back();
             },
             child: Text("OK".tr),
           ),
@@ -300,6 +287,4 @@ class BookingController extends GetxController {
       barrierDismissible: false,
     );
   }
-
-
 }

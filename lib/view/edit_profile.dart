@@ -333,10 +333,12 @@ class EditProfileScreen extends StatelessWidget {
                     controller.showConfirmPassword.toggle(),
                 validator: (value) {
                   if (controller.newPasswordController.text.isNotEmpty) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return 'Please confirm your password'.tr;
-                    if (value != controller.newPasswordController.text)
+                    }
+                    if (value != controller.newPasswordController.text) {
                       return 'Passwords do not match'.tr;
+                    }
                   }
                   return null;
                 },
