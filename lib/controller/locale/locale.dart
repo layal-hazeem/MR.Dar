@@ -67,7 +67,6 @@ class MyLocale implements Translations {
       "Confirm BookingConfirm Booking": "تأكيد الحجز",
       "Location": "الموقع",
       "Booking Period": "فترة الحجز",
-      "MMM dd, yyyy": "ش ي, س",
       "month(s)": "شهر(شهور)",
       "Payment": "الدفع",
       "Cash": "كاش",
@@ -107,6 +106,7 @@ class MyLocale implements Translations {
       "Enter your current password to save changes:":
           "أدخل كلمة المرور الحالية لحفظ التغييرات:",
       "Current Password": "كلمة المرور الحالية",
+      "Save changes": "حفظ التغييرات",
       "This ensures your account security": "هذا يضمن أمان حسابك",
       "CANCEL": "إلغاء",
       "Password is required": "كلمة المرور مطلوبة",
@@ -196,6 +196,9 @@ class MyLocale implements Translations {
           "عرض البيانات المخزنة مؤقتًا. اسحب للتحديث للاطلاع على آخر التحديثات.",
       "Refresh Profile": "تحديث الملف الشخصي",
       "owner": "مالك",
+      "ACTIVE": "مفعل",
+      "BLOCKED": "محظور",
+      "INACTIVE": "غير مفعل",
       "Update your personal information": "قم بتحديث معلوماتك الشخصية",
       "Settings": "الإعدادات",
       "App preferences and configurations": "تفضيلات التطبيق وإعداداته",
@@ -488,6 +491,7 @@ class MyLocale implements Translations {
       "Enter your current password to save changes:":
           "Enter your current password to save changes:",
       "Current Password": "Current Password",
+      "Save changes": "Save changes",
       "This ensures your account security":
           "This ensures your account security",
       "CANCEL": "CANCEL",
@@ -578,6 +582,9 @@ class MyLocale implements Translations {
           "Showing cached data. Pull to refresh for latest updates",
       "Refresh Profile": "Refresh Profile",
       "owner": "owner",
+      "ACTIVE": "Active",
+      "BLOCKED": "Blocked",
+      "INACTIVE": "Inactive",
       "Update your personal information": "Update your personal information",
       "Settings": "Settings",
       "App preferences and configurations":

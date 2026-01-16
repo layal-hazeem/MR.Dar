@@ -71,44 +71,49 @@ class _MyRentState extends State<MyRent> {
           // ----------- Reservation List -----------
           Expanded(
             child: Obx(() {
-              // 1️⃣ Loading
+              //  Loading
               if (controller.isLoading.value) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              // 2️⃣ Error
+              // Error
               if (controller.errorMessage.isNotEmpty) {
                 return Center(child: Text(controller.errorMessage.value));
               }
 
               final reservations = controller.filteredReservations;
 
-              // 3️⃣ Empty
+              //  Empty
               if (reservations.isEmpty) {
-                return Center(
-                  child: Text(
-                    'no ${controller.currentStatus.value.displayName} reservations'
-                        .tr,
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await controller.fetchMyReservations();
+                  },
+                  child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: Center(
+                          child: Text(
+                            "${'no reservations'.tr} ${controller.currentStatus.value.displayName.tr}",
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }
 
-              // 4️⃣ List
+              //List
               return RefreshIndicator(
-                onRefresh:
-                    controller.currentStatus.value == ReservationStatus.accepted
-                    ? () async {
-                        await controller.fetchMyReservations();
-                      }
-                    : () async {},
+                onRefresh: () async {
+                  await controller.fetchMyReservations();
+                },
                 child: ListView.builder(
                   controller: controller.scrollController,
 
-                  physics:
-                      controller.currentStatus.value ==
-                          ReservationStatus.accepted
-                      ? const AlwaysScrollableScrollPhysics()
-                      : const NeverScrollableScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
 
                   itemCount: reservations.length,
                   itemBuilder: (context, index) {

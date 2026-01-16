@@ -212,11 +212,11 @@ class MyAccount extends StatelessWidget {
                 ),
               ),
               child: Text(
-                user.role.toUpperCase(),
+                user.role.tr.toUpperCase(),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: user.role == 'owner'.tr
+                  color: user.role == 'owner'
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.secondary,
                 ),
@@ -416,12 +416,12 @@ class MyAccount extends StatelessWidget {
   String getAccountStatusLabel(String status) {
     switch (status) {
       case 'accepted':
-        return 'ACTIVE';
+        return 'ACTIVE'.tr;
       case 'blocked':
-        return 'BLOCKED';
+        return 'BLOCKED'.tr;
       case 'rejected':
       default:
-        return 'INACTIVE';
+        return 'INACTIVE'.tr;
     }
   }
 

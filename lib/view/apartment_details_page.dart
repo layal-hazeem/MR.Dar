@@ -196,7 +196,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                       child: Row(
                         children: [
                           RatingStars(
-                            rating: apartment.rating,
+                            rating: apartment.rating!,
                             size: 24,
                             activeColor: Colors.amber,
                             inactiveColor: Colors.grey.shade300,
@@ -216,28 +216,46 @@ class ApartmentDetailsPage extends StatelessWidget {
 
                   const SizedBox(height: 24),
 
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 14,
+                    childAspectRatio: screenWidth < 360
+                        ? 1.8 // موبايلات صغيرة
+                        : screenWidth < 420
+                        ? 2.2 // موبايلات متوسطة
+                        : 2.6, // شاشات كبيرة
+                    children: [
+                      _specItem(
+                        context,
+                        Icons.bed,
+                        "Rooms".tr,
+                        "${apartment.rooms}",
+                      ),
+                      _specItem(
+                        context,
+                        Icons.square_foot,
+                        "Space".tr,
+                        "${apartment.space} m²",
+                      ),
+                      _specItem(
+                        context,
+                        Icons.wifi,
+                        "Wi-Fi".tr,
+                        "Available".tr,
+                      ),
+                      _specItem(
+                        context,
+                        Icons.apartment,
+                        "Type".tr,
+                        "Apartment".tr,
+                      ),
+                    ],
+                  ),
 
-    GridView.count(
-    crossAxisCount: 2,
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    mainAxisSpacing: 14,
-    crossAxisSpacing: 14,
-    childAspectRatio: screenWidth < 360
-    ? 1.8   // موبايلات صغيرة
-        : screenWidth < 420
-    ? 2.2 // موبايلات متوسطة
-        : 2.6, // شاشات كبيرة
-    children: [
-    _specItem(context, Icons.bed, "Rooms".tr, "${apartment.rooms}"),
-    _specItem(context, Icons.square_foot, "Space".tr, "${apartment.space} m²"),
-    _specItem(context, Icons.wifi, "Wi-Fi".tr, "Available".tr),
-    _specItem(context, Icons.apartment, "Type".tr, "Apartment".tr),
-    ],
-    ),
-
-
-    const SizedBox(height: 28),
+                  const SizedBox(height: 28),
 
                   Text(
                     "About This House".tr,

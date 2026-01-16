@@ -52,20 +52,24 @@ class BookingConfirmPage extends StatelessWidget {
                     context,
                     Icons.login,
                     DateFormat(
-                      'MMM dd, yyyy'.tr,
+                      'MMM dd, yyyy',
+                      Get.locale?.languageCode,
                     ).format(controller.selectedStartDate.value!),
                   ),
                   const SizedBox(height: 12),
                   _row(
                     context,
                     Icons.logout,
-                    DateFormat('MMM dd, yyyy'.tr).format(controller.endDate!),
+                    DateFormat(
+                      'MMM dd, yyyy',
+                      Get.locale?.languageCode,
+                    ).format(controller.endDate!),
                   ),
                   const Divider(height: 30),
                   _row(
                     context,
                     Icons.timelapse,
-                    "${controller.duration.value} month(s)".tr,
+                    '${controller.duration.value} ${'month(s)'.tr}',
                     bold: true,
                   ),
                 ],

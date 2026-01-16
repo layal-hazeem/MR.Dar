@@ -303,7 +303,12 @@ class BookingDatePage extends StatelessWidget {
         Text(title, style: const TextStyle(fontSize: 12)),
         const SizedBox(height: 4),
         Text(
-          date == null ? "--" : DateFormat('MMM dd, yyyy'.tr).format(date),
+          date == null
+              ? "--"
+              : DateFormat(
+                  'MMM dd, yyyy',
+                  Get.locale?.languageCode,
+                ).format(date),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: colors.onSurface.withValues(alpha: 0.6),

@@ -17,8 +17,15 @@ class RateApartmentPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Rate Apartment"),
+        title: const Text(
+          "Rate Apartment",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: const Color(0xFF274668),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Get.back(),
+        ),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -73,14 +80,15 @@ class RateApartmentPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () async {
                     final success = await controller.submitReview(houseId);
-
                     if (success) {
                       Get.back();
+
                       Get.snackbar(
                         "Success",
                         "Review added successfully",
                         backgroundColor: Colors.green,
                         colorText: Colors.white,
+                        duration: const Duration(seconds: 2),
                       );
                     } else {
                       Get.snackbar(

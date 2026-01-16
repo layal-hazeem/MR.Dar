@@ -17,10 +17,11 @@ import 'package:get_storage/get_storage.dart';
 import 'core/theme/theme_service.dart';
 import 'core/api/api_config.dart';
 import 'core/storage/app_storage.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await initializeDateFormatting();
   await GetStorage.init();
   final storage = GetStorage();
 

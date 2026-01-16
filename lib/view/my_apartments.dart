@@ -174,8 +174,8 @@ class _MyApartmentsState extends State<MyApartments> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'No apartments in ${controller.currentStatus.value.displayName}'
-                            .tr,
+                        "${'No apartments in'.tr} ${controller.currentStatus.value.displayName.tr}",
+
                         style: TextStyle(
                           fontSize: 16,
                           color: Theme.of(
