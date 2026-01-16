@@ -263,6 +263,12 @@ class BookingController extends GetxController {
       barrierDismissible: false,
     );
   }
+  bool isPastDay(DateTime day) {
+    final today = DateTime.now();
+    final d = DateTime(day.year, day.month, day.day);
+    final t = DateTime(today.year, today.month, today.day);
+    return d.isBefore(t);
+  }
 
   void _showInactiveAccountDialog() {
     Get.dialog(

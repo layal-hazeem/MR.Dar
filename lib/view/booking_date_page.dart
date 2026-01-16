@@ -94,6 +94,8 @@ class BookingDatePage extends StatelessWidget {
                             day,
                           ),
                           onDaySelected: (day, _) {
+                            if (controller.isPastDay(day)) return; // ⛔ ممنوع
+
                             if (controller.isDayBooked(day)) {
                               return;
                             }
@@ -101,6 +103,14 @@ class BookingDatePage extends StatelessWidget {
                           },
                           calendarBuilders: CalendarBuilders(
                             prioritizedBuilder: (context, day, _) {
+                              // ⛔ الأيام الماضية
+                              if (controller.isPastDay(day)) {
+                                return _circleDay(
+                                  day,
+                                  Colors.grey.shade300,
+                                  Colors.grey.shade500,
+                                );
+                              }
                               if (controller.isDayBooked(day)) {
                                 return _circleDay(
                                   day,
