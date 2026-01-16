@@ -9,6 +9,9 @@ class AllApartmentsPage extends StatelessWidget {
   AllApartmentsPage({super.key});
 
   final ApartmentController controller = Get.find();
+  final args = Get.arguments;
+  late final bool fromHome = args?['fromHome'] ?? false;
+
 
   void _openFilterPage() async {
     final result = await Get.to(() => FilterPage());
@@ -49,7 +52,7 @@ class AllApartmentsPage extends StatelessWidget {
                       ],
                     ),
                     child: TextField(
-                      readOnly: true,
+                      autofocus: fromHome,
                       decoration: InputDecoration(
                         hintText: "Search".tr,
                         prefixIcon: Icon(
@@ -68,12 +71,9 @@ class AllApartmentsPage extends StatelessWidget {
                           vertical: 14,
                         ),
                       ),
-                      onTap: () {
-                        Get.to(
-                          () => AllApartmentsPage(),
-                          arguments: {"focusSearch": true},
-                        );
-                      },
+                         onChanged: (value) {
+                          controller.searchApartments(value);
+                          },
                     ),
                   ),
                 ),
