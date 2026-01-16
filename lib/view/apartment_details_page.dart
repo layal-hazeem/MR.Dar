@@ -21,6 +21,8 @@ class ApartmentDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
@@ -214,42 +216,28 @@ class ApartmentDetailsPage extends StatelessWidget {
 
                   const SizedBox(height: 24),
 
-                  GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    mainAxisSpacing: 14,
-                    crossAxisSpacing: 14,
-                    childAspectRatio: 2.4,
-                    children: [
-                      _specItem(
-                        context,
-                        Icons.bed,
-                        "Rooms".tr,
-                        "${apartment.rooms}",
-                      ),
-                      _specItem(
-                        context,
-                        Icons.square_foot,
-                        "Space".tr,
-                        "${apartment.space} m²".tr,
-                      ),
-                      _specItem(
-                        context,
-                        Icons.wifi,
-                        "Wi-Fi".tr,
-                        "Available".tr,
-                      ),
-                      _specItem(
-                        context,
-                        Icons.apartment,
-                        "Type".tr,
-                        "Apartment".tr,
-                      ),
-                    ],
-                  ),
 
-                  const SizedBox(height: 28),
+    GridView.count(
+    crossAxisCount: 2,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    mainAxisSpacing: 14,
+    crossAxisSpacing: 14,
+    childAspectRatio: screenWidth < 360
+    ? 1.8   // موبايلات صغيرة
+        : screenWidth < 420
+    ? 2.2 // موبايلات متوسطة
+        : 2.6, // شاشات كبيرة
+    children: [
+    _specItem(context, Icons.bed, "Rooms".tr, "${apartment.rooms}"),
+    _specItem(context, Icons.square_foot, "Space".tr, "${apartment.space} m²"),
+    _specItem(context, Icons.wifi, "Wi-Fi".tr, "Available".tr),
+    _specItem(context, Icons.apartment, "Type".tr, "Apartment".tr),
+    ],
+    ),
+
+
+    const SizedBox(height: 28),
 
                   Text(
                     "About This House".tr,

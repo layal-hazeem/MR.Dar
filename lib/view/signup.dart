@@ -46,11 +46,11 @@ class Signup extends StatelessWidget {
                       children: [
                         Expanded(
                           child: GestureDetector(
-                            onTap: () => ctrl.setRole('renter'.tr),
+                            onTap: () => ctrl.setRole('renter'),
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
-                                color: ctrl.role.value == 'renter'.tr
+                                color: ctrl.role.value == 'renter'
                                     ? Theme.of(context).colorScheme.primary
                                     : Theme.of(
                                         context,
@@ -70,7 +70,7 @@ class Signup extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: ctrl.role.value == 'renter'.tr
+                                    color: ctrl.role.value == 'renter'
                                         ? Theme.of(
                                             context,
                                           ).colorScheme.onPrimary
@@ -84,11 +84,11 @@ class Signup extends StatelessWidget {
                         const SizedBox(width: 15),
                         Expanded(
                           child: GestureDetector(
-                            onTap: () => ctrl.setRole('owner'.tr),
+                            onTap: () => ctrl.setRole('owner'),
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
-                                color: ctrl.role.value == 'owner'.tr
+                                color: ctrl.role.value == 'owner'
                                     ? Theme.of(context).colorScheme.primary
                                     : Theme.of(
                                         context,
@@ -108,7 +108,7 @@ class Signup extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: ctrl.role.value == 'owner'.tr
+                                    color: ctrl.role.value == 'owner'
                                         ? Theme.of(
                                             context,
                                           ).colorScheme.onPrimary
