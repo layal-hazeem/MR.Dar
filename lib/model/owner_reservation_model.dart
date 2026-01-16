@@ -31,8 +31,6 @@ class OwnerReservation {
   }
 }
 
-/* ================= House ================= */
-
 class House {
   final int id;
   final String title;
@@ -51,14 +49,10 @@ class House {
       id: json['id'],
       title: json['title'],
       rentValue: json['rent_value'],
-      images: (json['images'] as List)
-          .map((e) => e['url'].toString())
-          .toList(),
+      images: (json['images'] as List).map((e) => e['url'].toString()).toList(),
     );
   }
 }
-
-/* ================= Renter ================= */
 
 class Renter {
   final String firstName;

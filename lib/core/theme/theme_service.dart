@@ -42,11 +42,9 @@ class ThemeService extends GetxService {
       colorScheme: const ColorScheme.light(
         primary: primaryColor,
         secondary: Color(0xFF274668),
-        background: Colors.white,
         surface: Colors.white,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onBackground: primaryColor,
         onSurface: primaryColor,
       ),
       textTheme: const TextTheme(
@@ -71,7 +69,7 @@ class ThemeService extends GetxService {
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
         selectedItemColor: primaryColor,
-        unselectedItemColor: primaryColor.withOpacity(0.5),
+        unselectedItemColor: primaryColor.withValues(alpha: 0.5),
       ),
       checkboxTheme: CheckboxThemeData(
         fillColor: WidgetStateProperty.resolveWith<Color?>((
@@ -132,7 +130,6 @@ class ThemeService extends GetxService {
     const surface = Color(0xFF162033);
     const textPrimary = Color(0xFFE6EDF5);
     const textSecondary = Color(0xFF9FB2C8);
-    const nevy = Color(0xFF274668);
 
     return ThemeData(
       brightness: Brightness.dark,
@@ -149,11 +146,9 @@ class ThemeService extends GetxService {
       colorScheme: const ColorScheme.dark(
         primary: primary,
         secondary: Color(0xFF9CC4E4),
-        background: bg,
         surface: surface,
         onPrimary: Colors.black,
         onSecondary: Colors.black,
-        onBackground: textPrimary,
         onSurface: textPrimary,
       ),
 

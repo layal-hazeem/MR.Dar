@@ -10,31 +10,28 @@ class MyRentsController extends GetxController {
   final BookingService bookingService;
 
   MyRentsController({required this.bookingService});
-
-  // جميع الحجوزات
+  //all reservations
   final RxList<ReservationModel> allReservations = <ReservationModel>[].obs;
-  // الحالة الحالية
+
   final Rx<ReservationStatus> currentStatus = ReservationStatus.pending.obs;
-  //حالات الواجهة
+
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
-  final RxBool isProcessing = false.obs; // للعمليات الجديدة
+  final RxBool isProcessing = false.obs;
   final highlightedReservationId = RxnInt();
   final ScrollController scrollController = ScrollController();
 
   @override
   void onInit() {
     super.onInit();
-    print('🔥 MyRentsController INIT ${hashCode}');
+    debugPrint(' MyRentsController INIT $hashCode');
     fetchMyReservations();
   }
 
-  /// 🔄 إعادة تحميل البيانات (عند تغيير اللغة)
   Future<void> reload() async {
     await fetchMyReservations();
   }
 
-  // 👈 هاي الدالة بس
   void handleNotification({
     required String status,
     required int reservationId,
@@ -50,15 +47,14 @@ class MyRentsController extends GetxController {
     if (index == -1) return;
 
     scrollController.animateTo(
-      index * 170, // حسب ارتفاع الكارد
+      index * 170.0,
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
   }
 
-  /// جلب الحجوزات من السيرفر
   Future<void> fetchMyReservations() async {
-    print("🟡 fetchMyReservations START");
+    debugPrint("fetchMyReservations START");
 
     try {
       isLoading.value = true;
@@ -66,80 +62,56 @@ class MyRentsController extends GetxController {
 
       final reservations = await bookingService.getMyReservations();
 
-      print("🟢 API returned: ${reservations.length}");
+      debugPrint("API returned: ${reservations.length}");
 
       allReservations.assignAll(reservations);
 
-      print("🟢 allReservations now: ${allReservations.length}");
+      debugPrint("allReservations now: ${allReservations.length}");
     } catch (e) {
-      print("🔴 ERROR: $e");
-      errorMessage.value = 'load reservation failed'.tr;
-    } finally {
-      isLoading.value = false;
-    }
-
-    try {
-      isLoading.value = true;
-      errorMessage.value = '';
-
-      final reservations = await bookingService.getMyReservations();
-      print('🧾 reservations count = ${reservations.length}');
-      print("🟢 fetched reservations: ${reservations.length}");
-      allReservations.assignAll(reservations);
-    } catch (e) {
+      debugPrint("ERROR: $e");
       errorMessage.value = 'load reservation failed'.tr;
     } finally {
       isLoading.value = false;
     }
   }
 
-  // تغيير الحالة (عند الضغط على Tab / Button)
   void changeStatus(ReservationStatus status) {
     currentStatus.value = status;
   }
 
-  /// تحويل status النصي إلى enum
   ReservationStatus _mapStatus(String status) {
     return ReservationStatusExtension.fromString(status);
   }
 
-  /// الحجوزات المفلترة
   List<ReservationModel> get filteredReservations {
     final now = DateTime.now();
 
     return allReservations.where((reservation) {
       final status = _mapStatus(reservation.status);
 
-      final start = DateTime.parse(reservation.startDate);
       final end = DateTime.parse(reservation.endDate);
 
-      // 🟢 كل المقبولة
       if (currentStatus.value == ReservationStatus.accepted) {
         return status == ReservationStatus.accepted;
       }
 
-      // 🔵 السابقة (مقبولة + انتهت)
       if (currentStatus.value == ReservationStatus.previous) {
         return status == ReservationStatus.previous ||
             (status == ReservationStatus.accepted && end.isBefore(now));
       }
 
-      // باقي الحالات
       return status == currentStatus.value;
     }).toList();
   }
 
-  /// تحميل الحجوزات (API)
   void setReservations(List<ReservationModel> reservations) {
     allReservations.assignAll(reservations);
   }
 
-  /// تفريغ البيانات (اختياري)
   void clearReservations() {
     allReservations.clear();
   }
 
-  /// إلغاء حجز
   Future<void> cancelReservation(int reservationId) async {
     try {
       isProcessing.value = true;
@@ -147,13 +119,12 @@ class MyRentsController extends GetxController {
       final success = await bookingService.cancelReservation(reservationId);
 
       if (success) {
-        // تحديث حالة الحجز محلياً
         final index = allReservations.indexWhere((r) => r.id == reservationId);
         if (index != -1) {
           allReservations[index] = allReservations[index].copyWith(
             status: 'canceled',
           );
-          allReservations.refresh(); // لتحديث الـ Obx
+          allReservations.refresh();
         }
 
         Get.snackbar(
@@ -177,13 +148,12 @@ class MyRentsController extends GetxController {
     }
   }
 
-  /// تعديل حجز (يلغي القديم وينتقل لصفحة الحجز)
   void editReservation(ReservationModel reservation) {
-    // 1. نسأل المستخدم إذا مؤكد
     Get.defaultDialog(
       title: "Edit Reservation".tr,
       middleText:
-          "Editing will cancel the current request and create a new one. Continue?".tr,
+          "Editing will cancel the current request and create a new one. Continue?"
+              .tr,
       textConfirm: "Yes, Edit".tr,
       textCancel: "CANCEL".tr,
       confirmTextColor: Colors.white,
@@ -191,11 +161,8 @@ class MyRentsController extends GetxController {
       onConfirm: () async {
         Get.back();
 
-        // 2. نلغي الحجز القديم
         await cancelReservation(reservation.id);
 
-        // 3. ننتقل لصفحة الحجز مع بيانات الفترة القديمة
-        // هون رح نحتاج نمرر بيانات الفترة القديمة
         Get.to(
           () => BookingDatePage(
             houseId: reservation.apartment.id,

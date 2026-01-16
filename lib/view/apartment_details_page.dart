@@ -124,7 +124,9 @@ class ApartmentDetailsPage extends StatelessWidget {
               transform: Matrix4.translationValues(0, -24, 0),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(28),
+                ),
               ),
               padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
               child: Column(
@@ -152,9 +154,8 @@ class ApartmentDetailsPage extends StatelessWidget {
                             isFav ? Icons.favorite : Icons.favorite_border,
                             color: isFav
                                 ? Colors.red
-                                : Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface.withOpacity(0.6),
+                                : Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: 0.6),
                           ),
                           onPressed: () =>
                               apartmentController.toggleFavorite(apartment.id),
@@ -172,7 +173,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                         size: 18,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                      SizedBox(width: 6),
+                      const SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           "${apartment.street}, ${apartment.cityName}, ${apartment.governorateName}",
@@ -180,14 +181,13 @@ class ApartmentDetailsPage extends StatelessWidget {
                             fontSize: 14,
                             color: Theme.of(
                               context,
-                            ).colorScheme.onSurface.withOpacity(0.6),
+                            ).colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                       ),
                     ],
                   ),
 
-                  // ================= RATING ================= ✅ إضافة هنا
                   if (apartment.rating != null && apartment.rating! > 0)
                     Container(
                       margin: const EdgeInsets.only(top: 12),
@@ -267,7 +267,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                       height: 1.6,
                       color: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withOpacity(0.6),
+                      ).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
 
@@ -288,7 +288,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                       fontSize: 15,
                       color: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withOpacity(0.6),
+                      ).colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
 
@@ -300,12 +300,12 @@ class ApartmentDetailsPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Theme.of(
                           context,
-                        ).colorScheme.surface.withOpacity(0.95),
+                        ).colorScheme.surface.withValues(alpha: 0.95),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: Theme.of(
                             context,
-                          ).colorScheme.onSurface.withOpacity(0.08),
+                          ).colorScheme.onSurface.withValues(alpha: 0.08),
                         ),
                       ),
 
@@ -314,7 +314,10 @@ class ApartmentDetailsPage extends StatelessWidget {
                         children: [
                           Text(
                             "Price".tr,
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
                           ),
                           const SizedBox(height: 6),
                           Text(
@@ -344,7 +347,6 @@ class ApartmentDetailsPage extends StatelessWidget {
                                 ),
                               ),
                               onPressed: () {
-                                // 🔒 فحص تفعيل الحساب من البداية
                                 if (!account.isAccountActive) {
                                   Get.dialog(
                                     AlertDialog(
@@ -370,7 +372,6 @@ class ApartmentDetailsPage extends StatelessWidget {
                                   return;
                                 }
 
-                                // ✅ الحساب مفعل → كمل طبيعي
                                 Get.to(
                                   () => BookingDatePage(
                                     houseId: apartment.id,
@@ -382,7 +383,7 @@ class ApartmentDetailsPage extends StatelessWidget {
 
                               child: Text(
                                 "Reserve".tr,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -413,8 +414,8 @@ class ApartmentDetailsPage extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(
-            Theme.of(context).brightness == Brightness.dark ? 0.5 : 0.45,
+          color: Colors.black.withValues(
+            alpha: Theme.of(context).brightness == Brightness.dark ? 0.5 : 0.45,
           ),
           shape: BoxShape.circle,
         ),
@@ -442,7 +443,7 @@ class ApartmentDetailsPage extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(
                 context,
-              ).colorScheme.primary.withOpacity(0.12), // icon bg
+              ).colorScheme.primary.withValues(alpha: 0.12), // icon bg
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -453,7 +454,6 @@ class ApartmentDetailsPage extends StatelessWidget {
           ),
           const SizedBox(width: 10),
 
-          /// 👇 المهم
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -467,7 +467,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                     fontSize: 12,
                     color: Theme.of(
                       context,
-                    ).colorScheme.onSurface.withOpacity(0.6),
+                    ).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
                 Text(
@@ -476,7 +476,7 @@ class ApartmentDetailsPage extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),

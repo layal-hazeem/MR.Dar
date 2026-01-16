@@ -4,12 +4,14 @@ import 'package:intl/intl.dart';
 import '../../controller/booking_controller.dart';
 
 class BookingConfirmPage extends StatelessWidget {
+  const BookingConfirmPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<BookingController>(tag: Get.arguments);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -24,25 +26,24 @@ class BookingConfirmPage extends StatelessWidget {
           ),
         ),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            /// 📍 Location Card
+            ///  Location Card
             _infoCard(
               title: "Location".tr,
               child: _row(
                 context,
                 Icons.location_on,
-                "${controller.apartment.cityName} - ${controller.apartment.governorateName}", // ⛔ مؤقت
+                "${controller.apartment.cityName} - ${controller.apartment.governorateName}",
                 bold: true,
               ),
             ),
 
             const SizedBox(height: 16),
 
-            /// 📅 Period & Duration
+            /// Period & Duration
             _infoCard(
               title: "Booking Period".tr,
               child: Column(
@@ -73,7 +74,7 @@ class BookingConfirmPage extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            /// 💳 Payment & Price
+            ///Payment & Price
             _infoCard(
               title: "Payment".tr,
               child: Column(
@@ -93,7 +94,7 @@ class BookingConfirmPage extends StatelessWidget {
 
             const Spacer(),
 
-            /// ✅ Confirm Button
+            /// Confirm Button
             Obx(
               () => SizedBox(
                 width: double.infinity,

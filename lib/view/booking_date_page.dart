@@ -33,7 +33,6 @@ class BookingDatePage extends StatelessWidget {
       tag: houseId.toString(),
     );
     controller.apartment = apartment;
-    // 🔽 نضبط البيانات الأولية إذا موجودة
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (initialStartDate != null) {
         controller.selectedStartDate.value = DateTime.parse(initialStartDate!);
@@ -47,8 +46,10 @@ class BookingDatePage extends StatelessWidget {
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         centerTitle: true,
-        iconTheme:  IconThemeData(color:Theme.of(context).colorScheme.onSurface),
-        title:  Text(
+        iconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+        title: Text(
           "Select Booking Date".tr,
           style: TextStyle(
             color: Theme.of(context).colorScheme.onSurface,
@@ -57,17 +58,15 @@ class BookingDatePage extends StatelessWidget {
           ),
         ),
       ),
-
       body: Obx(
         () => Column(
           children: [
-            /// 🔽 كل المحتوى Scroll
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: Column(
                   children: [
-                    /// 📅 Calendar
+                    /// Calendar
                     Card(
                       margin: const EdgeInsets.all(16),
                       shape: RoundedRectangleBorder(
@@ -79,13 +78,15 @@ class BookingDatePage extends StatelessWidget {
                         child: TableCalendar(
                           key: ValueKey(controller.reservations.length),
 
-                          firstDay: DateTime(DateTime.now().year, 1, 1), // أول يوم بالسنة الحالية
-                          lastDay: DateTime(DateTime.now().year + 5, 12, 31), // آخر يوم بعد 5 سنوات
+                          firstDay: DateTime(DateTime.now().year, 1, 1),
+                          lastDay: DateTime(DateTime.now().year + 5, 12, 31),
 
-                          focusedDay: controller.selectedStartDate.value ?? DateTime.now(),
+                          focusedDay:
+                              controller.selectedStartDate.value ??
+                              DateTime.now(),
 
                           calendarFormat: CalendarFormat.month,
-                          availableCalendarFormats:  {
+                          availableCalendarFormats: {
                             CalendarFormat.month: 'Month'.tr,
                           },
                           selectedDayPredicate: (day) => isSameDay(
@@ -93,13 +94,13 @@ class BookingDatePage extends StatelessWidget {
                             day,
                           ),
                           onDaySelected: (day, _) {
-                            if (controller.isDayBooked(day))
-                              return; // يمنع الاختيار
+                            if (controller.isDayBooked(day)) {
+                              return;
+                            }
                             controller.selectedStartDate.value = day;
                           },
                           calendarBuilders: CalendarBuilders(
                             prioritizedBuilder: (context, day, _) {
-                              /// 🔴 محجوز (له الأولوية القصوى)
                               if (controller.isDayBooked(day)) {
                                 return _circleDay(
                                   day,
@@ -108,7 +109,6 @@ class BookingDatePage extends StatelessWidget {
                                 );
                               }
 
-                              /// 🔵 بداية الحجز
                               if (controller.isStartDay(day)) {
                                 return _circleDay(
                                   day,
@@ -117,7 +117,6 @@ class BookingDatePage extends StatelessWidget {
                                 );
                               }
 
-                              /// 🔵 نهاية الحجز
                               if (controller.isEndDay(day)) {
                                 return _circleDay(
                                   day,
@@ -126,11 +125,12 @@ class BookingDatePage extends StatelessWidget {
                                 );
                               }
 
-                              /// 🔹 داخل الفترة
                               if (controller.isInSelectedRange(day)) {
                                 return _circleDay(
                                   day,
-                                  Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.primary.withValues(alpha: 0.4),
                                   Theme.of(context).colorScheme.onPrimary,
                                 );
                               }
@@ -147,7 +147,7 @@ class BookingDatePage extends StatelessWidget {
                       ),
                     ),
 
-                    /// 🗓 Check in / out
+                    ///  Check in / out
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Card(
@@ -159,17 +159,17 @@ class BookingDatePage extends StatelessWidget {
                           child: Row(
                             children: [
                               _dateInfo(
-                                context: context,
                                 Icons.login,
                                 "CHECK IN".tr,
                                 controller.selectedStartDate.value,
+                                context: context,
                               ),
                               const Spacer(),
                               _dateInfo(
-                                context: context,
                                 Icons.logout,
                                 "CHECK OUT".tr,
                                 controller.endDate,
+                                context: context,
                               ),
                             ],
                           ),
@@ -179,7 +179,7 @@ class BookingDatePage extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    /// ⏱ Duration
+                    /// Duration
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Card(
@@ -191,9 +191,9 @@ class BookingDatePage extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                               Text(
+                              Text(
                                 "Duration (Months)".tr,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
@@ -206,15 +206,26 @@ class BookingDatePage extends StatelessWidget {
                                   return ChoiceChip(
                                     label: Text("$m"),
                                     selected: controller.duration.value == m,
-                                    selectedColor: Theme.of(context).colorScheme.primary,
-                                    backgroundColor: Theme.of(context).colorScheme.surface,
+                                    selectedColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.surface,
                                     labelStyle: TextStyle(
                                       color: controller.duration.value == m
-                                          ? Theme.of(context).colorScheme.onPrimary
-                                          : Theme.of(context).colorScheme.onSurface,
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimary
+                                          : Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface,
                                     ),
                                     side: BorderSide(
-                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.3),
                                     ),
                                     onSelected: (_) =>
                                         controller.duration.value = m,
@@ -231,7 +242,6 @@ class BookingDatePage extends StatelessWidget {
               ),
             ),
 
-            /// ▶️ زر ثابت
             Padding(
               padding: const EdgeInsets.all(16),
               child: SizedBox(
@@ -250,7 +260,7 @@ class BookingDatePage extends StatelessWidget {
 
                     if (controller.isRangeAvailable()) {
                       Get.to(
-                        () => BookingConfirmPage(),
+                        () => const BookingConfirmPage(),
                         arguments: houseId.toString(),
                       );
                     } else {
@@ -262,9 +272,12 @@ class BookingDatePage extends StatelessWidget {
                       );
                     }
                   },
-                  child:  Text(
+                  child: Text(
                     "Next".tr,
-                    style: TextStyle(fontSize: 16, color:Theme.of(context).colorScheme.surface),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
                   ),
                 ),
               ),
@@ -275,12 +288,17 @@ class BookingDatePage extends StatelessWidget {
     );
   }
 
-  Widget _dateInfo(IconData icon, String title, DateTime? date ,{required BuildContext context,}) {
+  Widget _dateInfo(
+    IconData icon,
+    String title,
+    DateTime? date, {
+    required BuildContext context,
+  }) {
     final colors = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color:colors.primary),
+        Icon(icon, color: colors.primary),
         const SizedBox(height: 6),
         Text(title, style: const TextStyle(fontSize: 12)),
         const SizedBox(height: 4),
@@ -288,7 +306,7 @@ class BookingDatePage extends StatelessWidget {
           date == null ? "--" : DateFormat('MMM dd, yyyy'.tr).format(date),
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: colors.onSurface.withOpacity(0.6),
+            color: colors.onSurface.withValues(alpha: 0.6),
           ),
         ),
       ],

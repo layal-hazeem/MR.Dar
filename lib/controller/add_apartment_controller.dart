@@ -9,7 +9,6 @@ class AddApartmentController extends GetxController {
   final ApartmentService service;
 
   AddApartmentController({required this.service});
-  // ================= Steps =================
   var currentStep = 0.obs;
 
   void goToStep(int step, PageController pageController) {
@@ -32,7 +31,6 @@ class AddApartmentController extends GetxController {
     }
   }
 
-  // ================= Validation Errors =================
   var titleError = RxnString();
   var descriptionError = RxnString();
   var rentError = RxnString();
@@ -44,7 +42,6 @@ class AddApartmentController extends GetxController {
   var streetError = RxnString();
   var flatError = RxnString();
 
-  //--------
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final rentController = TextEditingController();
@@ -57,13 +54,11 @@ class AddApartmentController extends GetxController {
   final longitudeController = TextEditingController();
   final latitudeController = TextEditingController();
 
-  // location
   var governorates = <GovernorateModel>[].obs;
   var cities = <CityModel>[].obs;
   var selectedGovernorateId = RxnInt();
   var selectedCityId = RxnInt();
 
-  // images
   var images = <XFile>[].obs;
   var imageError = RxnString();
   var isLoading = false.obs;
@@ -187,7 +182,6 @@ class AddApartmentController extends GetxController {
         colorText: Colors.white,
       );
     } finally {
-      // 🔴 هذا أهم سطر
       isLoading.value = false;
     }
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../model/apartment_model.dart';
@@ -9,13 +10,11 @@ class MyApartmentsController extends GetxController {
 
   MyApartmentsController({required this.apartmentService});
 
-  /// جميع الشقق
+  //all apartments
   final RxList<Apartment> allApartments = <Apartment>[].obs;
 
-  /// الحالة الحالية المختارة
   final Rx<ApartmentStatus> currentStatus = ApartmentStatus.pending.obs;
 
-  /// حالات الواجهة
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
 
@@ -25,12 +24,10 @@ class MyApartmentsController extends GetxController {
     fetchMyApartments();
   }
 
-  //تغيير الحالة المختارة
   void changeStatus(ApartmentStatus status) {
     currentStatus.value = status;
   }
 
-  /// جلب شقق المالك من السيرفر
   Future<void> fetchMyApartments() async {
     try {
       isLoading.value = true;
@@ -39,10 +36,9 @@ class MyApartmentsController extends GetxController {
       final apartments = await apartmentService.getMyApartments();
       allApartments.assignAll(apartments);
       update();
-      // طباعة البيانات للتشخيص
-      print('Total apartments fetched: ${allApartments.length}');
+      debugPrint('Total apartments fetched: ${allApartments.length}');
       for (var apt in allApartments) {
-        print('Apartment ${apt.id}: status = ${apt.apartmentStatus}');
+        debugPrint('Apartment ${apt.id}: status = ${apt.apartmentStatus}');
       }
     } catch (e) {
       errorMessage.value = 'load apartments failed'.tr;
@@ -51,7 +47,6 @@ class MyApartmentsController extends GetxController {
     }
   }
 
-  /// فلترة الشقق حسب الحالة
   List<Apartment> get filteredApartments {
     return allApartments.where((apartment) {
       final status = ApartmentStatusExtension.fromDynamic(
@@ -61,7 +56,6 @@ class MyApartmentsController extends GetxController {
     }).toList();
   }
 
-  /// تعداد الشقق حسب الحالة
   int getApartmentCountByStatus(ApartmentStatus status) {
     return allApartments.where((apartment) {
       final aptStatus = ApartmentStatusExtension.fromDynamic(
@@ -71,22 +65,18 @@ class MyApartmentsController extends GetxController {
     }).length;
   }
 
-  /// تحديث قائمة الشقق
   void updateApartments(List<Apartment> apartments) {
     allApartments.assignAll(apartments);
   }
 
-  /// مسح قائمة الشقق
   void clearApartments() {
     allApartments.clear();
   }
 
-  /// البحث عن شقة بواسطة الـ ID
   Apartment? getApartmentById(int id) {
     return allApartments.firstWhereOrNull((apt) => apt.id == id);
   }
 
-  /// تحديث حالة شقة معينة
   void updateApartmentStatus(int apartmentId, ApartmentStatus newStatus) {
     final index = allApartments.indexWhere((apt) => apt.id == apartmentId);
     if (index != -1) {
@@ -117,7 +107,6 @@ class MyApartmentsController extends GetxController {
     }
   }
 
-  /// 🔄 إعادة تحميل البيانات (عند تغيير اللغة)
   Future<void> reload() async {
     await fetchMyApartments();
   }

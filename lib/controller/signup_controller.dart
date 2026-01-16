@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/errors/exceptions.dart';
 import '../service/auth_service.dart';
 import '../view/home.dart';
@@ -211,13 +210,13 @@ class SignupController extends GetxController {
       );
       final userCtrl = Get.put(UserController());
       await userCtrl.loadUserRole();
-      await Future.delayed(Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 300));
 
       // load profile immediately
       try {
         await Get.find<MyAccountController>().loadProfile();
       } catch (e) {
-        print("Could not load profile immediately: $e");
+        debugPrint("Could not load profile immediately: $e");
       }
 
       Get.offAll(
@@ -236,7 +235,7 @@ class SignupController extends GetxController {
         colorText: Colors.white,
         backgroundColor: Colors.red,
       );
-      print("Server Exception: ${e.errModel.errorMessage}");
+      debugPrint("Server Exception: ${e.errModel.errorMessage}");
     } catch (e) {
       isLoading = false;
       update();

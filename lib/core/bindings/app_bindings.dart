@@ -17,7 +17,7 @@ import '../../service/user_local_service.dart';
 import '../../service/booking_service.dart';
 import '../../service/notification_service.dart';
 import '../../service/review_service.dart';
-import '../../service/userService.dart';
+import '../../service/user_service.dart';
 import '../api/dio_consumer.dart';
 import '../../controller/login_controller.dart';
 import '../../controller/signup_controller.dart';

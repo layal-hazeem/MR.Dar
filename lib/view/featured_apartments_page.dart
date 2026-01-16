@@ -7,19 +7,16 @@ import 'apartment_details_page.dart';
 class FeaturedApartmentsPage extends StatelessWidget {
   final List<Apartment> apartments;
 
-  const FeaturedApartmentsPage({
-    super.key,
-    required this.apartments,
-  });
+  const FeaturedApartmentsPage({super.key, required this.apartments});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
-        title:  Text("Featured Apartments".tr),
+        title: Text("Featured Apartments".tr),
         centerTitle: true,
       ),
       body: ListView.builder(
@@ -32,9 +29,7 @@ class FeaturedApartmentsPage extends StatelessWidget {
             child: ApartmentCard(
               apartment: apt,
               onTap: () {
-                Get.to(
-                      () => ApartmentDetailsPage(apartment: apt),
-                );
+                Get.to(() => ApartmentDetailsPage(apartment: apt));
               },
             ),
           );

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import '../core/api/dio_consumer.dart';
@@ -109,13 +110,11 @@ class ApartmentService {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString("token") ?? "";
 
-      // بناء query parameters
       Map<String, dynamic> queryParams = {
         'page': page.toString(),
         'limit': limit.toString(),
       };
 
-      // إضافة الفلاتر إذا كانت موجودة
       if (filter != null) {
         queryParams.addAll(filter.toQuery());
       }
@@ -133,13 +132,11 @@ class ApartmentService {
         final data = response.data;
 
         if (data is Map && data.containsKey("data")) {
-          // تحويل البيانات إلى قائمة شقق
           final List list = data["data"];
           final List<Apartment> apartments = list
               .map((e) => Apartment.fromJson(e))
               .toList();
 
-          // استخراج بيانات الـ pagination
           final int currentPage = data["current_page"] ?? 1;
           final int totalPages = data["last_page"] ?? 1;
           final int totalItems = data["total"] ?? apartments.length;
@@ -165,14 +162,12 @@ class ApartmentService {
         throw ServerException(errModel: ErrorModel(errorMessage: errorMsg));
       }
     } on DioException catch (e) {
-      print("Dio Error: ${e.message}");
+      debugPrint("Dio Error: ${e.message}");
       throw ServerException(
         errModel: ErrorModel(errorMessage: "Network error: ${e.message}"),
       );
     }
   }
-
-  // Get Featured Apartments (مثال: الإيجار أقل من 200)
 
   // Search Apartments
   Future<List<Apartment>> searchApartments(String query) async {
@@ -295,7 +290,6 @@ class ApartmentService {
       if (response.statusCode == 200) {
         final responseData = response.data;
 
-        // تحقق من هيكل البيانات
         if (responseData is Map && responseData.containsKey('data')) {
           final List list = responseData['data'];
 
@@ -315,8 +309,6 @@ class ApartmentService {
     }
   }
 
-  //جلب كل شقق المالك
-  // في ملف apartment_service.dart
   Future<List<Apartment>> getMyApartments() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -330,7 +322,7 @@ class ApartmentService {
         ),
       );
 
-      print("My Apartments Response status: ${response.statusCode}");
+      debugPrint("My Apartments Response status: ${response.statusCode}");
 
       if (response.statusCode == 200) {
         final data = response.data;

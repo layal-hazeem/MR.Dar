@@ -1,5 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-
 import '../model/apartment_model.dart';
 
 class ApartmentController extends GetxController {
@@ -14,9 +14,10 @@ class ApartmentController extends GetxController {
 
     isSearching.value = true;
     try {
-      final response = await api.dio.get('/apartments', queryParameters: {
-        'search': query,
-      });
+      final response = await api.dio.get(
+        '/apartments',
+        queryParameters: {'search': query},
+      );
 
       if (response.statusCode == 200) {
         final List data = response.data['data'];
@@ -24,7 +25,7 @@ class ApartmentController extends GetxController {
       }
     } catch (e) {
       searchResults.clear();
-      print("Search error: $e");
+      debugPrint("Search error: $e");
     } finally {
       isSearching.value = false;
     }

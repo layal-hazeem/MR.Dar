@@ -10,7 +10,6 @@ enum ReservationStatus {
 }
 
 extension ReservationStatusExtension on ReservationStatus {
-  /// للتحويل من String جاي من الباك إلى enum
   static ReservationStatus fromString(String? status) {
     switch (status?.toLowerCase()) {
       case 'pending':
@@ -29,7 +28,6 @@ extension ReservationStatusExtension on ReservationStatus {
     }
   }
 
-  ///  للعرض بالواجهة
   String get displayName {
     switch (this) {
       case ReservationStatus.pending:

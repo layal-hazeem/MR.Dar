@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../fcm_test.dart';
 import '../service/auth_service.dart';
 import '../controller/my_account_controller.dart';
-import '../service/userService.dart';
+import '../service/user_service.dart';
 import '../view/home.dart';
 import '../view/onboarding/onboarding_screen.dart';
 import 'apartment_controller.dart';

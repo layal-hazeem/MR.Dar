@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -239,10 +240,10 @@ class AuthService {
               });
             }
           } catch (e) {
-            print("Could not update MyAccountController: $e");
+            debugPrint("Could not update MyAccountController: $e");
           }
         } else {
-          print("Warning: No token returned from signup");
+          debugPrint("Warning: No token returned from signup");
         }
 
         return;
@@ -266,8 +267,8 @@ class AuthService {
       }
       throw ServerException(errModel: ErrorModel(errorMessage: errorMessage));
     } catch (e, s) {
-      print("Unexpected error: $e");
-      print("Stack trace: $s");
+      debugPrint("Unexpected error: $e");
+      debugPrint("Stack trace: $s");
       throw ServerException(
         errModel: ErrorModel(errorMessage: "Unexpected error: ${e.toString()}"),
       );

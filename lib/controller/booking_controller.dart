@@ -35,7 +35,7 @@ class BookingController extends GetxController {
 
   Future<void> loadReservations() async {
     reservations.value = await service.getHouseReservations(houseId);
-    reservations.refresh(); // 👈 مهم
+    reservations.refresh();
   }
 
   List<DateTime> get bookedDays {

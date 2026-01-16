@@ -1,7 +1,7 @@
 class FilterModel {
   String? search;
-  int? governorateId;    // نستخدم ID فقط
-  int? cityId;           // نستخدم ID فقط
+  int? governorateId;
+  int? cityId;
   int? minRent;
   int? maxRent;
   int? minRooms;
@@ -21,11 +21,10 @@ class FilterModel {
     this.maxRooms,
     this.minSpace,
     this.maxSpace,
-    this.sortBy = 'created_at', // قيمة افتراضية
-    this.sortDir = 'asc',        // قيمة افتراضية
+    this.sortBy = 'created_at',
+    this.sortDir = 'asc',
   });
 
-  // تنسيق JSON أو Map
   factory FilterModel.fromMap(Map<String, dynamic> map) {
     return FilterModel(
       search: map['search'] as String?,
@@ -42,7 +41,6 @@ class FilterModel {
     );
   }
 
-  // تحويل إلى query parameters
   Map<String, dynamic> toQuery() {
     final Map<String, dynamic> q = {};
 
@@ -61,7 +59,6 @@ class FilterModel {
     return q;
   }
 
-  // نسخ FilterModel مع تحديثات
   FilterModel copyWith({
     String? search,
     int? governorateId,
@@ -90,7 +87,6 @@ class FilterModel {
     );
   }
 
-  // فحص إذا كان هناك فلتر مفعل
   bool get hasActiveFilters {
     return search?.isNotEmpty == true ||
         governorateId != null ||
@@ -105,7 +101,6 @@ class FilterModel {
         (sortDir != null && sortDir != 'asc');
   }
 
-  // إعادة ضبط كل الفلاتر
   FilterModel clear() {
     return FilterModel();
   }

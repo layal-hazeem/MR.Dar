@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../model/user_model.dart';
 import '../service/user_local_service.dart';
-import '../service/userService.dart';
+import '../service/user_service.dart';
 import 'auth_controller.dart';
 
 class MyAccountController extends GetxController {
@@ -81,11 +81,11 @@ class MyAccountController extends GetxController {
     if (!url.startsWith('http')) {
       if (url.startsWith('/storage/')) {
         final fixed = 'http://10.0.2.2:8000$url';
-        debugPrint('🛠️ Fixed URL (with slash): $fixed');
+        debugPrint('Fixed URL (with slash): $fixed');
         return fixed;
       } else if (url.startsWith('storage/')) {
         final fixed = 'http://10.0.2.2:8000/storage/${url.substring(8)}';
-        debugPrint('🛠️ Fixed URL (without slash): $fixed');
+        debugPrint('Fixed URL (without slash): $fixed');
         return fixed;
       }
     }
@@ -103,11 +103,11 @@ class MyAccountController extends GetxController {
 
   Future<void> checkImageUrl(String url) async {
     try {
-      debugPrint('🔍 Testing image URL: $url');
+      debugPrint('Testing image URL: $url');
       final response = await Dio().head(url);
-      debugPrint('✅ Image exists - Status: ${response.statusCode}');
+      debugPrint('Image exists - Status: ${response.statusCode}');
     } catch (e) {
-      debugPrint('❌ Image not accessible: $e');
+      debugPrint('Image not accessible: $e');
     }
   }
 

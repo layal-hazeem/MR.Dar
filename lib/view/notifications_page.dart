@@ -30,7 +30,7 @@ class NotificationsPage extends StatelessWidget {
         }
 
         return RefreshIndicator(
-          onRefresh: controller.fetchNotifications, // 🔥 هون السحر
+          onRefresh: controller.fetchNotifications,
           child: ListView.builder(
             itemCount: controller.notifications.length,
             itemBuilder: (context, index) {
@@ -41,10 +41,8 @@ class NotificationsPage extends StatelessWidget {
                   final homeController = Get.find<HomeController>();
                   final myRentsController = Get.find<MyRentsController>();
 
-                  // سكّري كل الصفحات وروحي عالهوم
                   Get.offAll(() => Home());
 
-                  // خلي التغيير يتم بعد الرجوع
                   Future.delayed(const Duration(milliseconds: 100), () {
                     homeController.changeTab(1);
 
@@ -66,7 +64,9 @@ class NotificationsPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
-                        color: Theme.of(context).shadowColor.withOpacity(0.05),
+                        color: Theme.of(
+                          context,
+                        ).shadowColor.withValues(alpha: 0.05),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -75,7 +75,6 @@ class NotificationsPage extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 🔵 أيقونة الحالة
                       Icon(
                         getStatusIcon(n.status),
                         color: getStatusColor(n.status),
@@ -83,12 +82,10 @@ class NotificationsPage extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
 
-                      // 📄 محتوى الإشعار
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // 🔹 العنوان + الوقت
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -113,7 +110,6 @@ class NotificationsPage extends StatelessWidget {
 
                             const SizedBox(height: 4),
 
-                            // 🏠 اسم الشقة
                             if (n.house != null)
                               Text(
                                 n.house!,
@@ -125,7 +121,6 @@ class NotificationsPage extends StatelessWidget {
 
                             const SizedBox(height: 4),
 
-                            // 📝 الرسالة
                             Text(
                               n.message,
                               style: TextStyle(
@@ -136,7 +131,6 @@ class NotificationsPage extends StatelessWidget {
 
                             const SizedBox(height: 6),
 
-                            // 📅 التاريخ
                             if (n.date != null)
                               Row(
                                 children: [

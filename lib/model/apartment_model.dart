@@ -8,7 +8,7 @@ class Apartment {
   final int rooms;
   final double space;
   final String? notes;
-  final double? rating; // ممكن يكون null إذا ما في تقييم
+  final double? rating;
 
   final int cityId;
   final String cityName;
@@ -79,13 +79,9 @@ class Apartment {
             : 'pending';
       }
 
-      // استخدم الدالة المساعدة للتحويل
       if (statusValue != null) {
         final status = ApartmentStatusExtension.fromDynamic(statusValue);
-        return status
-            .toString()
-            .split('.')
-            .last; // يحول 'ApartmentStatus.accepted' إلى 'accepted'
+        return status.toString().split('.').last;
       }
 
       return 'pending';
@@ -118,7 +114,7 @@ class Apartment {
           : double.tryParse(address['latitude'].toString()),
 
       houseImages: parseImages(json['images']),
-      apartmentStatus: apartmentStatus, // ✅ هنا
+      apartmentStatus: apartmentStatus,
       rating: safeDouble(json['rating']),
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
-import '../service/userService.dart';
+import '../service/user_service.dart';
 import '../controller/my_account_controller.dart';
 import 'user_controller.dart';
 
@@ -151,7 +151,6 @@ class EditProfileController extends GetxController {
         return true;
       }
 
-      /// ❌ فقط هون في error
       dialogPasswordError.value =
           response['message'] ?? 'Incorrect current password'.tr;
       return false;

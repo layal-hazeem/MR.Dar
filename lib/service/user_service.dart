@@ -44,7 +44,7 @@ class UserService {
     required String confirmPassword,
   }) async {
     final response = await api.dio.post(
-      '${EndPoint.updateAccount}',
+      EndPoint.updateAccount,
       data: {
         'current_password': currentPassword,
         'new_password': newPassword,

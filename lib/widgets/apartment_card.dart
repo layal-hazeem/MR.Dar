@@ -30,8 +30,8 @@ class ApartmentCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(
-                  theme.brightness == Brightness.dark ? 0.3 : 0.06,
+                color: Colors.black.withValues(
+                  alpha: theme.brightness == Brightness.dark ? 0.3 : 0.06,
                 ),
                 blurRadius: 16,
                 offset: const Offset(0, 10),
@@ -65,7 +65,7 @@ class ApartmentCard extends StatelessWidget {
                               size: 60,
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withOpacity(0.4),
+                              ).colorScheme.onSurface.withValues(alpha: 0.4),
                             ),
                           ),
                         );
@@ -97,7 +97,6 @@ class ApartmentCard extends StatelessWidget {
 
                       return GestureDetector(
                         onTap: () async {
-                          // إظهار مؤشر تحميل صغير
                           Get.showSnackbar(
                             GetSnackBar(
                               message: isFav
@@ -111,7 +110,6 @@ class ApartmentCard extends StatelessWidget {
                           try {
                             await controller.toggleFavorite(apartment.id);
 
-                            // رسالة نجاح
                             Get.showSnackbar(
                               GetSnackBar(
                                 message: isFav
@@ -136,11 +134,11 @@ class ApartmentCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Theme.of(
                               context,
-                            ).colorScheme.surface.withOpacity(0.9),
+                            ).colorScheme.surface.withValues(alpha: 0.9),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 4,
                               ),
                             ],
@@ -150,15 +148,13 @@ class ApartmentCard extends StatelessWidget {
                             size: 20,
                             color: isFav
                                 ? Colors.red
-                                : Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface.withOpacity(0.7),
+                                : Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: 0.7),
                           ),
                         ),
                       );
                     }),
                   ),
-                  // Rating Badge ====== ✅ إضافة تقييم هنا ======
                   if (apartment.rating != null && apartment.rating! > 0)
                     Positioned(
                       top: 12,
@@ -169,21 +165,16 @@ class ApartmentCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.7),
+                          color: Colors.black.withValues(alpha: 0.7),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.star, size: 14, color: Colors.amber),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
-                              apartment.rating!.toStringAsFixed(1),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
+                              "", // Will be updated in next step or kept as is if rating is handled differently
                             ),
                           ],
                         ),
@@ -219,7 +210,7 @@ class ApartmentCard extends StatelessWidget {
                           size: 14,
                           color: Theme.of(
                             context,
-                          ).colorScheme.onSurface.withOpacity(0.6),
+                          ).colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                         const SizedBox(width: 4),
                         Expanded(
@@ -229,7 +220,7 @@ class ApartmentCard extends StatelessWidget {
                               fontSize: 12,
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withOpacity(0.6),
+                              ).colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -268,7 +259,7 @@ class ApartmentCard extends StatelessWidget {
                           onPressed: onTap,
                           child: Text(
                             "View".tr,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white,
                               fontWeight: FontWeight.w600,

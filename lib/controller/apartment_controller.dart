@@ -181,27 +181,6 @@ class ApartmentController extends GetxController {
     }
   }
 
-  // Future<void> searchApartments(String query) async {
-  //   try {
-  //     searchQuery.value = query;
-  //     currentPage.value = 1;
-  //     isLoading.value = true;
-  //
-  //     final response = await service.searchApartments(query, page: 1);
-  //
-  //     filteredApartments.value = response['apartments'] as List<Apartment>;
-  //     currentPage.value = response['current_page'];
-  //     totalPages.value = response['total_pages'];
-  //     totalItems.value = response['total_items'];
-  //     hasMore.value = response['has_more'];
-  //
-  //   } catch (e) {
-  //     errorMessage.value = "Failed to search: ${e.toString()}";
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
-
   Future<void> loadMore() async {
     if (isLoadingMore.value || !hasMore.value) return;
 
@@ -321,11 +300,11 @@ class ApartmentController extends GetxController {
 
       await service.toggleFavorite(houseId);
 
-      debugPrint("✅ Favorite toggled: House $houseId - isFav: ${!isFav}");
+      debugPrint("Favorite toggled: House $houseId - isFav: ${!isFav}");
 
       update();
     } catch (e) {
-      debugPrint("❌ Failed to toggle favorite: $e");
+      debugPrint("Failed to toggle favorite: $e");
 
       final bool wasFav = favoriteIds.contains(houseId);
       if (wasFav) {
@@ -366,7 +345,7 @@ class ApartmentController extends GetxController {
     try {
       await Future.wait([loadFavorites()]);
     } catch (e) {
-      debugPrint("⚠️ Error loading user data: $e");
+      debugPrint("Error loading user data: $e");
     }
   }
 
@@ -389,4 +368,3 @@ class ApartmentController extends GetxController {
     await Future.wait([loadApartments(), loadAllApartments(), loadFavorites()]);
   }
 }
-

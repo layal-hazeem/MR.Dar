@@ -56,7 +56,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   image: "images/Apartment rent-amico.png",
                 ),
 
-                /// آخر صفحة onboarding
                 OnboardingPage(
                   title: "Ready to Get Started?".tr,
                   subtitle: "Start your journey with MR.Dar today".tr,
@@ -87,7 +86,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ],
             ),
 
-            /// Skip button (يختفي بالصفحة الأخيرة)
             if (!isLastPage)
               Positioned(
                 top: 10,
@@ -140,7 +138,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   const SizedBox(height: 20),
 
-                  /// Next (يختفي بآخر صفحة)
                   if (!isLastPage)
                     ElevatedButton(
                       onPressed: nextPage,

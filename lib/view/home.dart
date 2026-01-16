@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import '../controller/user_controller.dart';
 import '../controller/home_controller.dart';
 import '../core/theme/theme_service.dart';
-import 'MyApartments.dart';
+import 'my_apartments.dart';
+import 'home_content.dart';
 import 'add_apartment_page.dart';
-import 'homeContent.dart';
 import 'favourite.dart';
 import 'my_account.dart';
 import 'my_rent.dart';
@@ -47,7 +47,7 @@ class Home extends StatelessWidget {
     });
   }
 
-  // ========================= AppBar =========================
+  // AppBar
   AppBar _buildAppBar(BuildContext context, int index) {
     String title;
     final isOwner = user.isOwner;
@@ -116,7 +116,7 @@ class Home extends StatelessWidget {
     );
   }
 
-  // ========================= Body =========================
+  //  Body
   Widget _buildIndexedStack() {
     return Obx(() {
       return IndexedStack(
@@ -134,26 +134,26 @@ class Home extends StatelessWidget {
     });
   }
 
-  // ========================= BottomNavigationBar =========================
+  //  BottomNavigationBar
   Widget _buildBottomNavigationBar(BuildContext context) {
     return Obx(() {
       final isOwner = user.isOwner;
 
       return BottomNavigationBar(
-        key: ValueKey(Get.locale?.languageCode), // 🔥 مهم
+        key: ValueKey(Get.locale?.languageCode),
         currentIndex: controller.currentIndex.value,
         onTap: controller.changeTab,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Theme.of(
           context,
-        ).colorScheme.onSurface.withOpacity(0.6),
+        ).colorScheme.onSurface.withValues(alpha: 0.6),
         items: isOwner ? _ownerItems() : _renterItems(),
       );
     });
   }
 
-  // ========================= Nav Items =========================
+  //  Nav Items
   List<BottomNavigationBarItem> _renterItems() => [
     BottomNavigationBarItem(
       icon: Icon(Icons.home_outlined),

@@ -15,13 +15,10 @@ class Booking {
     required this.status,
   });
 
-  factory Booking.fromJson(
-      Map<String, dynamic> json, {
-        required int houseId, // 👈 نمرّره من برا
-      }) {
+  factory Booking.fromJson(Map<String, dynamic> json, {required int houseId}) {
     return Booking(
       id: json['id'],
-      houseId: houseId, // 👈 ثابت
+      houseId: houseId,
       startDate: json['start_date'],
       endDate: json['end_date'],
       duration: int.parse(json['duration'].toString()),

@@ -22,8 +22,6 @@ class UserModel {
     required this.status,
   });
 
-  // من JSON
-
   factory UserModel.fromJson(Map<String, dynamic> json) {
     String parseImages(dynamic image) {
       if (image == null || image.toString().trim().isEmpty) {

@@ -8,22 +8,18 @@ class FilterPage extends StatelessWidget {
 
   final ApartmentController controller = Get.find<ApartmentController>();
 
-  // المتحكمات
   final Rx<RangeValues> rentRange = Rx(RangeValues(0, 5000));
   final Rx<RangeValues> roomsRange = Rx(RangeValues(1, 10));
   final Rx<RangeValues> spaceRange = Rx(RangeValues(0, 500));
   final TextEditingController searchController = TextEditingController();
 
-  // خيارات الترتيب
   final RxString selectedSortBy = RxString('created_at'.tr);
   final RxString selectedSortDir = RxString('asc'.tr);
   final RxList<Map<String, dynamic>> sortOptionsFromApi = RxList([]);
 
-  // متغيرات للمحافظة والمدينة المختارة (بالـ IDs)
   final RxInt selectedGovernorateId = RxInt(0);
   final RxInt selectedCityId = RxInt(0);
 
-  // قائمة المدن للمحافظة المختارة
   final RxList<Map<String, dynamic>> filteredCities = RxList([]);
 
   final Map<String, String> sortOptions = {
@@ -68,19 +64,19 @@ class FilterPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // البحث
+                    // search
                     _buildSearchSection(context),
                     const Divider(height: 30),
 
-                    // الترتيب
+                    // sort
                     _buildSortSection(context),
                     const Divider(height: 30),
 
-                    // الموقع
+                    // location
                     _buildLocationSection(context),
                     const Divider(height: 30),
 
-                    // نطاق الإيجار
+                    // rent range
                     _buildRangeSection(
                       context,
                       title: "Rent Range (SYP)".tr,
@@ -92,7 +88,7 @@ class FilterPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // نطاق الغرف
+                    // rooms range
                     _buildRangeSection(
                       context,
                       title: "Rooms Number".tr,
@@ -104,7 +100,7 @@ class FilterPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // نطاق المساحة
+                    // space range
                     _buildRangeSection(
                       context,
                       title: "Space Range (m²)".tr,
@@ -120,7 +116,6 @@ class FilterPage extends StatelessWidget {
               ),
             ),
 
-            // أزرار التطبيق
             _buildActionButtons(context),
           ],
         ),
@@ -128,7 +123,6 @@ class FilterPage extends StatelessWidget {
     );
   }
 
-  // قسم البحث
   Widget _buildSearchSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +159,6 @@ class FilterPage extends StatelessWidget {
     );
   }
 
-  // قسم الترتيب
   Widget _buildSortSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,36 +171,36 @@ class FilterPage extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Obx(
-          () => Column(
-            children: sortOptions.entries.map((entry) {
-              return RadioListTile<String>(
-                title: Text(
-                  entry.value,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                value: entry.key,
-                groupValue: selectedSortBy.value,
-                onChanged: (String? value) {
-                  if (value != null) {
-                    selectedSortBy.value = value;
-                    // إذا كان الخيار متعلق بالإيجار، نضبط الاتجاه المناسب
+          () => RadioGroup<String>(
+            groupValue: selectedSortBy.value,
+            onChanged: (String? value) {
+              if (value != null) {
+                selectedSortBy.value = value;
 
-                    if (value == 'rent_value') {
-                      selectedSortDir.value = 'asc'.tr;
-                    } else if (value == 'rent_desc') {
-                      selectedSortDir.value = 'desc'.tr;
-                    }
-                  }
-                },
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                activeColor: Theme.of(context).colorScheme.primary,
-              );
-            }).toList(),
+                if (value == 'rent_value') {
+                  selectedSortDir.value = 'asc'.tr;
+                } else if (value == 'rent_desc') {
+                  selectedSortDir.value = 'desc'.tr;
+                }
+              }
+            },
+            child: Column(
+              children: sortOptions.entries.map((entry) {
+                return RadioListTile<String>(
+                  title: Text(
+                    entry.value,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  value: entry.key,
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  activeColor: Theme.of(context).colorScheme.primary,
+                );
+              }).toList(),
+            ),
           ),
         ),
 
-        // خيار الاتجاه (لخيارات محددة فقط)
         Obx(() {
           final shouldShowSortDir =
               selectedSortBy.value == 'Rooms'.tr ||
@@ -226,29 +219,29 @@ class FilterPage extends StatelessWidget {
                   context,
                 ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: RadioListTile<String>(
-                      title: Text('Ascending'.tr),
-                      value: 'asc'.tr,
-                      groupValue: selectedSortDir.value,
-                      onChanged: (value) => selectedSortDir.value = value!,
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
+              RadioGroup<String>(
+                groupValue: selectedSortDir.value,
+                onChanged: (value) => selectedSortDir.value = value!,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile<String>(
+                        title: Text('Ascending'.tr),
+                        value: 'asc'.tr,
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: RadioListTile<String>(
-                      title: Text('Descending'.tr),
-                      value: 'desc'.tr,
-                      groupValue: selectedSortDir.value,
-                      onChanged: (value) => selectedSortDir.value = value!,
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
+                    Expanded(
+                      child: RadioListTile<String>(
+                        title: Text('Descending'.tr),
+                        value: 'desc'.tr,
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           );
@@ -257,7 +250,6 @@ class FilterPage extends StatelessWidget {
     );
   }
 
-  // قسم الموقع
   Widget _buildLocationSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,7 +264,6 @@ class FilterPage extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dropdown المحافظة
             Obx(
               () => DropdownButtonFormField<int>(
                 initialValue: selectedGovernorateId.value == 0
@@ -293,7 +284,7 @@ class FilterPage extends StatelessWidget {
                     value: 0,
                     child: Text("All Governorates".tr),
                   ),
-                  ...controller.governorates.map<DropdownMenuItem<int>>((gov) {
+                  ...controller.governorates.map((gov) {
                     return DropdownMenuItem<int>(
                       value: gov.id,
                       child: Text(gov.name),
@@ -321,7 +312,6 @@ class FilterPage extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Dropdown المدينة
             Obx(
               () => DropdownButtonFormField<int>(
                 initialValue: selectedCityId.value == 0
@@ -339,7 +329,7 @@ class FilterPage extends StatelessWidget {
                 ),
                 items: [
                   DropdownMenuItem<int>(value: 0, child: Text("All Cities".tr)),
-                  ...filteredCities.map<DropdownMenuItem<int>>((city) {
+                  ...filteredCities.map((city) {
                     return DropdownMenuItem<int>(
                       value: city['id'.tr],
                       child: Text(city['name'.tr]),
@@ -355,7 +345,6 @@ class FilterPage extends StatelessWidget {
     );
   }
 
-  // قسم النطاقات (الإيجار، الغرف، المساحة)
   Widget _buildRangeSection(
     BuildContext context, {
     required String title,
@@ -423,7 +412,6 @@ class FilterPage extends StatelessWidget {
     );
   }
 
-  // أزرار التطبيق والريست
   Widget _buildActionButtons(BuildContext context) {
     return Row(
       children: [
@@ -468,7 +456,6 @@ class FilterPage extends StatelessWidget {
     );
   }
 
-  // دالة إعادة تعيين جميع الفلاتر
   void _resetFilters() {
     rentRange.value = const RangeValues(0, 5000);
     roomsRange.value = const RangeValues(1, 10);
@@ -480,10 +467,9 @@ class FilterPage extends StatelessWidget {
     selectedSortDir.value = 'asc'.tr;
     filteredCities.value = [];
 
-    controller.resetFilter(); // إعادة تحميل كل البيانات بدون فلتر
+    controller.resetFilter();
   }
 
-  // دالة تطبيق الفلاتر
   void _applyFilters() {
     String finalSortBy = selectedSortBy.value;
     if (selectedSortBy.value == 'rent_desc'.tr) {
@@ -508,7 +494,7 @@ class FilterPage extends StatelessWidget {
       sortDir: selectedSortDir.value,
     );
 
-    controller.applyFilter(filter); // جلب البيانات من الباك
-    Get.back(); // إغلاق صفحة الفلاتر
+    controller.applyFilter(filter);
+    Get.back();
   }
 }

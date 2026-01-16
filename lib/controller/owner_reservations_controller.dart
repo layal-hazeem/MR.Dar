@@ -30,7 +30,6 @@ class OwnerReservationsController extends GetxController {
       reservations.removeWhere((r) => r.id == id);
       Get.snackbar("Success".tr, "Reservation accepted".tr);
     }
-    // تحديث إشعارات المستأجر
     if (Get.isRegistered<NotificationController>()) {
       Get.find<NotificationController>().fetchNotifications();
     }
@@ -42,10 +41,8 @@ class OwnerReservationsController extends GetxController {
       reservations.removeWhere((r) => r.id == id);
       Get.snackbar("Rejected".tr, "Reservation rejected".tr);
     }
-    // تحديث إشعارات المستأجر
     if (Get.isRegistered<NotificationController>()) {
       Get.find<NotificationController>().fetchNotifications();
     }
   }
-
 }

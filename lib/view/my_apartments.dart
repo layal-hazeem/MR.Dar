@@ -42,7 +42,7 @@ class _MyApartmentsState extends State<MyApartments> {
         children: [
           // -------- Status Tabs --------
           Container(
-            color: Theme.of(context).colorScheme.surfaceVariant,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             child: Obx(() {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
