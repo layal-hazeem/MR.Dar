@@ -8,8 +8,8 @@ void showLanguageSelector(BuildContext context) {
   Get.bottomSheet(
     Container(
       padding: const EdgeInsets.all(20),
-      decoration:  BoxDecoration(
-        color:Theme.of(context).colorScheme.surface,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
       child: Column(
@@ -20,20 +20,22 @@ void showLanguageSelector(BuildContext context) {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color : Theme.of(context).colorScheme.onSurface,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 20),
 
           ListTile(
             leading: const Text("🇸🇾", style: TextStyle(fontSize: 22)),
-            title: Text("العربية",
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-              ),
+            title: Text(
+              "العربية",
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             ),
             trailing: Get.locale?.languageCode == 'ar'
-                ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary)
+                ? Icon(
+                    Icons.check,
+                    color: Theme.of(context).colorScheme.primary,
+                  )
                 : null,
             onTap: () {
               controller.changeLocale('ar');
@@ -43,12 +45,15 @@ void showLanguageSelector(BuildContext context) {
 
           ListTile(
             leading: const Text("🇬🇧", style: TextStyle(fontSize: 22)),
-            title:  Text(
-                "English",
+            title: Text(
+              "English",
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             ),
             trailing: Get.locale?.languageCode == 'en'
-                ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary)
+                ? Icon(
+                    Icons.check,
+                    color: Theme.of(context).colorScheme.primary,
+                  )
                 : null,
             onTap: () {
               controller.changeLocale('en');

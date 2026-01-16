@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/my_account_controller.dart';
 import '../controller/auth_controller.dart';
+import '../core/theme/theme_service.dart';
 import 'language_selector_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -9,6 +10,7 @@ class SettingsScreen extends StatelessWidget {
 
   final MyAccountController accountController = Get.find<MyAccountController>();
   final AuthController authController = Get.find<AuthController>();
+  final ThemeService themeService = Get.find<ThemeService>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.dark_mode,
             title: "Theme".tr,
             subtitle: "Light / Dark mode".tr,
-            enabled: false,
+            onTap: () => _showThemeBottomSheet(context),
           ),
 
           settingsCard(
@@ -126,6 +128,77 @@ class SettingsScreen extends StatelessWidget {
           ).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
         ),
       ),
+    );
+  }
+
+  void _showThemeBottomSheet(BuildContext context) {
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Obx(() {
+          final isDark = themeService.rxIsDark.value;
+
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              Text(
+                "Choose Theme".tr,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              ListTile(
+                leading: const Icon(Icons.light_mode),
+                title: Text("Light Mode".tr),
+                trailing: !isDark
+                    ? const Icon(Icons.check, color: Colors.green)
+                    : null,
+                onTap: () {
+                  if (isDark) {
+                    themeService.toggleTheme();
+                  }
+                  Get.back();
+                },
+              ),
+
+              ListTile(
+                leading: const Icon(Icons.dark_mode),
+                title: Text("Dark Mode".tr),
+                trailing: isDark
+                    ? const Icon(Icons.check, color: Colors.green)
+                    : null,
+                onTap: () {
+                  if (!isDark) {
+                    themeService.toggleTheme();
+                  }
+                  Get.back();
+                },
+              ),
+
+              const SizedBox(height: 12),
+            ],
+          );
+        }),
+      ),
+      isScrollControlled: false,
     );
   }
 }
