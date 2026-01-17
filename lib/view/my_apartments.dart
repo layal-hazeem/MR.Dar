@@ -30,7 +30,6 @@ class _MyApartmentsState extends State<MyApartments> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
-        title: Text('My Apartments'.tr),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -240,7 +239,7 @@ class _MyApartmentsState extends State<MyApartments> {
                                   ),
                                 ),
                                 Text(
-                                  '${apartment.rentValue} SYP'.tr,
+                                  '${apartment.rentValue} \$'.tr,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,

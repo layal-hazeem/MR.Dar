@@ -146,6 +146,11 @@ class MyAccountController extends GetxController {
     update();
   }
 
+  Future<void> clearLocalSession() async {
+    await localService.clearUserData();
+    user.value = null;
+  }
+
   Future<void> verifyAndDeleteAccount(String password) async {
     if (password.isEmpty) {
       Get.snackbar(
@@ -162,23 +167,11 @@ class MyAccountController extends GetxController {
 
       final response = await service.deleteAccount(password);
 
-      if (Get.isDialogOpen!) Get.back();
-
       if (response['data'] == true) {
-        await authController.logout();
-
-        Get.snackbar(
-          "Account Deleted".tr,
-          "Your account has been permanently removed".tr,
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-        );
+        Get.offAllNamed('/onboarding');
       }
     } on DioException catch (e) {
-      if (Get.isDialogOpen!) Get.back();
-
       final data = e.response?.data;
-
       if (data != null && data['message'] != null) {
         _showCannotDeleteDialog(data['message']);
       } else {
@@ -189,17 +182,9 @@ class MyAccountController extends GetxController {
           colorText: Colors.white,
         );
       }
-    } catch (e) {
-      if (Get.isDialogOpen!) Get.back();
-
-      Get.snackbar(
-        "Error".tr,
-        "Something went wrong".tr,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
     } finally {
       isDeleting.value = false;
+      deletePasswordController.clear();
     }
   }
 
@@ -230,12 +215,17 @@ class MyAccountController extends GetxController {
   }
 
   void showDeleteAccountFlow(BuildContext context) {
+    deletePasswordController.clear();
+
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: Text(
-          "Attention!".tr,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          "Delete Account".tr,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
         ),
         content: Text(
           "Are you sure you want to delete your account?\nThis action cannot be undone."
@@ -243,24 +233,33 @@ class MyAccountController extends GetxController {
         ),
         actions: [
           TextButton(
-            onPressed: () => Get.back(),
-            child: Text("CANCEL".tr, style: const TextStyle(color: Colors.red)),
+            onPressed: () {
+              deletePasswordController.clear();
+              Get.back();
+            },
+            child: Text(
+              "CANCEL".tr,
+              style: const TextStyle(color: Colors.grey),
+            ),
           ),
           TextButton(
             onPressed: () {
               Get.back();
-              _showPasswordVerifyDialog(context);
+              Future.delayed(const Duration(milliseconds: 300), () {
+                _showPasswordVerifyDialog(context);
+              });
             },
             child: Text(
               "Confirm".tr,
               style: const TextStyle(
-                color: Color(0xFF274668),
+                color: Colors.red,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
         ],
       ),
+      barrierDismissible: false,
     );
   }
 
@@ -316,14 +315,28 @@ class MyAccountController extends GetxController {
                 labelText: "Password".tr,
                 prefixIcon: const Icon(Icons.lock_outline),
               ),
+              onSubmitted: (value) {
+                if (value.isNotEmpty && !isDeleting.value) {
+                  verifyAndDeleteAccount(value);
+                }
+              },
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: Text("CANCEL".tr)),
+          TextButton(
+            onPressed: () {
+              deletePasswordController.clear();
+              Get.back();
+            },
+            child: Text("CANCEL".tr),
+          ),
           Obx(
             () => ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
               onPressed: isDeleting.value
                   ? null
                   : () => verifyAndDeleteAccount(deletePasswordController.text),

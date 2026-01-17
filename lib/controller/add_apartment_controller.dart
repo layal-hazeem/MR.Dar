@@ -146,7 +146,7 @@ class AddApartmentController extends GetxController {
         rentValue: double.parse(rentController.text),
         rooms: int.parse(roomsController.text),
         space: double.parse(spaceController.text),
-        notes: "",
+        notes: cityNotesController.text.trim(),
         governorateId: selectedGovernorateId.value!,
         cityId: selectedCityId.value!,
         street: streetController.text.trim(),

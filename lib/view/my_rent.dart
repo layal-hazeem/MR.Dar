@@ -126,8 +126,8 @@ class _MyRentState extends State<MyRent> {
                       ),
                       child: Column(
                         children: [
-                          ApartmentCard(
-                            apartment: reservation.apartment,
+                          InkWell(
+                            borderRadius: BorderRadius.circular(16),
                             onTap: () {
                               Get.to(
                                 () => ApartmentDetailsPage(
@@ -135,6 +135,95 @@ class _MyRentState extends State<MyRent> {
                                 ),
                               );
                             },
+                            child: Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // ---------- Image ----------
+                                  if (reservation
+                                      .apartment
+                                      .houseImages
+                                      .isNotEmpty)
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(16),
+                                      ),
+                                      child: Image.network(
+                                        reservation.apartment.houseImages.first,
+                                        height: 180,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // ---------- Apartment title ----------
+                                        Text(
+                                          reservation.apartment.title,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 6),
+
+                                        // ---------- Dates ----------
+                                        Text(
+                                          "From ${reservation.startDate} → ${reservation.endDate}",
+                                          style: TextStyle(
+                                            color: Colors.grey.shade700,
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 6),
+
+                                        // ---------- Owner ----------
+                                        if (reservation.user != null)
+                                          Text(
+                                            "Owner: ${reservation.user!.firstName} ${reservation.user!.lastName}",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+
+                                        const SizedBox(height: 10),
+
+                                        // ---------- Status ----------
+                                        Row(
+                                          children: [
+                                            const Text("Status: "),
+                                            Text(
+                                              reservation.status.tr,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    reservation.status ==
+                                                        'accepted'
+                                                    ? Colors.green
+                                                    : reservation.status ==
+                                                          'pending'
+                                                    ? Colors.orange
+                                                    : Colors.red,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 12),
                           if (controller.currentStatus.value ==

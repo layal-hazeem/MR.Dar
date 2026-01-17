@@ -1,13 +1,6 @@
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-enum ReservationStatus {
-  pending,
-  accepted,
-  rejected,
-  blocked,
-  canceled,
-  previous,
-}
+enum ReservationStatus { pending, accepted, rejected, canceled, previous }
 
 extension ReservationStatusExtension on ReservationStatus {
   static ReservationStatus fromString(String? status) {
@@ -18,8 +11,7 @@ extension ReservationStatusExtension on ReservationStatus {
         return ReservationStatus.accepted;
       case 'rejected':
         return ReservationStatus.rejected;
-      case 'blocked':
-        return ReservationStatus.blocked;
+
       case 'canceled':
       case 'cancelled':
         return ReservationStatus.canceled;
@@ -36,8 +28,6 @@ extension ReservationStatusExtension on ReservationStatus {
         return 'accepted'.tr;
       case ReservationStatus.rejected:
         return 'Rejected'.tr;
-      case ReservationStatus.blocked:
-        return 'Blocked'.tr;
       case ReservationStatus.canceled:
         return 'Canceled'.tr;
       case ReservationStatus.previous:

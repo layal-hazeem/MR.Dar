@@ -46,91 +46,129 @@ class SignupController extends GetxController {
 
   void selectProfileImage() {
     Get.bottomSheet(
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.photo_library),
-            title: Text("Gallery".tr),
-            onTap: () async {
-              Get.back();
-              final XFile? image = await picker.pickImage(
-                source: ImageSource.gallery,
-                imageQuality: 80,
-              );
-              if (image != null) {
-                profileImage.value = image;
-                profileImageError.value = "";
-
-                update();
-              }
-            },
+      Container(
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.surface, // 🔥 هنا ناخد لون الثيم تلقائي
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(
+                  Icons.photo_library,
+                  color: Get.theme.colorScheme.primary,
+                ),
+                title: Text(
+                  "Gallery".tr,
+                  style: TextStyle(color: Get.theme.colorScheme.onSurface),
+                ),
+                onTap: () async {
+                  Get.back();
+                  final XFile? image = await picker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 80,
+                  );
+                  if (image != null) {
+                    profileImage.value = image;
+                    profileImageError.value = "";
+                    update();
+                  }
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.camera_alt,
+                  color: Get.theme.colorScheme.primary,
+                ),
+                title: Text(
+                  "Camera".tr,
+                  style: TextStyle(color: Get.theme.colorScheme.onSurface),
+                ),
+                onTap: () async {
+                  Get.back();
+                  final XFile? image = await picker.pickImage(
+                    source: ImageSource.camera,
+                    imageQuality: 80,
+                  );
+                  if (image != null) {
+                    profileImage.value = image;
+                    profileImageError.value = "";
+                    update();
+                  }
+                },
+              ),
+            ],
           ),
-          ListTile(
-            leading: const Icon(Icons.camera_alt),
-            title: Text("Camera".tr),
-            onTap: () async {
-              Get.back();
-              final XFile? image = await picker.pickImage(
-                source: ImageSource.camera,
-                imageQuality: 80,
-              );
-              if (image != null) {
-                profileImage.value = image;
-                profileImageError.value = "";
-
-                update();
-              }
-            },
-          ),
-        ],
+        ),
       ),
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      isScrollControlled: false,
+      backgroundColor: Colors.transparent, // مهم عشان ما يضل أبيض
     );
   }
 
   void pickIdImage() async {
     Get.bottomSheet(
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.photo_library),
-            title: Text("Gallery".tr),
-            onTap: () async {
-              Get.back();
-              final XFile? image = await picker.pickImage(
-                source: ImageSource.gallery,
-                imageQuality: 80,
-              );
-              if (image != null) {
-                idImage.value = image;
-                idImageError.value = "";
-                update();
-              }
-            },
+      Container(
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(
+                  Icons.photo_library,
+                  color: Get.theme.colorScheme.primary,
+                ),
+                title: Text(
+                  "Gallery".tr,
+                  style: TextStyle(color: Get.theme.colorScheme.onSurface),
+                ),
+                onTap: () async {
+                  Get.back();
+                  final XFile? image = await picker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 80,
+                  );
+                  if (image != null) {
+                    idImage.value = image;
+                    idImageError.value = "";
+                    update();
+                  }
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.camera_alt,
+                  color: Get.theme.colorScheme.primary,
+                ),
+                title: Text(
+                  "Camera".tr,
+                  style: TextStyle(color: Get.theme.colorScheme.onSurface),
+                ),
+                onTap: () async {
+                  Get.back();
+                  final XFile? image = await picker.pickImage(
+                    source: ImageSource.camera,
+                    imageQuality: 80,
+                  );
+                  if (image != null) {
+                    idImage.value = image;
+                    idImageError.value = "";
+                    update();
+                  }
+                },
+              ),
+            ],
           ),
-          ListTile(
-            leading: const Icon(Icons.camera_alt),
-            title: Text("Camera".tr),
-            onTap: () async {
-              Get.back();
-              final XFile? image = await picker.pickImage(
-                source: ImageSource.camera,
-                imageQuality: 80,
-              );
-              if (image != null) {
-                idImage.value = image;
-                idImageError.value = "";
-                update();
-              }
-            },
-          ),
-        ],
+        ),
       ),
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      isScrollControlled: false,
+      backgroundColor: Colors.transparent,
     );
   }
 

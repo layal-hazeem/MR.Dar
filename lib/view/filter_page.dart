@@ -79,12 +79,12 @@ class FilterPage extends StatelessWidget {
                     // rent range
                     _buildRangeSection(
                       context,
-                      title: "Rent Range (SYP)".tr,
+                      title: "Rent Range (\$)".tr,
                       range: rentRange,
                       min: 0,
                       max: 5000,
                       divisions: 50,
-                      unit: 'SYP'.tr,
+                      unit: '\$'.tr,
                     ),
                     const SizedBox(height: 20),
 
